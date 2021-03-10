@@ -3,4 +3,4 @@ Dissertação de Mestrado
 
 ORGANIZAÇÃO DAS PASTAS:
  
- 1. LITERATURA- Encontram-se os Artigos científicos/ Documentos utilizados para a investigação sobre o tema, bem como resumos em .pwp com as ideias essenciais de cada um.
+ 1. LITERATURA- Nesta pasta encontra-se um documento (.PWP) que contém os resumos de Artigos Científicos/ Documentos utilizados para a investigação do tema da Dissertação de Mestrado.
