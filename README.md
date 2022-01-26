@@ -2,6 +2,7 @@
 
 ORGANIZATION:
 
- 1. LITERATURE- Nesta pasta encontra-se um documento (.PWP) que contém os resumos de Artigos Científicos/ Documentos utilizados para a investigação do tema da Dissertação de Mestrado, bem como a referência ao Artigo usado.
+ 1. LITERATURE- In this folder there is a document (.PWP) that contains the abstracts of Scientific Articles/Documents used for the investigation of the theme of the Master's
+Dissertation, as well as the reference to the article used.
 
-2. MATLAB- Nesta pasta encontra-se o código em matlab utilizado. Na pasta Wave Migration , encontra-se o código "READ_S4P" para fazer a leitura dos valores medidos na experiência e o código "RADAR" para obter as imagens dos alvos de acordo com a experiência realizada.
+2. MATLAB- In this folder there is the matlab code used.
