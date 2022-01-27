@@ -16,3 +16,12 @@ In order to start programming SDR at a high level end, it was used Gnu radio com
  3. MATLAB- In this folder there is the matlab code used.
   LIBRARY- All the functions needed for the main program.
   PASSIVE RADAR- main program of passive radar using LimeSDR.
+
+
+
+REFERENCES:
+
+The code is based on the work from Jockover.
+The code is based on the work from RakhDamir.
+The code is based on the work from afonsosenica.
+
