@@ -1,7 +1,9 @@
 
-%% Author of the LimeSDR MATLAB compatibility program:
+% Author of the LimeSDR MATLAB compatibility program:
 %    Damir Rakhimov, CRL, TU Ilmenau, Dec 2019
 
+% Author of the current program, based on the simple RX by Damir Rakhimov:
+% Afonso Sénica, Escola Naval, June 2020
 clc
 clear all
 
@@ -112,7 +114,7 @@ afmag2(afmag2>1 )= 1;
 afmag3 = afmag3*1.5;
 afmag3(afmag3>1 )= 1;
 
-%%
+
 % Plot spectrograms of the recieved signals
 figure(1)
 subplot(3,2,1);
