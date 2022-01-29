@@ -118,11 +118,11 @@ afmag3(afmag3>1 )= 1;
 
 % Plot spectrograms of the recieved signals
 figure(1)
-%subplot(3,2,1);
-%spectrogram(bufferRx,2^12,2^10,2^12,'centered','yaxis')
+subplot(3,2,1);
+spectrogram(bufferRx,2^12,2^10,2^12,'centered','yaxis')
 
- %subplot(3,2,2);
-%spectrogram(bufferRx1,2^12,2^10,2^12,'centered','yaxis')
+ subplot(3,2,2);
+spectrogram(bufferRx1,2^12,2^10,2^12,'centered','yaxis')
 
 
 % Plot the ambiguity functions of Sref and Sr
