@@ -2,8 +2,12 @@
 % Author of the LimeSDR MATLAB compatibility program:
 %    Damir Rakhimov, CRL, TU Ilmenau, Dec 2019
 
-% Author of the current program, based on the simple RX by Damir Rakhimov:
+% Author of the ambiguity function program, based on the simple RX by Damir Rakhimov:
 % Afonso Sénica, Escola Naval, June 2020
+
+% Author of the current program:
+% Miguel Albuquerque, Escola Naval, 2022
+
 
 clc
 clear all
