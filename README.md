@@ -3,7 +3,7 @@
 OBJECTIVE:
 
  The main purpose of this work is to develop a passive radar with MATLAB using LimeSDR ( ISM spectrum).
-In order to achieve that goal,firstly it was used Gnu Radio to produce some examples and receivers of ISM using LimeSDR.
+In order to achieve that goal,firstly it was used Gnu Radio to produce some examples and receivers of ISM/ FM using LimeSDR.
 
 
 ORGANIZATION AND SEQUENCE: 
