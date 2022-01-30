@@ -1,5 +1,10 @@
 # Passive Radar| SDR | MATLAB | GNU RADIO
 
+OBJECTIVE:
+
+ The main purpose of this work is to develop a passive radar using LimeSDR in ISM spectrum.
+
+
 ORGANIZATION AND SEQUENCE: 
 
  1. LITERATURE- In this folder there is a document (.PWP) that contains the abstracts of Scientific Articles/Documents used for the investigation of the theme of the Master's
