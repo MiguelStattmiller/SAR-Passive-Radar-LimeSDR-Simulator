@@ -34,13 +34,13 @@ dev.rx0.frequency   = Fc;
 dev.rx0.samplerate  = Fs;
 dev.rx0.bandwidth   = BW;
 dev.rx0.gain        = Gain;
-dev.rx0.antenna     = 2;     % LNA_L
+dev.rx0.antenna     = 3;     % LNAW
 
 dev.rx1.frequency   = Fc;
 dev.rx1.samplerate  = Fs;
 dev.rx1.bandwidth   = BW;
 dev.rx1.gain        = Gain;
-dev.rx1.antenna     = 2;     % LNA_L
+dev.rx1.antenna     = 3;     % LNAW
 
 % Read parameters from the devices
 Fs_dev      = dev.rx0.samplerate;  
