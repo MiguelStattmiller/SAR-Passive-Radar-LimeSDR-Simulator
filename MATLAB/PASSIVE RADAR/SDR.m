@@ -1,4 +1,3 @@
-
 % Author of the LimeSDR MATLAB compatibility program:
 %    Damir Rakhimov, CRL, TU Ilmenau, Dec 2019
 
@@ -8,20 +7,17 @@
 % Author of the current program:
 % Miguel Albuquerque, Escola Naval, 2022
 
-
 clc
 clear all
 
 addpath('C:\Program Files\PothosSDR\bin') % add path with LimeSuite library
 
 % Initialize parameters
-TotalTime   = 12;       % Time of observation, s
+TotalTime   = 1;       % Time of observation, s
 Fc          = 2.4e9;   % Carrier Frequency, Hz
 Fs          = 1e6;      % Frequency of sampling frequency, Hz
 Ts          = 4e0;      % Signal duration, s
 Fsig        = 2.4e9;    % Frequency of desired signal, Hz
-%Fdev        = 1e5;      % Frequency of deviation, Hz
-%Fif         = 2e5;      % Intermediate frequency, Hz
 Asig        = 1;        % Amplitude of signal, V
 BW          = 5e6;      % Bandwidth of the signal, Hz (5-40MHz and 50-130Mhz)
 Gain        = 10;       % Receiver Gain, dB
@@ -119,19 +115,22 @@ afmag2(afmag2>1 )= 1;
 afmag3 = afmag3*1.5;
 afmag3(afmag3>1 )= 1;
 
-
+%%
 % Plot spectrograms of the recieved signals
 figure(1)
 subplot(3,2,1);
 spectrogram(bufferRx,2^12,2^10,2^12,'centered','yaxis')
 
- subplot(3,2,2);
+subplot(3,2,2);
 spectrogram(bufferRx1,2^12,2^10,2^12,'centered','yaxis')
 
 
-% Plot the ambiguity functions of Sref and Sr
-subplot(3,2,4)
-surf(delay,doppler,afmag,'LineStyle','none'); 
+%% Plot the ambiguity functions of Sref and Sr
+
+[maxValue1] = max(afmag(:));
+subplot(3,2,1)
+surf(delay,doppler,afmag,'LineStyle','none');
+text(-0.5e-5,-0.5e-5,maxValue1,['\leftarrow Máximo = ' num2str(maxValue1)],'color','b','FontSize',10);
 shading interp;
 axis([-0.5e-5 0.5e-5 -10000 10000]); 
 grid on; 
@@ -142,8 +141,11 @@ ylabel('Doppler f_d (Hz)');
 title('Ambiguity Function Sref');
 
 
-subplot(3,2,5)   
-surf(delay2,doppler2,afmag2,'LineStyle','none'); 
+
+[maxValue2] = max(afmag2(:));
+subplot(3,2,2)   
+surf(delay2,doppler2,afmag2,'LineStyle','none');
+text(-0.5e-5,-0.5e-5,maxValue2,['\leftarrow Máximo = ' num2str(maxValue2)],'color','b','FontSize',10);
 shading interp;
 axis([-0.5e-5 0.5e-5 -10000 10000]); 
 grid on; 
@@ -154,12 +156,15 @@ ylabel('Doppler f_d (kHz)');
 title('Ambiguity Function Sr');
 
 
+
 % Plot the correlation of Sref and Sr
 
-subplot(3,2,6)
+[maxValue3] = max(afmag3(:));
+subplot(3,2,3)
 surf(delay3,doppler3,afmag3,'LineStyle','none'); 
+text(-0.5e-5,-0.5e-5,maxValue3,['\leftarrow Máximo = ' num2str(maxValue3)],'Color','b','FontSize',10);
 shading interp;
-axis([-0.3e-6 0.3e-6 -1500 1500]); 
+axis([-0.5e-5 0.5e-5 -10000 10000]); 
 zlim([0 1]);
 grid on; 
 view([140,35]); 
@@ -167,5 +172,8 @@ colorbar;
 xlabel('Delay \tau (s)');
 ylabel('Doppler f_d (Hz)');
 title('Cross-correlation');
+%Idx = find((afmag3(:) == max(afmag3(:)))); %Descobrir índice do máximo
+%[af3maxRow,af3maxCol] = ind2sub(size(afmag3), Idx); %Descobrir índice do máximo
 
-%fprintf('Time for visualisation: %g\n', toc);
+
+
