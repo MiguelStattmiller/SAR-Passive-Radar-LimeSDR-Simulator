@@ -16,11 +16,13 @@ addpath('C:\Program Files\PothosSDR\bin') % add path with LimeSuite library
 TotalTime   = 1;       % Time of observation, s
 Fc          = 2.4e9;   % Carrier Frequency, Hz
 Fs          = 1e6;      % Frequency of sampling frequency, Hz
-Ts          = 4e0;      % Signal duration, s
+Ts          = 2;      % Signal duration, s
 Fsig        = 2.4e9;    % Frequency of desired signal, Hz
 Asig        = 1;        % Amplitude of signal, V
 BW          = 5e6;      % Bandwidth of the signal, Hz (5-40MHz and 50-130Mhz)
-Gain        = 10;       % Receiver Gain, dB
+Gain        = 20;       % Receiver Gain, dB
+tempo=0:1/Fs:1000/Fs-1/Fs;
+fontsize=12;
 
 % Open LimeSDR:
 dev = limeSDR(); % Open device
@@ -30,13 +32,13 @@ dev.rx0.frequency   = Fc;
 dev.rx0.samplerate  = Fs;
 dev.rx0.bandwidth   = BW;
 dev.rx0.gain        = Gain;
-dev.rx0.antenna     = 3;     % LNAW
+dev.rx0.antenna     = 2;     % LNAL
 
 dev.rx1.frequency   = Fc;
 dev.rx1.samplerate  = Fs;
 dev.rx1.bandwidth   = BW;
 dev.rx1.gain        = Gain;
-dev.rx1.antenna     = 3;     % LNAW
+dev.rx1.antenna     = 2;     % LNAL
 
 % Read parameters from the devices
 Fs_dev      = dev.rx0.samplerate;  
@@ -99,7 +101,37 @@ x = transpose(t);
 t1 = bufferRx1(1:1000);
 x1 = transpose(t1);
 
-% Select plot gain *1
+
+%% Espetro
+
+[freq,Spectrum]=time2freq(x,tempo);
+fig=figure;
+hold on
+set(fig,'color','white');
+plot(freq,20*log10(abs(Spectrum)),'b','linewidth',2);
+xlabel('Frequency [Hz]');
+xlim auto; 
+ylabel('Spectrum');
+set(gca,'fontsize',fontsize);
+grid on;
+hold off
+
+%%
+[freq,Spectrum]=time2freq(x1,tempo);
+fig=figure;
+hold on
+set(fig,'color','white');
+plot(freq,20*log10(abs(Spectrum)),'b','linewidth',2);
+xlabel('Frequency [Hz]');
+ylabel('Spectrum');
+set(gca,'fontsize',fontsize);
+grid on;
+hold off
+
+
+
+
+%% Select plot gain *1
 %Sref ambiguity function
 [afmag,delay,doppler] = ambgfun(x,Fs,250000);
 afmag = afmag*1;
@@ -112,7 +144,7 @@ afmag2(afmag2>1 )= 1;
 
 %Correlation
 [afmag3,delay3,doppler3] = ambgfun(x,x1,Fs,[250000 250000]);
-afmag3 = afmag3*1.5;
+afmag3 = afmag3*1;
 afmag3(afmag3>1 )= 1;
 
 %%
@@ -174,6 +206,3 @@ ylabel('Doppler f_d (Hz)');
 title('Cross-correlation');
 %Idx = find((afmag3(:) == max(afmag3(:)))); %Descobrir índice do máximo
 %[af3maxRow,af3maxCol] = ind2sub(size(afmag3), Idx); %Descobrir índice do máximo
-
-
-
