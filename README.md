@@ -18,8 +18,8 @@ ORGANIZATION DESCRIPTION:
  1. LITERATURE- In this folder there is a document (.PWP) that contains the abstracts with the most important ideas of Scientific Articles/Documents/books/videos used for the investigation of the theme of the Master's Dissertation, as well as the reference to the specific article.
 
  2. GNU RADIO- For the first part of the project, it was necessary to install LimeSDR Drivers and libraries , such as Lime Suite, CubicSDR, GNU radio companion, SDR Console,Pothos Flow,SDRangel,...
- 3. 
-Initially it is necessary to connect LimeSDR to your computer,and be able to recognize It as a device. In order to check if this connection was well made, It can be used Lime suite, where you can see LimeSDR status,callibrate Tx and Rx,...
+ 
+ 3. Initially it is necessary to connect LimeSDR to your computer,and be able to recognize It as a device. In order to check if this connection was well made, It can be used Lime suite, where you can see LimeSDR status,callibrate Tx and Rx,...
 
 Next, it was used cubicSDR, SDRangel and SDRconsole to evaluate the spectogram of FM/ISM signals received with the receiver antennas and start gaining some knowledge on this theme.
 
