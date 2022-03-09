@@ -6,9 +6,9 @@ OBJECTIVE:
  
  WORKING PROCESS:
  
-In order to achieve that goal, firstly It was used Gnu Radio and Pothos Flow to produce some examples and receivers of ISM/ FM using LimeSDR (GNU RADIO folder).
-Next, It was developped the main processing code in MATLAB. 
-Finally, It was produced a passive radar simulator. 
+In order to achieve that goal, firstly It was used Gnu Radio and Pothos Flow to produce some receivers of ISM/ FM and passive radar examples using LimeSDR (GNU RADIO folder).
+Next, It was developped the main processing code in MATLAB (MATLAB folder).
+Finally, It was produced a passive radar simulator (MATLAB folder).
 
 
 ORGANIZATION AND SEQUENCE: 
