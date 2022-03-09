@@ -13,7 +13,7 @@ Next, It was developped the main processing code in MATLAB (MATLAB folder).
 Finally, It was produced a passive radar simulator (MATLAB folder).
 
 
-**ORGANIZATION DESCRIPTION:** 
+**ORGANIZATION/WORK DESCRIPTION:** 
 
  1. LITERATURE- In this folder there is a document (.PWP) that contains the abstracts with the most important ideas of Scientific Articles/Documents/books/videos used for the investigation of the theme of the Master's Dissertation, as well as the reference to the specific article.
 
