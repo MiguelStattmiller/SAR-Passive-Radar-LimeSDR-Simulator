@@ -23,9 +23,13 @@ Finally, It was produced a passive radar simulator (MATLAB folder).
 Next, it was used cubicSDR, SDRangel and SDRconsole to evaluate the spectogram of FM/ISM signals received with the receiver antennas and start gaining some knowledge on this theme.
 
 In order to start programming SDR at a high level end, it was used Gnu radio companion and Pothos Flow:
+
      *Creating a FM receiver in both programs
+     
      *Creating a ISM receiver
+     
      *Experiment of Passive Radar
+     
      *Passive Radar using the LimeSDR
 
  3. MATLAB- In this folder there is the matlab code used.
