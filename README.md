@@ -2,7 +2,7 @@
 
 OBJECTIVE:
 
- The main purpose of this work is to develop a passive radar with MATLAB using LimeSDR ( ISM spectrum, central frequency of 2.45 GHz).
+ The main purpose of this work is to develop a passive radar with MATLAB using LimeSDR ( based on ISM spectrum, central frequency of 2.45 GHz).
  SDR used: https://limemicro.com/products/boards/limesdr/
  
  
