@@ -15,12 +15,11 @@ Finally, It was produced a passive radar simulator (MATLAB folder).
 
 ORGANIZATION AND SEQUENCE: 
 
- 1. LITERATURE- In this folder there is a document (.PWP) that contains the abstracts of Scientific Articles/Documents used for the investigation of the theme of the Master's
-Dissertation, as well as the reference to the article used.
+ 1. LITERATURE- In this folder there is a document (.PWP) that contains the abstracts with the most important ideas of Scientific Articles/Documents/books/videos used for the investigation of the theme of the Master's Dissertation, as well as the reference to the specific article.
 
- 2. GNU RADIO- For the first part of the project, it was necessary to install LimeSDR Drivers and libraries , such as Lime Suite, CubicSDR, GNU radio companion, SDR Console,Pothos Flow and SDRangel.
-Initially it is necessary to use Lime suite in order to connect LimeSDR and callibrate Tx and Rx.
-Next, it was used cubicSDR, SDRangel, SDRconsole to evaluate the spectogram of FM and ISM signals and start gaining some knowledge on this theme.
+ 2. GNU RADIO- For the first part of the project, it was necessary to install LimeSDR Drivers and libraries , such as Lime Suite, CubicSDR, GNU radio companion, SDR Console,Pothos Flow,SDRangel,...
+Initially it is necessary to connect LimeSDR to your computer,and be able to recognize It as a device. In order to check if this connection was well made, It can be used Lime suite, where you can see LimeSDR status,callibrate Tx and Rx,...
+Next, it was used cubicSDR, SDRangel and SDRconsole to evaluate the spectogram of FM/ISM signals received with the receiver antennas and start gaining some knowledge on this theme.
 In order to start programming SDR at a high level end, it was used Gnu radio companion and Pothos Flow:
      |Creating a FM receiver in both programs
      |Creating a ISM receiver
