@@ -8,7 +8,7 @@
  
 In order to achieve the main goal, firstly It was used Gnu Radio and Pothos Flow to produce some receivers of ISM/ FM and passive radar examples using LimeSDR (GNU RADIO folder).
 
-Next, It was developped the main processing code in MATLAB (MATLAB folder).
+Next, It was developped the passive radar processing code in MATLAB (MATLAB folder).
 
 Finally, It was produced a passive radar simulator (MATLAB folder).
 
