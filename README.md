@@ -1,10 +1,10 @@
 # Passive Radar| SDR | MATLAB | GNU RADIO
 
-OBJECTIVE:
+**OBJECTIVE:**
 
  The main purpose of this work is to develop a passive radar with MATLAB using LimeSDR (https://limemicro.com/products/boards/limesdr/), based on ISM spectrum (central frequency of 2.45 GHz).
 
- WORKING PROCESS ABSTRACT:
+**WORKING PROCESS ABSTRACT:**
  
 In order to achieve the main goal, firstly It was used Gnu Radio and Pothos Flow to produce some receivers of ISM/ FM and passive radar examples using LimeSDR (GNU RADIO folder).
 
@@ -13,7 +13,7 @@ Next, It was developped the main processing code in MATLAB (MATLAB folder).
 Finally, It was produced a passive radar simulator (MATLAB folder).
 
 
-ORGANIZATION DESCRIPTION: 
+**ORGANIZATION DESCRIPTION:** 
 
  1. LITERATURE- In this folder there is a document (.PWP) that contains the abstracts with the most important ideas of Scientific Articles/Documents/books/videos used for the investigation of the theme of the Master's Dissertation, as well as the reference to the specific article.
 
@@ -34,7 +34,7 @@ In order to start programming SDR at a high level end, it was used Gnu radio com
   PASSIVE RADAR- Main program of passive radar using LimeSDR.
 
 
-REFERENCES:
+**REFERENCES:**
 
 The code is based on the work from Jockover.
 The code is based on the work from RakhDamir.
