@@ -1,6 +1,10 @@
 % Author of the LimeSDR MATLAB compatibility program:
 %    Damir Rakhimov, CRL, TU Ilmenau, Dec 2019
 
+% Author of the time2freq function:
+%    Andela Zaric  02/09/2012
+%    date of latest revision: 07/11/2016 (by Joao Felicio)
+
 % Author of the ambiguity function program, based on the simple RX by Damir Rakhimov:
 % Afonso Sénica, Escola Naval, June 2020
 
@@ -14,10 +18,10 @@ addpath('C:\Program Files\PothosSDR\bin') % add path with LimeSuite library
 
 % Initialize parameters
 TotalTime   = 1;       % Time of observation, s
-Fc          = 2.4e9;   % Carrier Frequency, Hz
+Fc          = 2.45e9;   % Carrier Frequency, Hz
 Fs          = 1e6;      % Frequency of sampling frequency, Hz
 Ts          = 2;      % Signal duration, s
-Fsig        = 2.4e9;    % Frequency of desired signal, Hz
+Fsig        = 2.45e9;    % Frequency of desired signal, Hz
 Asig        = 1;        % Amplitude of signal, V
 BW          = 5e6;      % Bandwidth of the signal, Hz (5-40MHz and 50-130Mhz)
 Gain        = 20;       % Receiver Gain, dB
@@ -102,7 +106,7 @@ t1 = bufferRx1(1:1000);
 x1 = transpose(t1);
 
 
-%% Espetro
+%% Receiving channels Spectrum
 
 [freq,Spectrum]=time2freq(x,tempo);
 fig=figure;
@@ -116,7 +120,7 @@ set(gca,'fontsize',fontsize);
 grid on;
 hold off
 
-%%
+
 [freq,Spectrum]=time2freq(x1,tempo);
 fig=figure;
 hold on
