@@ -6,14 +6,14 @@ OBJECTIVE:
  SDR used: https://limemicro.com/products/boards/limesdr/
  
  
- WORKING PROCESS:
+ WORKING PROCESS ABSTRACT:
  
 In order to achieve that goal, firstly It was used Gnu Radio and Pothos Flow to produce some receivers of ISM/ FM and passive radar examples using LimeSDR (GNU RADIO folder).
 Next, It was developped the main processing code in MATLAB (MATLAB folder).
 Finally, It was produced a passive radar simulator (MATLAB folder).
 
 
-ORGANIZATION AND SEQUENCE: 
+ORGANIZATION DESCRIPTION: 
 
  1. LITERATURE- In this folder there is a document (.PWP) that contains the abstracts with the most important ideas of Scientific Articles/Documents/books/videos used for the investigation of the theme of the Master's Dissertation, as well as the reference to the specific article.
 
