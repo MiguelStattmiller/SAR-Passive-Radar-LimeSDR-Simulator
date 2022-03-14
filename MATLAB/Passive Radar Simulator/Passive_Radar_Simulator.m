@@ -25,7 +25,7 @@ clc
 fc=2.45e9; %Carrier frequency
 Rb=fc/100; %Bitrate
 %SNR=10; %SNR [dB]
-fontsize=16;
+fontsize=12;
 SentenceFilename = 'Mensagem_short.txt';
 MeasuredFilename = 'ImplantableAntenna2Reader.s2p';
 %*******************************************
@@ -60,10 +60,10 @@ Ac=1; %Amplitude
 wc=2*pi*fc;
 Tc=1/fc; %Period
 Tb=1/Rb; %Bit period
-fs=4*fc; %Sampling frequency
+fs=2*fc; %Sampling frequency
 t_bit=linspace(0,Tb,round(Tb*fs)); %Time base of bit
 
-TxQPSK_signal=[];
+Reference_Signal=[];
 Binary_signal=[];
 bit=[];
 Eb=Ac^2*Tb; %Bit energy
@@ -79,25 +79,25 @@ for ss=1:length(sequence)/2
 %     QPSK_temp = awgn(QPSK_temp,SNR,S);
     
     %Modulated QPSK signal
-    TxQPSK_signal=[TxQPSK_signal,QPSK_temp];
+    Reference_Signal=[Reference_Signal,QPSK_temp];
 end
 
-t=linspace(0,Ns*Tb,length(TxQPSK_signal));
+t=linspace(0,Ns*Tb,length(Reference_Signal));
 
 
 %**************** Plot QPSK signal over time
-%fig=figure;
-%set(fig,'color','white');
-%plot(t,TxQPSK_signal,'linewidth',2,'color','b');
-%xlabel('Time [s]');
-%ylabel('QPSK signal');
-%set(gca,'fontsize',fontsize);
+fig=figure;
+set(fig,'color','white');
+plot(t,Reference_Signal,'linewidth',2,'color','b');
+xlabel('Time [s]');
+ylabel('QPSK signal');
+set(gca,'fontsize',fontsize);
 %set(gca,'fontsize',fs);
-%grid on;
+grid on;
 
 %**************** Plot frequency spectrum of QPSK signal
 
- [freq,Spectrum]=time2freq(TxQPSK_signal,t);
+ %[freq,Spectrum]=time2freq(Reference_Signal,t);
  %fig=figure;
  %hold on
  %set(fig,'color','white');
@@ -107,6 +107,54 @@ t=linspace(0,Ns*Tb,length(TxQPSK_signal));
  %set(gca,'fontsize',fontsize);
  %grid on;
  %hold off
+
+
+%****************
+c=3e8;
+delay= 2*t;
+Surveillance_Signal=Reference_Signal.*(t-delay);
+
+range=c*delay/2
+
+
+%Plot the ambiguity functions of Sref and Sr
+
+
+
+  % Select a few samples to get the process quicker
+samples = Reference_Signal(1:1000);
+x = transpose(samples);
+
+
+samples1 = Surveillance_Signal(1:1000);
+x1 = transpose(samples1);
+
+
+
+%%
+
+%Reference_Signal ambiguity function
+[afmag,delay,doppler] = ambgfun(x,fs,250000);
+afmag = afmag*1;
+afmag(afmag>1 )= 1;
+
+ %Surveillance_Signal ambiguity function
+[afmag2,delay2,doppler2] = ambgfun(x1,fs,250000);
+afmag2 = afmag2*1;
+afmag2(afmag2>1 )= 1;
+
+%Correlation
+[afmag3,delay3,doppler3] = ambgfun(x,x1,fs,[250000 250000]);
+afmag3 = afmag3*1;
+afmag3(afmag3>1 )= 1;
+
+
+
+
+
+
+
+
 
 
 
