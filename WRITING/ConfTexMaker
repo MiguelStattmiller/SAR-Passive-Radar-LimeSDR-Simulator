@@ -1,3 +1,0 @@
-Latexmk = latexmk -e "$pdflatex=q/pdflatex -synctex=1 -interaction=nonstopmode/" -pdf %.tex
-Bib(la)tex = biber build/%
-Makeindex = makeglossaries -d build %
