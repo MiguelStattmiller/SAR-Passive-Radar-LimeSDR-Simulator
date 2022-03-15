@@ -1,0 +1,186 @@
+% Modelo da Dissertação de Mestrado da Escola Naval
+% TMDEI Thesis EN Style
+% 
+% Baseado em MastersDoctoralThesis Version 1.2 by Vel (vel@latextemplates.com) and
+% Johannes Böttcher, downloaded from (21/11/15):
+% http://www.LaTeXTemplates.com
+%
+% Autores:
+%  Vel (vel@ latextemplates. com)
+%  Johannes Böttcher%
+%
+%  Adaptado para Thesis EN Style (JUL/2019) por 
+%  Hilário Araújo (rocha.araujo@marinha.pt) 
+%  Ricardo Moura (ricardo.pinto.moura@marinha.pt)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%-----------------------------------------%
+%    CONFIGURAÇÃO INICIAl
+%-----------------------------------------%
+
+\documentclass[12pt, % O tamanho da fonte do documento padrão, opções: 10pt, 11pt (ter-se-ia que mudar tipo de letra para Arial) , 12pt (relembra-se que 12pt é o que está estipulado nas normas)
+%oneside, % Dois lados (margens alternadas) para ligação por padrão, descomentar  para mudar para um lado (para desenho / leitura)
+portuguese, %portuguese,% para Português; english para Inglês; Se mudar a língua convém apagar ficheiros temporários (e.g. 'make clean; make')
+onehalfspacing, % espaçamento e meio, alternativas: singlespacing - Espaçamento de linha única; doublespacing (para fins de redação / leitura)
+%draft, % Descomentar para ativar o modo de rascunho (sem imagens, sem links, caixas de texto overfull indicadas)
+%nolistspacing, % Se o documento for de meio-espaço ou de espaçamento duplo, descomentar para definir o espaçamento nas listas como único
+%liststotoc, % Descomentar para adicionar a lista de figuras / tabelas / etc ao índice (não recomendado)
+%toctotoc, % Descomentear para adicionar o índice principal ao índice (não recomendado)
+parskip, % Adicione espaço entre parágrafos (recomendado)
+%nohyperref, % Descomentar para não carregar o pacote hyperref (não recomendado)
+nohyperreflinkcolor, % links de hyperref (ligação à referência) não são coloridos (comentar para links de cores, por exemplo, para produzir uma versão somente eletrónica)
+headsepline, % Descomentar para obter uma linha sob o cabeçalho
+]{enStyle} % O arquivo de classe que especifica a estrutura do documento
+
+\usepackage{tikz} % Em caso de necessidade para criar gráficos automaticamente na página (pode remover se tiver apenas gráficos por imagem)
+%\usetikzlibrary{arrows} % Necessário se quiser inserir setas do pacote TiKZ (pode remover se não usar)
+
+\usepackage{pgfplots} % Necessário se quiser desenhar plots de alta qualidade (pode remover se não usar)
+\pgfplotsset{compat=newest}
+
+%
+% Next you have examples of admissable citation styles; we recomend using the authoryear-comp citation style (which resembles Harvard); don't forget to only uncomment one
+
+% authoryear-comp: recommended citation style (e.g. (Buendía, 1860), (Buendía 1910, Arcadio 1940))
+\usepackage[style=authoryear-comp,backend=biber,doi=true, %display DOI with link
+     eprint=false, %display arxiv id etc
+     maxnames=25, %number of names in List of references
+     maxcitenames=7, % number of names for textcite command
+     ]{biblatex} % Bibtex backend with the authoryear-comp citation style (authoryear citations, bibliography ordered alphabetically)
+
+%\usepackage[backend=biber,
+%     style=authoryear-comp, %style to use, other styles are nature, science or apa
+%     sorting=none,
+%     natbib=true,
+%     url=false, 
+%     doi=true, %display DOI with link
+%     eprint=false, %display arxiv id etc
+%     maxnames=25, %number of names in List of references
+%     maxcitenames=2, % number of names for textcite command
+%     autocite=superscript
+%]{biblatex}
+
+% numeric citation style (e.g. [1], [1-3])
+%\usepackage[style=numeric-comp,sorting=none,backend=biber]{biblatex} % Bibtex backend with the numeric-comp citation style (numeric citations, bibliography ordered by appearance)
+
+% alphabetic citation style (e.g. [Buendía10], [Buendía10, Arcadio40])
+%\usepackage[style=alphabetic,sorting=none,backend=biber]{biblatex} % Bibtex backend with the alphabetic citation style (alphabetic citations, bibliography ordered by appearance)
+
+
+\addbibresource{mainbibliography.bib} % O nome da base de dados da sua bibliografia
+
+\makeglossaries % cria o glossário
+
+
+%----------------------------------------------------------------------------------------
+%	INFORMAÇÃO SOBRE A TESE
+%----------------------------------------------------------------------------------------
+
+\thesistitle{Desenvolvimento de rádio definido por software para sistema de radar passivo. 
+} % Escreva o título da tese, pode referenciar o titulo ao longa da dissertação utilizando o comando (\ttitle)
+
+\thesissubtitle{} % %Escreva o subtítulo da tese, pode referenciar o titulo ao longa da dissertação utilizando o comando (\subttitle)
+
+\author{Miguel Ramos Gonçalves Stattmiller Albuquerque} % % Escreva o seu nome completo, pode referenciar o autor ao longa da dissertação utilizando o comando (\authorname)
+
+\authorshort{Miguel Albuquerque} % % Escreva o seu 1º e último nome, pode referenciar o autor ao longa da dissertação utilizando o comando (\authorname)
+
+\subjectarea{Engenharia Naval Ramo de Armas e Eletrónica} % Identifica a tua especialidade: Engenharia Naval Ramo de Armas e Eletrónica, Engenharia Naval Ramo de Mecânica, Marinha, Fuzileiros, Marinha e Administração Naval
+%poderá referenciar-lo ao longo do seu trabalho com o comando (\areaname)
+
+\supervisor{João Manuel de Almeida Monteiro Felício} % O nome do seu supervisor, isto é usado na página da contra capa,  poderá referenciar-lo ao longo do seu trabalho com o comando (\supname)
+
+\supervisorshort{João Felício} %Nome do seu orientador (1º e último), isto é usado na página da contra capa, poderá referenciar-lo ao longo do seu trabalho com o comando (\supsname)
+
+\cosupervisor{ Paulo Alexandre Carapinha Marques} % O nome do seu co-orientador, isto é usado na página da contra capa,  poderá referenciar-lo ao longo do seu trabalho com o comando (\cosupname) (comenta, se não tiveres co-orientador)
+
+\cosupervisorshort{Paulo Marques} %Nome do seu co-orientador (1º e último), isto é usado na página da contra capa, poderá referenciar-lo ao longo do seu trabalho com o comando (\cosupsname)
+
+\keywords{Radar, Radar Passivo, Radar de Abertura Sintética, Processamento de Sinal, Recetor de Rádio Definido por Software} % Defina até 6 palavras-chave que descrevam melhor o seu trabalho, e poderá referenciar-las ao longo do seu trabalho com o comando (\keywordnames)
+
+\conkeywords{Radar, Passive Radar, Synthetic-Aperture radar , Signal Processing, Software Defined Radio } %  Traduza as palavras do resumo e coloque-as aqui(\conkeywordnames)
+
+\university{\href{https://escolanaval.marinha.pt}{Escola Naval}} % Nome da universidade e endereço web, , e poderá referenciar-la ao longo do seu trabalho com o comando \univname
+
+\department{\href{http://department.university.com}{Departamento Ciência e Tecnologias}} % Nome do departamento e endereço web, e poderá referenciar-la ao longo do seu trabalho com o comando \deptname
+% Classes e respetivos departamentos:
+% EN-AEL E EN-MEC - Departamento Ciência e Tecnologias
+% AN - Departamento de Humanidades e Gestão
+% M - Departamento de Ciências do Mar
+% FZ - Departamento de Ciências do Mar
+
+\thesisdate{Alfeite \\ \the\year{} } % data da impressão da tese, pode referenciar a data ao longa da dissertação utilizando o comando (\tdate)
+
+\hypersetup{pdftitle=\ttitle} % Set the PDF's title to your title
+\hypersetup{pdfauthor=\authorname} % Set the PDF's author to your name
+\hypersetup{pdfkeywords=\keywordnames} % Set the PDF's keywords to your keywords
+
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	PÁGINAS INICIAIS
+%----------------------------------------------------------------------------------------
+
+% Inclui as páginas iniciais da sua tese
+\input{frontmatter/frontmatter}
+
+%----------------------------------------------------------------------------------------
+%	CORPO DA TESE
+%----------------------------------------------------------------------------------------
+\pagestyle{thesis} % Colocar os cabeçalhos nas páginas com o estilo definido para o corpo da tese
+
+
+%Introcução - Obrigatória
+\input{chapters/introduction/introduction}
+
+% Inclui os capítulos da tese como das respetivas pastas
+%separadas por cada capítulo
+% Uncomment os capítulos à medida que vais criando novos.
+
+\input{chapters/ch1/chapter1}
+\input{chapters/ch2/chapter2}
+\input{chapters/ch3/chapter3}
+%\input{ch4/chapter4}
+%\input{ch5/chapter5}
+
+
+%Conclusão - Obrigatória
+\input{chapters/conclusion/conclusion}
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAFIA
+%----------------------------------------------------------------------------------------
+
+\printbibliography[heading=bibintoc]
+
+
+%----------------------------------------------------------------------------------------
+%	APÊNDICES e ANEXOS
+%----------------------------------------------------------------------------------------
+
+% Incluir os apêndices da tese como arquivos separados da pasta (appendices)
+% Uncomment as linhas para teres à medida que fores criando apendices.
+
+\appendixfile{appendix1}%
+%\appendixfile{appendix2}%
+%\appendixfile{appendix3}%
+%\appendixfile{appendix}%
+
+
+% Incluir os anexos da tese como arquivos separados da pasta (annexes)
+% Uncomment as linhas para teres à medida que fores criando anexos
+
+\annexfile{annex1}%
+%\annexfile{annex2}%
+%\annexfile{annex3}%
+
+
+%Imprime no documento os anexos e apendices.
+\printappendixes
+\printannexes
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
