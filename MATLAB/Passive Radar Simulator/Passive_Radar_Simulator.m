@@ -111,22 +111,22 @@ grid on;
 
 %****************
 c=3e8;
-delay= 2*t;
-Surveillance_Signal=Reference_Signal.*(t-delay);
 
-range=c*delay/2
+Surveillance_Signal=circshift(Reference_Signal,5);
+delay = finddelay(Reference_Signal,Surveillance_Signal);
+
+range=c*delay/2;
 
 
-%Plot the ambiguity functions of Sref and Sr
 
 
 
   % Select a few samples to get the process quicker
-samples = Reference_Signal(1:1000);
+samples =Reference_Signal(1:10000);
 x = transpose(samples);
 
 
-samples1 = Surveillance_Signal(1:1000);
+samples1 = Surveillance_Signal(1:10000);
 x1 = transpose(samples1);
 
 
