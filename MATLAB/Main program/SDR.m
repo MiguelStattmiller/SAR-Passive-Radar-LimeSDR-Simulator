@@ -19,7 +19,7 @@ addpath('C:\Program Files\PothosSDR\bin') % add path with LimeSuite library
 % Initialize parameters
 TotalTime   = 1;       % Time of observation, s
 Fc          = 2.45e9;   % Carrier Frequency, Hz
-Fs          = 1e6;      % Frequency of sampling frequency, Hz
+Fs          = 10e6;      % Frequency of sampling frequency, Hz   2x> B
 Ts          = 2;      % Signal duration, s
 Fsig        = 2.45e9;    % Frequency of desired signal, Hz
 Asig        = 1;        % Amplitude of signal, V
@@ -121,11 +121,11 @@ grid on;
 hold off
 
 
-[freq,Spectrum]=time2freq(x1,tempo);
+[freq1,Spectrum1]=time2freq(x1,tempo);
 fig=figure;
 hold on
 set(fig,'color','white');
-plot(freq,20*log10(abs(Spectrum)),'b','linewidth',2);
+plot(freq1,20*log10(abs(Spectrum1)),'b','linewidth',2);
 xlabel('Frequency [Hz]');
 ylabel('Spectrum');
 set(gca,'fontsize',fontsize);
@@ -177,7 +177,7 @@ ylabel('Doppler f_d (Hz)');
 title('Ambiguity Function Sref');
 
 
-
+%%
 [maxValue2] = max(afmag2(:));
 subplot(3,2,2)   
 surf(delay2,doppler2,afmag2,'LineStyle','none');
@@ -192,7 +192,7 @@ ylabel('Doppler f_d (kHz)');
 title('Ambiguity Function Sr');
 
 
-
+%%
 % Plot the correlation of Sref and Sr
 
 [maxValue3] = max(afmag3(:));
@@ -208,5 +208,5 @@ colorbar;
 xlabel('Delay \tau (s)');
 ylabel('Doppler f_d (Hz)');
 title('Cross-correlation');
-%Idx = find((afmag3(:) == max(afmag3(:)))); %Descobrir índice do máximo
-%[af3maxRow,af3maxCol] = ind2sub(size(afmag3), Idx); %Descobrir índice do máximo
+Idx = find((afmag3(:) == max(afmag3(:)))) %Descobrir índice do máximo
+[af3maxRow,af3maxCol] = ind2sub(size(afmag3), Idx) %Descobrir índice do máximo
