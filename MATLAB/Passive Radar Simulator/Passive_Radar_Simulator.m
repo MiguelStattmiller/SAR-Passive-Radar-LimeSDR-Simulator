@@ -23,6 +23,7 @@ clc
 
 %***************** INPUTS ******************
 fc=2.45e9; %Carrier frequency
+c=3e8; % Speed of light 
 Rb=fc/100; %Bitrate
 %SNR=10; %SNR [dB]
 fontsize=12;
@@ -51,7 +52,8 @@ end
 for cc=1:length(sequence_str)
     sequence(cc)=str2num(sequence_str(cc));
 end
-
+%sequence=[];
+%sequence=[1,0,0,1,0,0,1,0,0,1,1,1];
 Nb=length(sequence); %Number of bits
 Ns=Nb/2; %Number of symbols
 
@@ -75,7 +77,7 @@ for ss=1:length(sequence)/2
     Q=PolarRZ(2*ss)*Ac.*sin(wc*t_bit); %Q-channel
     
     %Adding noise
-    QPSK_temp=I+Q;
+    QPSK_temp=I+1j*Q;
 %     QPSK_temp = awgn(QPSK_temp,SNR,S);
     
     %Modulated QPSK signal
@@ -97,60 +99,99 @@ grid on;
 
 %**************** Plot frequency spectrum of QPSK signal
 
- %[freq,Spectrum]=time2freq(Reference_Signal,t);
- %fig=figure;
- %hold on
- %set(fig,'color','white');
- %plot(freq,20*log10(abs(Spectrum)),'b','linewidth',2);
- %xlabel('Frequency [Hz]');
- %ylabel('QPSK Spectrum');
- %set(gca,'fontsize',fontsize);
- %grid on;
- %hold off
+ [freq,Spectrum]=time2freq(Reference_Signal,t);
+ fig=figure;
+ hold on
+ set(fig,'color','white');
+ plot(freq,20*log10(abs(Spectrum)),'b','linewidth',2);
+ xlabel('Frequency [Hz]');
+ ylabel('QPSK Spectrum');
+ set(gca,'fontsize',fontsize);
+ grid on;
+ hold off
 
 
-%****************
-c=3e8;
-
-Surveillance_Signal=circshift(Reference_Signal,5);
-delay = finddelay(Reference_Signal,Surveillance_Signal);
-
-range=c*delay/2;
-
-
+%**************** Calculate Surveillance_Signal 
+Surveillance_Signal=circshift(Reference_Signal,5); %delay Reference signal in time
+atraso = finddelay(Reference_Signal,Surveillance_Signal); % Number of samples for delay
 
 
 
   % Select a few samples to get the process quicker
-samples =Reference_Signal(1:10000);
+samples =Reference_Signal(1:1000);
 x = transpose(samples);
 
 
-samples1 = Surveillance_Signal(1:10000);
+samples1 = Surveillance_Signal(1:1000);
 x1 = transpose(samples1);
 
 
 
-%%
+
+%**************** Calculate ambiguity and cross-ambiguity functions 
 
 %Reference_Signal ambiguity function
-[afmag,delay,doppler] = ambgfun(x,fs,250000);
+[afmag,delay,doppler] = ambgfun(x,fs,1e9);
 afmag = afmag*1;
 afmag(afmag>1 )= 1;
 
  %Surveillance_Signal ambiguity function
-[afmag2,delay2,doppler2] = ambgfun(x1,fs,250000);
+[afmag2,delay2,doppler2] = ambgfun(x1,fs,1e9);
 afmag2 = afmag2*1;
 afmag2(afmag2>1 )= 1;
 
 %Correlation
-[afmag3,delay3,doppler3] = ambgfun(x,x1,fs,[250000 250000]);
+[afmag3,delay3,doppler3] = ambgfun(x,x1,fs,[1e9 1e9]);
 afmag3 = afmag3*1;
 afmag3(afmag3>1 )= 1;
 
 
+%**************** Plot ambiguity and cross-ambiguity functions
+[maxValue1] = max(afmag(:));
+subplot(3,2,1)
+surf(delay,doppler,afmag,'LineStyle','none');
+text(-0.5e-5,-0.5e-5,maxValue1,['\leftarrow Máximo = ' num2str(maxValue1)],'color','b','FontSize',10);
+shading interp;
+axis([-10000 10000 -10 10]);
+grid on; 
+view([140,35]); 
+colorbar;
+xlabel('Delay \tau (s)');
+ylabel('Doppler f_d (Hz)');
+title('Ambiguity Function Sref');
 
 
+
+
+[maxValue2] = max(afmag2(:));
+subplot(3,2,2)   
+surf(delay2,doppler2,afmag2,'LineStyle','none');
+text(-0.5e-5,-0.5e-5,maxValue2,['\leftarrow Máximo = ' num2str(maxValue2)],'color','b','FontSize',10);
+shading interp;
+axis([-0.5e-5 0.5e-5 -10000 10000]); 
+grid on; 
+view([140,35]); 
+colorbar;
+xlabel('Delay \tau (us)');
+ylabel('Doppler f_d (kHz)');
+title('Ambiguity Function Sr');
+
+
+% Plot the cross-ambiguity function of Sref and Sr
+
+[maxValue3] = max(afmag3(:));
+subplot(3,2,3)
+surf(delay3,doppler3,afmag3,'LineStyle','none'); 
+text(-0.5e-5,-0.5e-5,maxValue3,['\leftarrow Máximo = ' num2str(maxValue3)],'Color','b','FontSize',10);
+shading interp;
+axis([-0.5e-5 0.5e-5 -10000 10000]); 
+zlim([0 1]);
+grid on; 
+view([140,0]); 
+colorbar;
+xlabel('Delay \tau (s)');
+ylabel('Doppler f_d (Hz)');
+title('Cross-correlation');
 
 
 
