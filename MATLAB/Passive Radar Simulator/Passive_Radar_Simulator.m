@@ -77,7 +77,7 @@ for ss=1:length(sequence)/2
     Q=PolarRZ(2*ss)*Ac.*sin(wc*t_bit); %Q-channel
     
     %Adding noise
-    QPSK_temp=I+1j*Q;
+    QPSK_temp=I+Q;
 %     QPSK_temp = awgn(QPSK_temp,SNR,S);
     
     %Modulated QPSK signal
@@ -112,18 +112,26 @@ grid on;
 
 
 %**************** Calculate Surveillance_Signal 
-Surveillance_Signal=circshift(Reference_Signal,5); %delay Reference signal in time
+Surveillance_Signal=circshift(Reference_Signal,2); %delay Reference signal in time
 atraso = finddelay(Reference_Signal,Surveillance_Signal); % Number of samples for delay
 
 
 
-  % Select a few samples to get the process quicker
-samples =Reference_Signal(1:1000);
-x = transpose(samples);
+
+%**************** Read data from channels  
+
+[n,m]=size(Reference_Signal);
+[n2,m2]=size(Surveillance_Signal);
 
 
-samples1 = Surveillance_Signal(1:1000);
-x1 = transpose(samples1);
+for column=1:1000:m
+     samples =(Reference_Signal(:,column:column+999))
+        x = transpose(samples);
+        [afmag,delay,doppler] = ambgfun(x,fs,1e9);
+        afmag = afmag*1;
+        afmag(afmag>1 )= 1;
+    end
+
 
 
 
@@ -152,7 +160,7 @@ subplot(3,2,1)
 surf(delay,doppler,afmag,'LineStyle','none');
 text(-0.5e-5,-0.5e-5,maxValue1,['\leftarrow Máximo = ' num2str(maxValue1)],'color','b','FontSize',10);
 shading interp;
-axis([-10000 10000 -10 10]);
+axis([-0.5e-5 0.5e-5 -10000 10000]); 
 grid on; 
 view([140,35]); 
 colorbar;
@@ -187,7 +195,7 @@ shading interp;
 axis([-0.5e-5 0.5e-5 -10000 10000]); 
 zlim([0 1]);
 grid on; 
-view([140,0]); 
+view([140,35]); 
 colorbar;
 xlabel('Delay \tau (s)');
 ylabel('Doppler f_d (Hz)');
