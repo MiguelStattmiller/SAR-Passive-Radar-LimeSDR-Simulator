@@ -11,7 +11,8 @@
 
 
 % The current program is a passive radar simulator, using QPSK.
-% For a passive radar: Reference signal=TxQPSK_signal
+% QPSK signal is based on a message written in .txt file
+% For the passive radar: Reference signal=TxQPSK_signal
 %                      Surveillance signal=TxQPSK_signal delayed in Time 
 
 
@@ -22,7 +23,7 @@ close all
 clc
 
 %***************** INPUTS ******************
-fc=2.45e9; %Carrier frequency
+fc=30e6; %Carrier frequency
 c=3e8; % Speed of light 
 Rb=fc/100; %Bitrate
 %SNR=10; %SNR [dB]
@@ -52,6 +53,8 @@ end
 for cc=1:length(sequence_str)
     sequence(cc)=str2num(sequence_str(cc));
 end
+
+% Reference_signal uses this sequence of bits
 %sequence=[];
 %sequence=[1,0,0,1,0,0,1,0,0,1,1,1];
 Nb=length(sequence); %Number of bits
@@ -112,7 +115,7 @@ grid on;
 
 
 %**************** Calculate Surveillance_Signal 
-Surveillance_Signal=circshift(Reference_Signal,2); %delay Reference signal in time
+Surveillance_Signal=circshift(Reference_Signal,30); %delay Reference signal in time
 atraso = finddelay(Reference_Signal,Surveillance_Signal); % Number of samples for delay
 
 
@@ -120,18 +123,17 @@ atraso = finddelay(Reference_Signal,Surveillance_Signal); % Number of samples fo
 
 %**************** Read data from channels  
 
-[n,m]=size(Reference_Signal);
-[n2,m2]=size(Surveillance_Signal);
+%[n,m]=size(Reference_Signal);
+%[n2,m2]=size(Surveillance_Signal);
 
 
-for column=1:1000:m
-     samples =(Reference_Signal(:,column:column+999))
-        x = transpose(samples);
-        [afmag,delay,doppler] = ambgfun(x,fs,1e9);
-        afmag = afmag*1;
-        afmag(afmag>1 )= 1;
-    end
-
+%for column=1:3000:m
+     %samples =(Reference_Signal(:,column:column+999));
+       % x = transpose(samples);
+       % [afmag,delay,doppler] = ambgfun(x,fs,1e6);
+       % afmag = afmag*1;
+       % afmag(afmag>1 )= 1;
+   % end
 
 
 
@@ -139,71 +141,94 @@ for column=1:1000:m
 %**************** Calculate ambiguity and cross-ambiguity functions 
 
 %Reference_Signal ambiguity function
-[afmag,delay,doppler] = ambgfun(x,fs,1e9);
+[afmag,delay] = ambgfun(Reference_Signal,fs,1e6,'Cut','Doppler');
 afmag = afmag*1;
 afmag(afmag>1 )= 1;
 
  %Surveillance_Signal ambiguity function
-[afmag2,delay2,doppler2] = ambgfun(x1,fs,1e9);
+[afmag2,delay2] = ambgfun(Surveillance_Signal,fs,1e6,'Cut','Doppler');
 afmag2 = afmag2*1;
 afmag2(afmag2>1 )= 1;
 
 %Correlation
-[afmag3,delay3,doppler3] = ambgfun(x,x1,fs,[1e9 1e9]);
+[afmag3,delay3] = ambgfun(Reference_Signal,Surveillance_Signal,fs,[1e6 1e6],'Cut','Doppler');
 afmag3 = afmag3*1;
 afmag3(afmag3>1 )= 1;
 
 
 %**************** Plot ambiguity and cross-ambiguity functions
+
+
+%Ambiguity Function Sref
+[pks1,locs1] = findpeaks(afmag(:));
+[r1,c1] = ind2sub(size(afmag), locs1);
 [maxValue1] = max(afmag(:));
 subplot(3,2,1)
-surf(delay,doppler,afmag,'LineStyle','none');
-text(-0.5e-5,-0.5e-5,maxValue1,['\leftarrow Máximo = ' num2str(maxValue1)],'color','b','FontSize',10);
+plot(delay,afmag,'LineStyle','-'); 
+hold on
+plot3(delay(r1,c1),afmag(r1,c1), pks1, '^r')
+hold off
+text(-0.5e-9,0.6,maxValue1,['\leftarrow Máximo = ' num2str(maxValue1)],'Color','b','FontSize',10);
 shading interp;
-axis([-0.5e-5 0.5e-5 -10000 10000]); 
+xlim([-8e-5 8e-5]);
 grid on; 
-view([140,35]); 
 colorbar;
 xlabel('Delay \tau (s)');
-ylabel('Doppler f_d (Hz)');
+ylabel('Ambiguity Function Magnitude');
 title('Ambiguity Function Sref');
 
 
-
-
+%Ambiguity Function Sr
+[pks2,locs2] = findpeaks(afmag2(:));
+[r2,c2] = ind2sub(size(afmag2), locs2);
 [maxValue2] = max(afmag2(:));
 subplot(3,2,2)   
-surf(delay2,doppler2,afmag2,'LineStyle','none');
-text(-0.5e-5,-0.5e-5,maxValue2,['\leftarrow Máximo = ' num2str(maxValue2)],'color','b','FontSize',10);
+plot(delay2,afmag2,'LineStyle','-'); 
+hold on
+plot3(delay2(r2,c2), afmag2(r2,c2), pks2, '^r')
+hold off
+text(-0.5e-9,0.6,maxValue2,['\leftarrow Máximo = ' num2str(maxValue2)],'Color','b','FontSize',10);
 shading interp;
-axis([-0.5e-5 0.5e-5 -10000 10000]); 
+xlim([-8e-5 8e-5]);
 grid on; 
-view([140,35]); 
 colorbar;
 xlabel('Delay \tau (us)');
-ylabel('Doppler f_d (kHz)');
+ylabel('Ambiguity Function Magnitude');
 title('Ambiguity Function Sr');
 
 
 % Plot the cross-ambiguity function of Sref and Sr
 
+[pks3,locs3] = findpeaks(afmag3(:));
+[r3,c3] = ind2sub(size(afmag3), locs3);
 [maxValue3] = max(afmag3(:));
 subplot(3,2,3)
-surf(delay3,doppler3,afmag3,'LineStyle','none'); 
-text(-0.5e-5,-0.5e-5,maxValue3,['\leftarrow Máximo = ' num2str(maxValue3)],'Color','b','FontSize',10);
+plot(delay3,afmag3,'LineStyle','-'); 
+hold on
+plot3(delay3(r3,c3), afmag3(r3,c3), pks3, '^r')
+hold off
+text(-0.5e-9,0.6,maxValue3,['\leftarrow Máximo = ' num2str(maxValue3)],'Color','b','FontSize',10);
 shading interp;
-axis([-0.5e-5 0.5e-5 -10000 10000]); 
-zlim([0 1]);
+xlim([-8e-5 8e-5]);
 grid on; 
-view([140,35]); 
 colorbar;
 xlabel('Delay \tau (s)');
-ylabel('Doppler f_d (Hz)');
+ylabel('Ambiguity Function Magnitude');
 title('Cross-correlation');
 
 
+% Plot of Sref, Sr and cross-ambiguity
 
-
-
-
-
+subplot(3,2,4)
+plot(delay,afmag,'LineStyle','-','Color','g'); % Green Sref
+hold on
+plot(delay2, afmag2,'LineStyle',':','Color','r'); % Red Sr
+plot(delay3, afmag3,'LineStyle','--','Color','b'); % blue corss-ambiguity 
+hold off
+xlim([-8e-5 8e-5]);
+grid on; 
+colorbar;
+xlabel('Delay \tau (s)');
+ylabel('Ambiguity Function Magnitude');
+title('Sref, Sr and cross-ambiguity');
+legend('Sref','Sr','Cross-ambiguity');
