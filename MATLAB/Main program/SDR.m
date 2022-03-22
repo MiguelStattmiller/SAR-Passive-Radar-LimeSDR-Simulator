@@ -19,11 +19,11 @@ addpath('C:\Program Files\PothosSDR\bin') % add path with LimeSuite library
 % Initialize parameters
 TotalTime   = 1;       % Time of observation, s
 Fc          = 2.45e9;   % Carrier Frequency, Hz
-Fs          = 10e6;      % Frequency of sampling frequency, Hz   2x> B
-Ts          = 2;      % Signal duration, s
+Fs          = 17e6;      % Frequency of sampling frequency, Hz   2x> B
+Ts          = 1;      % Signal duration, s
 Fsig        = 2.45e9;    % Frequency of desired signal, Hz
 Asig        = 1;        % Amplitude of signal, V
-BW          = 5e6;      % Bandwidth of the signal, Hz (5-40MHz and 50-130Mhz)
+BW          = 8e6;      % Bandwidth of the signal, Hz (5-40MHz and 50-130Mhz)
 Gain        = 20;       % Receiver Gain, dB
 tempo=0:1/Fs:1000/Fs-1/Fs;
 fontsize=12;
