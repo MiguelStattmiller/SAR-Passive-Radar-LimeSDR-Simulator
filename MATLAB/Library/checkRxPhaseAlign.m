@@ -24,7 +24,7 @@ plotbool = true; % plot figures
 
 % Initialize parameters
 TotalTime           = 60e0;     % Time of observation for one experiment, s
-Fc                  = 900e6;    % Carrier Frequency, Hz5
+Fc                  = 100;    % Carrier Frequency, Hz5
 Fs                  = 1e6;      % Frequency of sampling frequency, Hz
 Ts                  = 0.2e0;    % Signal duration, s
 Fdev                = 0.5e6;      % Frequency of deviation, Hz
