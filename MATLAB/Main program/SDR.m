@@ -5,9 +5,6 @@
 %    Andela Zaric  02/09/2012
 %    date of latest revision: 07/11/2016 (by Joao Felicio)
 
-% Author of the ambiguity function program, based on the simple RX by Damir Rakhimov:
-% Afonso Sénica, Escola Naval, June 2020
-
 % Author of the current program:
 % Miguel Albuquerque, Escola Naval, 2022
 
@@ -98,15 +95,24 @@ clear dev;
 fprintf('Stop of LimeSDR\n');
 
 % Select a few samples to get the process quicker
-t = bufferRx(1:1000);
+t = bufferRx(1:6000);
 x = transpose(t);
 
 
-t1 = bufferRx1(1:1000);
+t1 = bufferRx1(1:6000);
 x1 = transpose(t1);
 
+%**************** Plot spectrograms of the recieved signals
 
-%% Receiving channels Spectrum
+figure(1)
+subplot(3,2,1);
+spectrogram(bufferRx,2^12,2^10,2^12,'centered','yaxis')
+
+subplot(3,2,2);
+spectrogram(bufferRx1,2^12,2^10,2^12,'centered','yaxis')
+
+
+%**************** Samples of the receiving channels spectrum
 
 [freq,Spectrum]=time2freq(x,tempo);
 fig=figure;
@@ -134,79 +140,79 @@ hold off
 
 
 
+%**************** Calculate ambiguity and cross-ambiguity functions
 
-%% Select plot gain *1
 %Sref ambiguity function
-[afmag,delay,doppler] = ambgfun(x,Fs,250000);
-afmag = afmag*1;
+[afmag,delay] = ambgfun(x,Fs,250000,'cut','Doppler');
+afmag = afmag*1; % Select plot gain *1
 afmag(afmag>1 )= 1;
 
  %Sr ambiguity function
-[afmag2,delay2,doppler2] = ambgfun(x1,Fs,250000);
-afmag2 = afmag2*1;
+[afmag2,delay2] = ambgfun(x1,Fs,250000,'cut','Doppler');
+afmag2 = afmag2*1; % Select plot gain *1
 afmag2(afmag2>1 )= 1;
 
-%Correlation
-[afmag3,delay3,doppler3] = ambgfun(x,x1,Fs,[250000 250000]);
-afmag3 = afmag3*1;
+% Sref and Sr Cross-ambiguity function
+[afmag3,delay3] = ambgfun(x,x1,Fs,[250000 250000],'cut','Doppler');
+afmag3 = afmag3*1; % Select plot gain *1
 afmag3(afmag3>1 )= 1;
 
-%%
-% Plot spectrograms of the recieved signals
-figure(1)
-subplot(3,2,1);
-spectrogram(bufferRx,2^12,2^10,2^12,'centered','yaxis')
-
-subplot(3,2,2);
-spectrogram(bufferRx1,2^12,2^10,2^12,'centered','yaxis')
 
 
-%% Plot the ambiguity functions of Sref and Sr
+%% Plot the ambiguity and cross-ambiguity functions of Sref and Sr
 
+%Ambiguity Function Sref
 [maxValue1] = max(afmag(:));
 subplot(3,2,1)
-surf(delay,doppler,afmag,'LineStyle','none');
-text(-0.5e-5,-0.5e-5,maxValue1,['\leftarrow Máximo = ' num2str(maxValue1)],'color','b','FontSize',10);
+plot(delay,afmag,'LineStyle','-.'); 
+text(-0.5e-9,0.6,maxValue1,['\leftarrow Máximo = ' num2str(maxValue1)],'Color','b','FontSize',10);
 shading interp;
-axis([-0.5e-5 0.5e-5 -10000 10000]); 
+xlim([-0.5e-5 0.5e-5]);
 grid on; 
-view([140,35]); 
 colorbar;
 xlabel('Delay \tau (s)');
-ylabel('Doppler f_d (Hz)');
+ylabel('Ambiguity Function Magnitude');
 title('Ambiguity Function Sref');
 
 
-%%
+
+%Ambiguity Function Sr
 [maxValue2] = max(afmag2(:));
 subplot(3,2,2)   
-surf(delay2,doppler2,afmag2,'LineStyle','none');
-text(-0.5e-5,-0.5e-5,maxValue2,['\leftarrow Máximo = ' num2str(maxValue2)],'color','b','FontSize',10);
+plot(delay2,afmag2,'LineStyle','-'); 
+text(-0.5e-9,0.6,maxValue2,['\leftarrow Máximo = ' num2str(maxValue2)],'Color','b','FontSize',10);
 shading interp;
-axis([-0.5e-5 0.5e-5 -10000 10000]); 
+xlim([-0.5e-5 0.5e-5]);
 grid on; 
-view([140,35]); 
 colorbar;
 xlabel('Delay \tau (us)');
-ylabel('Doppler f_d (kHz)');
+ylabel('Ambiguity Function Magnitude');
 title('Ambiguity Function Sr');
 
-
-%%
-% Plot the correlation of Sref and Sr
-
-[maxValue3] = max(afmag3(:));
-subplot(3,2,3)
-surf(delay3,doppler3,afmag3,'LineStyle','none'); 
-text(-0.5e-5,-0.5e-5,maxValue3,['\leftarrow Máximo = ' num2str(maxValue3)],'Color','b','FontSize',10);
-shading interp;
-axis([-0.5e-5 0.5e-5 -10000 10000]); 
-zlim([0 1]);
+% Plot of Sref, Sr
+subplot(3,2,4)
+plot(delay,afmag,'LineStyle','-.','Color','g'); % Green Sref
+hold on
+plot(delay2, afmag2,'LineStyle','-','Color','r'); % Red Sr
+hold off
+xlim ([-0.5e-5 0.5e-5]);
 grid on; 
-view([140,35]); 
 colorbar;
 xlabel('Delay \tau (s)');
-ylabel('Doppler f_d (Hz)');
+ylabel('Ambiguity Function Magnitude');
+title('Sref, Sr and cross-ambiguity');
+legend('Sref','Sr');
+
+
+% Plot the cross-ambiguity function of Sref and Sr
+[maxValue3] = max(afmag3(:));
+subplot(3,2,3)
+plot(delay3,afmag3,'LineStyle','-'); 
+text(-0.4e-5,0.04,maxValue3,['\leftarrow Máximo = ' num2str(maxValue3)],'Color','b','FontSize',10);
+shading interp;
+xlim([-0.5e-5 0.5e-5]);
+grid on; 
+colorbar;
+xlabel('Delay \tau (s)');
+ylabel('Ambiguity Function Magnitude');
 title('Cross-correlation');
-Idx = find((afmag3(:) == max(afmag3(:)))) %Descobrir índice do máximo
-[af3maxRow,af3maxCol] = ind2sub(size(afmag3), Idx) %Descobrir índice do máximo
