@@ -10,10 +10,10 @@
 % Miguel Albuquerque, Escola Naval, 2022
 
 
-% The current program is a passive radar simulator, using QPSK.
-% QPSK signal is based on a message written in .txt file
-% For the passive radar: Reference signal=TxQPSK_signal
-%                      Surveillance signal=TxQPSK_signal delayed in Time 
+% The current program is a passive radar simulator, using QPSK transmitted signal.
+% QPSK signal is created based on a message written in .txt file
+% For the passive radar: Reference signal= QPSK signal
+%                      Surveillance signal=QPSK_signal delayed in Time 
 
 
 
@@ -55,8 +55,8 @@ for cc=1:length(sequence_str)
 end
 
 % Reference_signal uses this sequence of bits
-%sequence=[];
-%sequence=[1,0,0,1,0,0,1,0,0,1,1,1];
+sequence=[];
+sequence=[1,0,0,1,0,0,1,0,0,1,1,1];
 Nb=length(sequence); %Number of bits
 Ns=Nb/2; %Number of symbols
 
@@ -115,7 +115,7 @@ grid on;
 
 
 %**************** Calculate Surveillance_Signal 
-Surveillance_Signal=circshift(Reference_Signal,30); %delay Reference signal in time
+Surveillance_Signal=circshift(Reference_Signal,1000); %delay Reference signal in time
 atraso = finddelay(Reference_Signal,Surveillance_Signal); % Number of samples for delay
 
 
@@ -164,13 +164,13 @@ afmag3(afmag3>1 )= 1;
 [r1,c1] = ind2sub(size(afmag), locs1);
 [maxValue1] = max(afmag(:));
 subplot(3,2,1)
-plot(delay,afmag,'LineStyle','-'); 
+plot(delay,afmag,'LineStyle','-.'); 
 hold on
 plot3(delay(r1,c1),afmag(r1,c1), pks1, '^r')
 hold off
 text(-0.5e-9,0.6,maxValue1,['\leftarrow Máximo = ' num2str(maxValue1)],'Color','b','FontSize',10);
 shading interp;
-xlim([-8e-5 8e-5]);
+xlim ([-8e-5 8e-5]);
 grid on; 
 colorbar;
 xlabel('Delay \tau (s)');
@@ -220,12 +220,12 @@ title('Cross-correlation');
 % Plot of Sref, Sr and cross-ambiguity
 
 subplot(3,2,4)
-plot(delay,afmag,'LineStyle','-','Color','g'); % Green Sref
+plot(delay,afmag,'LineStyle','-.','Color','g'); % Green Sref
 hold on
-plot(delay2, afmag2,'LineStyle',':','Color','r'); % Red Sr
+plot(delay2, afmag2,'LineStyle','-','Color','r'); % Red Sr
 plot(delay3, afmag3,'LineStyle','--','Color','b'); % blue corss-ambiguity 
 hold off
-xlim([-8e-5 8e-5]);
+xlim ([-2e-5 2e-5]);
 grid on; 
 colorbar;
 xlabel('Delay \tau (s)');
