@@ -115,8 +115,10 @@ grid on;
 
 
 %**************** Calculate Surveillance_Signal 
-Surveillance_Signal=circshift(Reference_Signal,1000); %delay Reference signal in time
-atraso = finddelay(Reference_Signal,Surveillance_Signal); % Number of samples for delay
+
+Signal_zeros=padarray(Reference_Signal,[0 1000],0,'both'); %Adds zeros to reference_signal 
+Surveillance_Signal=circshift(Signal_zeros,500); %delay Reference signal in time
+atraso = finddelay(Reference_Signal,Surveillance_Signal); % Number of samples of delay
 
 
 
