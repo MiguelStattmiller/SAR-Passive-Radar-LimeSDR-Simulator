@@ -38,7 +38,9 @@ In order to start programming SDR at a high level end, it was used Gnu radio com
   
   Main program- Main program of passive radar using LimeSDR.
   
-  Passive Radar Simulator- Simulator for any type of passive radar.
+  Passive Radar Simulator- Simulators for any type of passive radar.
+  
+   *QPSK_Time_Delay*- Passive Radar simulator for static targets with zero-doppler values.
 
 
 **REFERENCES:**
