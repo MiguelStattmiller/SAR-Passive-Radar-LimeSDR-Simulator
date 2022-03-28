@@ -10,14 +10,14 @@
 % Miguel Albuquerque, Escola Naval, 2022
 
 
-% The current program is a passive radar simulator, using QPSK transmitted signal.
+% The current program is a passive radar simulator for static targets with zero-doppler values, using QPSK transmitted signal.
 % QPSK signal is created based on a message written in .txt file
 % For the passive radar: Reference signal= QPSK signal
 %                      Surveillance signal=QPSK_signal delayed in Time 
 
 
 
-% QPSK modulator
+%**************** QPSK Modulator 
 clear
 close all
 clc
@@ -116,8 +116,8 @@ grid on;
 
 %**************** Calculate Surveillance_Signal 
 
-Signal_zeros=padarray(Reference_Signal,[0 1000],0,'both'); %Adds zeros to reference_signal 
-Surveillance_Signal=circshift(Signal_zeros,500); %delay Reference signal in time
+Signal_zeros=padarray(Reference_Signal,[0 1000],0,'both'); %Adds zeros to reference_signal  
+Surveillance_Signal=circshift(Signal_zeros,500); %delay Reference signal in samples
 atraso = finddelay(Reference_Signal,Surveillance_Signal); % Number of samples of delay
 
 
@@ -152,7 +152,7 @@ afmag(afmag>1 )= 1;
 afmag2 = afmag2*1;
 afmag2(afmag2>1 )= 1;
 
-%Correlation
+%Cross-ambiguity
 [afmag3,delay3] = ambgfun(Reference_Signal,Surveillance_Signal,fs,[1e6 1e6],'Cut','Doppler');
 afmag3 = afmag3*1;
 afmag3(afmag3>1 )= 1;
@@ -161,7 +161,7 @@ afmag3(afmag3>1 )= 1;
 %**************** Plot ambiguity and cross-ambiguity functions
 
 
-%Ambiguity Function Sref
+%Plot Ambiguity Function of Sref
 [pks1,locs1] = findpeaks(afmag(:));
 [r1,c1] = ind2sub(size(afmag), locs1);
 [maxValue1] = max(afmag(:));
@@ -180,7 +180,7 @@ ylabel('Ambiguity Function Magnitude');
 title('Ambiguity Function Sref');
 
 
-%Ambiguity Function Sr
+%Plot Ambiguity Function of Sr
 [pks2,locs2] = findpeaks(afmag2(:));
 [r2,c2] = ind2sub(size(afmag2), locs2);
 [maxValue2] = max(afmag2(:));
@@ -199,7 +199,7 @@ ylabel('Ambiguity Function Magnitude');
 title('Ambiguity Function Sr');
 
 
-% Plot the cross-ambiguity function of Sref and Sr
+% Plot cross-ambiguity function of Sref and Sr
 
 [pks3,locs3] = findpeaks(afmag3(:));
 [r3,c3] = ind2sub(size(afmag3), locs3);
@@ -216,10 +216,10 @@ grid on;
 colorbar;
 xlabel('Delay \tau (s)');
 ylabel('Ambiguity Function Magnitude');
-title('Cross-correlation');
+title('Cross-ambiguity');
 
 
-% Plot of Sref, Sr and cross-ambiguity
+% Plot ambiguity function of Sref, Sr and cross-ambiguity
 
 subplot(3,2,4)
 plot(delay,afmag,'LineStyle','-.','Color','g'); % Green Sref
