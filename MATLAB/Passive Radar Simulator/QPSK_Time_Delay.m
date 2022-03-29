@@ -117,8 +117,14 @@ grid on;
 %**************** Calculate Surveillance_Signal 
 
 Signal_zeros=padarray(Reference_Signal,[0 1000],0,'both'); %Adds zeros to reference_signal  
-Surveillance_Signal=circshift(Signal_zeros,500); %delay Reference signal in samples
-atraso = finddelay(Reference_Signal,Surveillance_Signal); % Number of samples of delay
+Signal_delayed=circshift(Signal_zeros,300); %delay Reference signal in samples
+atraso = finddelay(Reference_Signal,Signal_delayed); % Number of samples of delay
+
+
+%**************** Add White noise to Surveillance_Signal
+
+SNR=2;
+Surveillance_Signal=awgn(Signal_delayed,SNR,'measured');
 
 
 
@@ -162,15 +168,16 @@ afmag3(afmag3>1 )= 1;
 
 
 %Plot Ambiguity Function of Sref
-[pks1,locs1] = findpeaks(afmag(:));
-[r1,c1] = ind2sub(size(afmag), locs1);
-[maxValue1] = max(afmag(:));
+[pks1, index] = max(afmag);
+xMax = delay(index);
+yMax = pks1;
 subplot(3,2,1)
 plot(delay,afmag,'LineStyle','-.'); 
 hold on
-plot3(delay(r1,c1),afmag(r1,c1), pks1, '^r')
+plot3(delay(pks1,index),afmag(pks1,index), pks1, '^r')
+textString = sprintf('(%f, %f)', xMax, yMax);
+text(xMax, yMax,textString,"Color",'b','FontSize',10);
 hold off
-text(-0.5e-9,0.6,maxValue1,['\leftarrow Máximo = ' num2str(maxValue1)],'Color','b','FontSize',10);
 shading interp;
 xlim ([-8e-5 8e-5]);
 grid on; 
@@ -181,15 +188,16 @@ title('Ambiguity Function Sref');
 
 
 %Plot Ambiguity Function of Sr
-[pks2,locs2] = findpeaks(afmag2(:));
-[r2,c2] = ind2sub(size(afmag2), locs2);
-[maxValue2] = max(afmag2(:));
+[pks2,index2] = max(afmag2);
+xMax2 = delay2(index2);
+yMax2 = pks2;
 subplot(3,2,2)   
 plot(delay2,afmag2,'LineStyle','-'); 
 hold on
-plot3(delay2(r2,c2), afmag2(r2,c2), pks2, '^r')
+plot3(delay2(pks2,index2), afmag2(pks2,index2), pks2, '^r')
+textString2 = sprintf('(%f, %f)', xMax2, yMax2);
+text(xMax2, yMax2,textString2,"Color",'b','FontSize',10);
 hold off
-text(-0.5e-9,0.6,maxValue2,['\leftarrow Máximo = ' num2str(maxValue2)],'Color','b','FontSize',10);
 shading interp;
 xlim([-8e-5 8e-5]);
 grid on; 
@@ -201,15 +209,16 @@ title('Ambiguity Function Sr');
 
 % Plot cross-ambiguity function of Sref and Sr
 
-[pks3,locs3] = findpeaks(afmag3(:));
-[r3,c3] = ind2sub(size(afmag3), locs3);
-[maxValue3] = max(afmag3(:));
+[pks3,index3] = max(afmag3);
+xMax3 = delay3(index3);
+yMax3 = pks3;
 subplot(3,2,3)
 plot(delay3,afmag3,'LineStyle','-'); 
 hold on
-plot3(delay3(r3,c3), afmag3(r3,c3), pks3, '^r')
+%plot3(delay3(pks3,index3), afmag3(pks3,index3), pks3, '^r')
+textString3 = sprintf('(%f, %f)', xMax3, yMax3);
+text(xMax3, yMax3,textString3,"Color",'b','FontSize',10);
 hold off
-text(-0.5e-9,0.6,maxValue3,['\leftarrow Máximo = ' num2str(maxValue3)],'Color','b','FontSize',10);
 shading interp;
 xlim([-8e-5 8e-5]);
 grid on; 
@@ -222,10 +231,10 @@ title('Cross-ambiguity');
 % Plot ambiguity function of Sref, Sr and cross-ambiguity
 
 subplot(3,2,4)
-plot(delay,afmag,'LineStyle','-.','Color','g'); % Green Sref
+plot(delay,afmag,'LineStyle','-.','Color','b'); % Green Sref
 hold on
 plot(delay2, afmag2,'LineStyle','-','Color','r'); % Red Sr
-plot(delay3, afmag3,'LineStyle','--','Color','b'); % blue corss-ambiguity 
+plot(delay3, afmag3,'LineStyle','--','Color','g'); % blue cross-ambiguity 
 hold off
 xlim ([-4e-5 4e-5]);
 grid on; 
@@ -233,4 +242,9 @@ colorbar;
 xlabel('Delay \tau (s)');
 ylabel('Ambiguity Function Magnitude');
 title('Sref, Sr and cross-ambiguity');
-legend('Sref','Sr','Cross-ambiguity');
+legend('Sref','Sr','cross-ambiguity');
+
+
+
+
+
