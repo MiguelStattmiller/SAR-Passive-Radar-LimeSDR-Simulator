@@ -13,7 +13,7 @@
 % The current program is a passive radar simulator for static targets with zero-doppler values, using QPSK transmitted signal.
 % QPSK signal is created based on a message written in .txt file
 % For the passive radar: Reference signal= QPSK signal
-%                      Surveillance signal=QPSK_signal delayed in Time 
+%                        Surveillance signal=QPSK_signal delayed in Time 
 
 
 
@@ -26,7 +26,6 @@ clc
 fc=30e6; %Carrier frequency
 c=3e8; % Speed of light 
 Rb=fc/100; %Bitrate
-%SNR=10; %SNR [dB]
 fontsize=12;
 SentenceFilename = 'Mensagem_short.txt';
 MeasuredFilename = 'ImplantableAntenna2Reader.s2p';
@@ -117,14 +116,14 @@ grid on;
 %**************** Calculate Surveillance_Signal 
 
 Signal_zeros=padarray(Reference_Signal,[0 1000],0,'both'); %Adds zeros to reference_signal  
-Signal_delayed=circshift(Signal_zeros,300); %delay Reference signal in samples
+Signal_delayed=circshift(Signal_zeros,0); %delay Reference signal in samples
 atraso = finddelay(Reference_Signal,Signal_delayed); % Number of samples of delay
 
 
 %**************** Add White noise to Surveillance_Signal
 
-SNR=2;
-Surveillance_Signal=awgn(Signal_delayed,SNR,'measured');
+SNR=20; %dB
+Surveillance_Signal=awgn(Signal_delayed,SNR,'measured'); % Introduce white gaussian Noise 
 
 
 
@@ -150,17 +149,17 @@ Surveillance_Signal=awgn(Signal_delayed,SNR,'measured');
 
 %Reference_Signal ambiguity function
 [afmag,delay] = ambgfun(Reference_Signal,fs,1e6,'Cut','Doppler');
-afmag = afmag*1;
+afmag = afmag*1; % Select plot gain *1
 afmag(afmag>1 )= 1;
 
  %Surveillance_Signal ambiguity function
 [afmag2,delay2] = ambgfun(Surveillance_Signal,fs,1e6,'Cut','Doppler');
-afmag2 = afmag2*1;
+afmag2 = afmag2*1; % Select plot gain *1
 afmag2(afmag2>1 )= 1;
 
 %Cross-ambiguity
 [afmag3,delay3] = ambgfun(Reference_Signal,Surveillance_Signal,fs,[1e6 1e6],'Cut','Doppler');
-afmag3 = afmag3*1;
+afmag3 = afmag3*1; % Select plot gain *1
 afmag3(afmag3>1 )= 1;
 
 
