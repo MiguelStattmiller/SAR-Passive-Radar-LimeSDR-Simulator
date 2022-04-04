@@ -16,11 +16,11 @@ addpath('C:\Program Files\PothosSDR\bin') % add path with LimeSuite library
 % Initialize parameters
 TotalTime   = 1;       % Time of observation, s
 Fc          = 2.45e9;   % Carrier Frequency, Hz
-Fs          = 17e6;      % Frequency of sampling frequency, Hz   2x> B
+Fs          = 10e6;      % Frequency of sampling frequency, Hz   2x> B
 Ts          = 1;      % Signal duration, s
 Fsig        = 2.45e9;    % Frequency of desired signal, Hz
 Asig        = 1;        % Amplitude of signal, V
-BW          = 8e6;      % Bandwidth of the signal, Hz (5-40MHz and 50-130Mhz)
+BW          = 5e6;      % Bandwidth of the signal, Hz (5-40MHz and 50-130Mhz)
 Gain        = 20;       % Receiver Gain, dB
 tempo=0:1/Fs:1000/Fs-1/Fs;
 fontsize=12;
@@ -101,7 +101,7 @@ x = transpose(t);
 
 t1 = bufferRx1(1:6000);
 x1 = transpose(t1);
-
+%%
 %**************** Plot spectrograms of the recieved signals
 
 figure(1)
@@ -214,7 +214,7 @@ textString3 = sprintf('(%f, %f)', xMax3, yMax3);
 text(xMax3, yMax3,textString3,"Color",'b','FontSize',10);
 hold off
 shading interp;
-xlim([-1.3e-5 1.3e-5]);
+xlim([-0.5e-5 16e-5]);
 grid on; 
 colorbar;
 xlabel('Delay \tau (s)');
@@ -226,8 +226,9 @@ subplot(3,2,4)
 plot(delay,afmag,'LineStyle','-.','Color','g'); % Green Sref
 hold on
 plot(delay2, afmag2,'LineStyle','-','Color','r'); % Red Sr
+plot(delay3,afmag3,'LineStyle','-','Color','b'); 
 hold off
-xlim ([-0.5e-5 0.5e-5]);
+xlim ([15.5e-5 16.5e-5]);
 grid on; 
 colorbar;
 xlabel('Delay \tau (s)');
