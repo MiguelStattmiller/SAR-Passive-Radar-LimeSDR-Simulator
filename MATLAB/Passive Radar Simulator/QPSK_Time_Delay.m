@@ -122,7 +122,7 @@ atraso = finddelay(Reference_Signal,Signal_delayed); % Number of samples of dela
 
 %**************** Add White noise to Surveillance_Signal
 
-SNR=20; %dB
+SNR=-26; %dB
 Surveillance_Signal=awgn(Signal_delayed,SNR,'measured'); % Introduce white gaussian Noise 
 
 
