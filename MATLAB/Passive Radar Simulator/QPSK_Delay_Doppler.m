@@ -113,12 +113,18 @@ grid on;
  hold off
 
 
-%**************** Convert speed to doppler shift 
+%**************** Target description
 
-v=23.0; %Target speed
+radarpos=[0;0;0]; % Receiver position
+radarvel=[0;0;0]; % Receiver velocity
+
+tgtinitpos = [0;0;0]; % Target initial position
+tgtvel     = [60;0;0]; % Target velocity m/s
+tgtmotion  = phased.Platform('InitialPosition',tgtinitpos,'Velocity',tgtvel);
+
+v=60.0; %Target speed
 lambda=c/fc; %Wavelength
-dopplershift=speed2dop(v,lambda);
-
+dopplershift=speed2dop(v,lambda); %Convert speed to doppler shift 
 
 
 
