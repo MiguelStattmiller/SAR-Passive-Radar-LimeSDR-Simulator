@@ -40,9 +40,11 @@ In order to start programming SDR at a high level end, it was used Gnu radio com
   
   Passive Radar Simulator- Simulators for any type of passive radar.
   
-     *QPSK_Time_Delay*- Passive Radar simulator for static targets with zero-doppler values.
+     *QPSK_Time_Delay*- Allows to study the relation between delay and range response in the cross-ambiguity function for static targets with zero-doppler values.
+     
+     *QPSK_Time_Delay_Radar*- Passive Radar simulator for static targets with zero-doppler values.
 
-     *QPSK_Delay_Doppler*- Passive Radar simulator for non-static targets.
+     *QPSK_Delay_Doppler*- Allows to study the relation between delay and range-doppler response in the cross-ambiguity function for static targets with doppler values
 
 **REFERENCES:**
 
