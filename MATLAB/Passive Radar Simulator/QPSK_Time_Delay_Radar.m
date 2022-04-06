@@ -1,4 +1,3 @@
-
 % Author of the time2freq function:
 %    Andela Zaric  02/09/2012
 %    date of latest revision: 07/11/2016 (by Joao Felicio)
@@ -111,6 +110,37 @@ grid on;
  set(gca,'fontsize',fontsize);
  grid on;
  hold off
+
+%**************** Define targets, Surveillance area and radar positions
+
+lambda=c/fc; %Wavelength
+
+% Define surveillance area and targets
+Nx= 1:60; % dimension in x of surveillance area
+Ny= 1:60; % dimension in y of surveillance area
+A = zeros(60,60); % 0= non target, 1= target
+A(4,(3:7)) = 1; % set row 4, from column 3-7 to 1
+
+
+% Receiver antenna position
+
+X_receiver=20;
+Y_receiver=30;
+A(X_receiver,Y_receiver) = 10; % Define position of receiver=10 in matrix
+
+% Transmitter antenna position
+
+X_transmitter=5;
+Y_transmitter=5;
+A(X_transmitter,Y_transmitter) = 10; % Define position of transmitter=10, in matrix
+
+% Distance calculation
+
+[X_target,Y_target] = find(A,1,'first'); % finds target location
+
+R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target
+R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target
+L=sqrt( (X_receiver-X_transmitter).^2 + (Y_receiver-Y_transmitter).^2); % Distance Transmitter-Receiver
 
 
 %**************** Calculate Surveillance_Signal 
@@ -241,8 +271,4 @@ xlabel('Delay \tau (s)');
 ylabel('Ambiguity Function Magnitude');
 title('Sref, Sr and cross-ambiguity');
 legend('Sref','Sr','cross-ambiguity');
-
-
-
-
 
