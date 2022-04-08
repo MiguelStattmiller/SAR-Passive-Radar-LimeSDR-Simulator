@@ -116,59 +116,78 @@ grid on;
 lambda=c/fc; %Wavelength
 
 % Define surveillance area and targets
-Nx= 1:60; % dimension in x of surveillance area
-Ny= 1:60; % dimension in y of surveillance area
-A = zeros(60,60); % 0= non target, 1= target
-A(4,(3:7)) = 1; % set row 4, from column 3-7 to 1
+
+
+Nx= zeros(1,200); % dimension in x, horizontal of surveillance area
+Ny= zeros(200,1); % dimension in y, vertical  of surveillance area
+Lp=2.5; % Pixel length
+
+AoI=Nx.*Ny; % Surveillance area
+AoI(4,(3:7)) = 1; % define target, set row 4, from column 3-7 to 1
 
 
 % Receiver antenna position
-
-X_receiver=20;
-Y_receiver=30;
+X_receiver=14;
+Y_receiver=17;
+Receiver=[X_receiver,Y_receiver];
 
 % Transmitter antenna position
 
-X_transmitter=10;
-Y_transmitter=15;
+X_transmitter=14;
+Y_transmitter=7;
+Transmitter=[X_transmitter,Y_transmitter];
+
 
 % Search for targets in surveillance area
 
-nonZeroIndices = A ~= 0;
-[rows, columns] = find(nonZeroIndices);
-X_target=4;
-Y_target=median(columns);
+for xx=1:200
+    for yy=1:200
+         if AoI(xx,yy) ~= 0 % Target detection
+            X_target= xx;
+            Y_target= yy;
+            angle_transmitter =atan2(X_transmitter-X_target,Y_transmitter-Y_target);
+            angle_transmitter = rad2deg(angle_transmitter);
+            angle_receiver =atan2(X_receiver-X_target,Y_receiver-Y_target);
+            angle_receiver = rad2deg(angle_receiver);
+            disp('Target detected');
+             
+             if angle_transmitter==angle_receiver
+
+                 R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target
+                 R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target
+                 L=sqrt( (X_receiver-X_transmitter).^2 + (Y_receiver-Y_transmitter).^2); % Distance Transmitter-Receiver
+
+             end
+        end
+    end
+end
+
 
 % Define straight line Transmitter-Target
 
 m_transmitter=(Y_target-Y_transmitter)/(X_target-X_transmitter);
-angle_transmitter =atand(m_transmitter);
+angle_transmitter =atan2(X_transmitter-X_target,Y_transmitter-Y_target);
+angle_transmitter = rad2deg(angle_transmitter);
 
 % Define Define straight line Target-Receiver
 
 m_receiver=(Y_receiver-Y_target)/(X_receiver-X_target);
-angle_receiver = atand(m_receiver);
+angle_receiver =atan2(X_receiver-X_target,Y_receiver-Y_target);
+angle_receiver = rad2deg(angle_receiver);
+
 
 % Define Define straight line Transmitter-Receiver
 
 m_L=(Y_receiver-Y_transmitter)/(X_receiver-X_transmitter);
-angle_L = atand(m_L);
+angle_L =atan2(X_receiver-X_transmitter,Y_receiver-Y_transmitter);
+angle_L = rad2deg(angle_L);
+
 
 % Distance calculation
 
 R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target
 R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target
 L=sqrt( (X_receiver-X_transmitter).^2 + (Y_receiver-Y_transmitter).^2); % Distance Transmitter-Receiver
-
-
-
-
-
-
-
-
-
-
 
 
 
