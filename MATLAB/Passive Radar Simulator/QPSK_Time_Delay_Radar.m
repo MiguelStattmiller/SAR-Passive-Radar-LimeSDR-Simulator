@@ -126,21 +126,50 @@ A(4,(3:7)) = 1; % set row 4, from column 3-7 to 1
 
 X_receiver=20;
 Y_receiver=30;
-A(X_receiver,Y_receiver) = 10; % Define position of receiver=10 in matrix
 
 % Transmitter antenna position
 
-X_transmitter=5;
-Y_transmitter=5;
-A(X_transmitter,Y_transmitter) = 10; % Define position of transmitter=10, in matrix
+X_transmitter=10;
+Y_transmitter=15;
+
+% Search for targets in surveillance area
+
+nonZeroIndices = A ~= 0;
+[rows, columns] = find(nonZeroIndices);
+X_target=4;
+Y_target=median(columns);
+
+% Define straight line Transmitter-Target
+
+m_transmitter=(Y_target-Y_transmitter)/(X_target-X_transmitter);
+angle_transmitter =atand(m_transmitter);
+
+% Define Define straight line Target-Receiver
+
+m_receiver=(Y_receiver-Y_target)/(X_receiver-X_target);
+angle_receiver = atand(m_receiver);
+
+% Define Define straight line Transmitter-Receiver
+
+m_L=(Y_receiver-Y_transmitter)/(X_receiver-X_transmitter);
+angle_L = atand(m_L);
 
 % Distance calculation
-
-[X_target,Y_target] = find(A,1,'first'); % finds target location
 
 R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target
 R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target
 L=sqrt( (X_receiver-X_transmitter).^2 + (Y_receiver-Y_transmitter).^2); % Distance Transmitter-Receiver
+
+
+
+
+
+
+
+
+
+
+
 
 
 %**************** Calculate Surveillance_Signal 
