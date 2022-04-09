@@ -38,13 +38,13 @@ In order to start programming SDR at a high level end, it was used Gnu radio com
   
   Main program- Main program for real tests of passive radar using LimeSDR.
   
-  Passive Radar Simulator- Simulators for any type of passive radar.
+  Passive Radar Simulator- Simulator for passive radar using QPSK transmitted signal.
   
-     *QPSK_Time_Delay*- Allows to study the relation between delay and range response in the cross-ambiguity function for static targets with zero-doppler values.
+     *QPSK_Time_Delay*- Allows to study the relation between delay and range response in the cross-ambiguity function,with white noise addition for static targets with zero-doppler values.
      
      *QPSK_Time_Delay_Radar*- Passive Radar simulator for static targets with zero-doppler values.
 
-     *QPSK_Delay_Doppler*- Allows to study the relation between delay and range-doppler response in the cross-ambiguity function for static targets with doppler values
+     *QPSK_Delay_Doppler*- Allows to study the relation between delay and range-doppler response in the cross-ambiguity function,with white noise addition for non-static targets with doppler values
 
 **REFERENCES:**
 
