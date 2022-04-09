@@ -235,3 +235,21 @@ xlabel('Delay \tau (s)');
 ylabel('Ambiguity Function Magnitude');
 title('Sref, Sr and cross-ambiguity');
 legend('Sref','Sr');
+
+
+
+
+
+%**************** Read data from channels  
+
+%[n,m]=size(Reference_Signal);
+%[n2,m2]=size(Surveillance_Signal);
+
+
+%for column=1:3000:m
+     %samples =(Reference_Signal(:,column:column+999));
+       % x = transpose(samples);
+       % [afmag,delay,doppler] = ambgfun(x,fs,1e6);
+       % afmag = afmag*1;
+       % afmag(afmag>1 )= 1;
+   % end
