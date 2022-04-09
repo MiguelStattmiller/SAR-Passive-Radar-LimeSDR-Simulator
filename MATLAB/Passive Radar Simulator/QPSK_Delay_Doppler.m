@@ -9,7 +9,8 @@
 % Miguel Albuquerque, Escola Naval, 2022
 
 
-% The current program is a passive radar simulator for moving targets, using QPSK transmitted signal.
+% The current program is a simulator for testing delay-doppler with noise parameters for moving targets
+% using QPSK transmitted signal.
 % QPSK signal is created based on a message written in .txt file
 % For the passive radar: Reference signal= QPSK signal
 %                        Surveillance signal=QPSK_signal delayed in Time 
@@ -114,13 +115,6 @@ grid on;
 
 
 %**************** Target description
-
-radarpos=[0;0;0]; % Receiver position
-radarvel=[0;0;0]; % Receiver velocity
-
-tgtinitpos = [0;0;0]; % Target initial position
-tgtvel     = [60;0;0]; % Target velocity m/s
-tgtmotion  = phased.Platform('InitialPosition',tgtinitpos,'Velocity',tgtvel);
 
 v=60.0; %Target speed
 lambda=c/fc; %Wavelength

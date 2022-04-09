@@ -24,6 +24,7 @@ clc
 %***************** INPUTS ******************
 fc=30e6; %Carrier frequency
 c=3e8; % Speed of light 
+lambda=c/fc; %Wavelength
 Rb=fc/100; %Bitrate
 fontsize=12;
 SentenceFilename = 'Mensagem_short.txt';
@@ -113,10 +114,7 @@ grid on;
 
 %**************** Define targets, Surveillance area and radar positions
 
-lambda=c/fc; %Wavelength
-
 % Define surveillance area and targets
-
 
 Nx= zeros(1,200); % dimension in x, horizontal of surveillance area
 Ny= zeros(200,1); % dimension in y, vertical  of surveillance area
@@ -191,34 +189,8 @@ L=sqrt( (X_receiver-X_transmitter).^2 + (Y_receiver-Y_transmitter).^2); % Distan
 
 
 
-%**************** Calculate Surveillance_Signal 
-
-Signal_zeros=padarray(Reference_Signal,[0 1000],0,'both'); %Adds zeros to reference_signal  
-Signal_delayed=circshift(Signal_zeros,0); %delay Reference signal in samples
-atraso = finddelay(Reference_Signal,Signal_delayed); % Number of samples of delay
 
 
-%**************** Add White noise to Surveillance_Signal
-
-SNR=-26; %dB
-Surveillance_Signal=awgn(Signal_delayed,SNR,'measured'); % Introduce white gaussian Noise 
-
-
-
-
-%**************** Read data from channels  
-
-%[n,m]=size(Reference_Signal);
-%[n2,m2]=size(Surveillance_Signal);
-
-
-%for column=1:3000:m
-     %samples =(Reference_Signal(:,column:column+999));
-       % x = transpose(samples);
-       % [afmag,delay,doppler] = ambgfun(x,fs,1e6);
-       % afmag = afmag*1;
-       % afmag(afmag>1 )= 1;
-   % end
 
 
 

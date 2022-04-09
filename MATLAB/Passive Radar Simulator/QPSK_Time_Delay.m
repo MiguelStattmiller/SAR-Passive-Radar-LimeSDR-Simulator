@@ -10,10 +10,11 @@
 % Miguel Albuquerque, Escola Naval, 2022
 
 
-% The current program is a passive radar simulator for static targets with zero-doppler values, using QPSK transmitted signal.
+% The current program is a simulator for testing delay and white noise parameters for static targets with zero-doppler values
+% using QPSK transmitted signal.
 % QPSK signal is created based on a message written in .txt file
-% For the passive radar: Reference signal= QPSK signal
-%                        Surveillance signal=QPSK_signal delayed in Time 
+% For the simulator: Reference signal= QPSK signal
+%                    Surveillance signal=QPSK_signal delayed in Time 
 
 
 
@@ -124,23 +125,6 @@ atraso = finddelay(Reference_Signal,Signal_delayed); % Number of samples of dela
 
 SNR=-26; %dB
 Surveillance_Signal=awgn(Signal_delayed,SNR,'measured'); % Introduce white gaussian Noise 
-
-
-
-
-%**************** Read data from channels  
-
-%[n,m]=size(Reference_Signal);
-%[n2,m2]=size(Surveillance_Signal);
-
-
-%for column=1:3000:m
-     %samples =(Reference_Signal(:,column:column+999));
-       % x = transpose(samples);
-       % [afmag,delay,doppler] = ambgfun(x,fs,1e6);
-       % afmag = afmag*1;
-       % afmag(afmag>1 )= 1;
-   % end
 
 
 
