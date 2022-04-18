@@ -1,4 +1,4 @@
-% Author of the time2freq function:
+% Author of the time2freq and freq2time functions:
 %    Andela Zaric  02/09/2012
 %    date of latest revision: 07/11/2016 (by Joao Felicio)
 
@@ -7,7 +7,6 @@
 
 % Author of the current program:
 % Miguel Albuquerque, Escola Naval, 2022
-
 
 % The current program is a passive radar simulator for static targets with zero-doppler values, using QPSK transmitted signal.
 % QPSK signal is created based on a message written in .txt file
@@ -67,7 +66,7 @@ Tb=1/Rb; %Bit period
 fs=2*fc; %Sampling frequency
 t_bit=linspace(0,Tb,round(Tb*fs)); %Time base of bit
 
-Reference_Signal=[];
+QPSK_Signal=[];
 Binary_signal=[];
 bit=[];
 Eb=Ac^2*Tb; %Bit energy
@@ -83,16 +82,16 @@ for ss=1:length(sequence)/2
 %     QPSK_temp = awgn(QPSK_temp,SNR,S);
     
     %Modulated QPSK signal
-    Reference_Signal=[Reference_Signal,QPSK_temp];
+    QPSK_Signal=[QPSK_Signal,QPSK_temp];
 end
 
-t=linspace(0,Ns*Tb,length(Reference_Signal));
+t=linspace(0,Ns*Tb,length(QPSK_Signal));
 
 
 %**************** Plot QPSK signal over time
 fig=figure;
 set(fig,'color','white');
-plot(t,Reference_Signal,'linewidth',2,'color','b');
+plot(t,QPSK_Signal,'linewidth',2,'color','b');
 xlabel('Time [s]');
 ylabel('QPSK signal');
 set(gca,'fontsize',fontsize);
@@ -101,7 +100,7 @@ grid on;
 
 %**************** Plot frequency spectrum of QPSK signal
 
- [freq,Spectrum]=time2freq(Reference_Signal,t);
+ [freq,Spectrum]=time2freq(QPSK_Signal,t);
  fig=figure;
  hold on
  set(fig,'color','white');
@@ -161,12 +160,24 @@ for xx=1:200
     end
 end
 
-k0=(2*pi*fc)/c;
-X_QPSK=fft(Reference_Signal);
-Reference_Signal=(1/L)*X_QPSK*exp(-1*j*k0*L);
-Surveillance_Signal=(1/(R1+R2))*X_QPSK*exp(-1*j*k0*(R1+R2));
-Reference_Signal=ifft(Reference_Signal);
-Surveillance_Signal=ifft(Surveillance_Signal);
+
+
+%**********Calculate Reference and Surveillance Signals in Frequency Domain
+
+
+[freq_XQPSK,X_QPSK]=time2freq(QPSK_Signal,t); % Define QPSK signal in frequency domain
+k0=(2*pi*freq_XQPSK)/c; % Wave index variable
+Reference_SignalFD=(1/L)*X_QPSK.*exp(-1*j*k0*L); % Reference Signal frequency domain
+Surveillance_SignalFD=(1/(R1+R2))*X_QPSK.*exp(-1*j*k0*(R1+R2)); % Surveillance Signal frequency domain
+
+%**************** Calculate Reference and Surveillance Signals in Time Domain  
+
+Reference_Signal_real=real(Reference_SignalFD);
+Surveillance_Signal_real=real(Surveillance_SignalFD);
+[time_RS,Reference_Signal]=freq2time(Reference_Signal_real,freq_XQPSK);
+[time_SS,Surveillance_Signal]=freq2time(Surveillance_Signal_real,freq_XQPSK);
+
+
 
 
 %**************** Calculate ambiguity and cross-ambiguity functions 

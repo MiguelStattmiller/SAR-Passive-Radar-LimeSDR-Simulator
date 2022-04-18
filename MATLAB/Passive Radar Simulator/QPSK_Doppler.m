@@ -118,11 +118,12 @@ grid on;
 
 v=20; %Target speed
 lambda=c/fc; %Wavelength
-dopplershift=speed2dop(v,lambda); %Convert speed to doppler shift 
+dopplershift=2*speed2dop(v,lambda); %Convert speed to doppler shift 
 
 
 f=freq+dopplershift;
-Surveillance_Signal=ifft(f);
+
+[Surveillance_Signal,tempo_surveillance]=freq2time(f);
 
 
 %**************** Add White noise to Surveillance_Signal
