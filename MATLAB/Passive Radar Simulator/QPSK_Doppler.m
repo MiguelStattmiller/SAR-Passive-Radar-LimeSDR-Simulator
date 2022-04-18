@@ -9,11 +9,11 @@
 % Miguel Albuquerque, Escola Naval, 2022
 
 
-% The current program is a simulator for testing delay-doppler with noise parameters for moving targets
+% The current program is a simulator for testing doppler shifts with white noise addition, for moving targets
 % using QPSK transmitted signal.
 % QPSK signal is created based on a message written in .txt file
 % For the passive radar: Reference signal= QPSK signal
-%                        Surveillance signal=QPSK_signal delayed in Time 
+%            tir            Surveillance signal=QPSK_signal delayed in Time 
 
 
 
@@ -116,18 +116,18 @@ grid on;
 
 %**************** Target description
 
-v=300.0; %Target speed
+v=20; %Target speed
 lambda=c/fc; %Wavelength
 dopplershift=speed2dop(v,lambda); %Convert speed to doppler shift 
 
 
 f=freq+dopplershift;
-Signal_dopplershift=ifft(f);
+Surveillance_Signal=ifft(f);
 
 
 %**************** Add White noise to Surveillance_Signal
 
-SNR=50;
+SNR=20;
 Surveillance_Signal=awgn(Signal_dopplershift,SNR,'measured');
 
 %**************** Calculate ambiguity and cross-ambiguity functions 
@@ -162,7 +162,7 @@ textString = sprintf('(%f, %f)', xMax, yMax);
 text(xMax, yMax,textString,"Color",'b','FontSize',10);
 hold off
 shading interp;
-xlim auto;
+xlim ([-3e-7 3e-7]);
 grid on; 
 colorbar;
 xlabel('Doppler (Hz)');
@@ -182,7 +182,7 @@ textString2 = sprintf('(%f, %f)', xMax2, yMax2);
 text(xMax2, yMax2,textString2,"Color",'b','FontSize',10);
 hold off
 shading interp;
-xlim auto;
+xlim ([-3e-7 3e-7]);
 grid on; 
 colorbar;
 xlabel('Doppler (Hz)');
