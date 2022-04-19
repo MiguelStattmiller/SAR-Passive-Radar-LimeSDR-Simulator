@@ -120,17 +120,19 @@ Ny= zeros(200,1); % dimension in y, vertical  of surveillance area
 
 
 AoI=Nx.*Ny; % Surveillance area
-AoI(4,(3:7)) = 1; % define target, set row 4, from column 3-7 to 1
+AoI(2,(7:10)) = 1; % define target, set row 4, from column 7-10 to 1
+normal_ntarget1=[3 0]; % Define a normal vector to the target
+
 
 
 % Receiver antenna position
-X_receiver=100*Lp;
-Y_receiver=97*Lp;
+X_receiver=6*Lp;
+Y_receiver=12*Lp;
 
 % Transmitter antenna position
 
-X_transmitter=100*Lp;
-Y_transmitter=7*Lp;
+X_transmitter=6*Lp;
+Y_transmitter=8*Lp;
 
 
 
@@ -141,19 +143,20 @@ for xx=1:200
          if AoI(xx,yy) ~= 0 % Target detection
             X_target= xx*Lp;
             Y_target= yy*Lp;
-            angle_transmitter =atan2(X_transmitter-X_target,Y_transmitter-Y_target);
-            angle_transmitter = rad2deg(angle_transmitter);
-            angle_receiver =atan2(X_receiver-X_target,Y_receiver-Y_target);
-            angle_receiver = rad2deg(angle_receiver);
-             
+            VTransmitter_target=[X_target-X_transmitter Y_target-Y_transmitter]; % Vector transmitter-target
+            Vectors_product=dot( VTransmitter_target,normal_ntarget1);
+            angle_transmitter =180-acosd(Vectors_product/(norm(VTransmitter_target)*norm(normal_ntarget1)));
+            VTarget_receiver=[X_receiver-X_target Y_receiver-Y_target]; % Vector Target-receiver
+            Vectors_product=dot( VTarget_receiver,normal_ntarget1);
+            angle_receiver =acosd(Vectors_product/(norm(VTarget_receiver)*norm(normal_ntarget1)));
             status=snell_function(angle_transmitter,angle_receiver);
             P=LoS(AoI,X_transmitter,Y_transmitter,Lp);
 
-             if status==1 && P==-1
+             if status==1 && P==1
 
-                 R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target
-                 R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target
-                 L=sqrt( (X_receiver-X_transmitter).^2 + (Y_receiver-Y_transmitter).^2); % Distance Transmitter-Receiver
+                 R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target in meters
+                 R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target in meters
+                 L=sqrt( (X_receiver-X_transmitter).^2 + (Y_receiver-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
 
              end
         end
@@ -166,7 +169,7 @@ end
 
 
 [freq_XQPSK,X_QPSK]=time2freq(QPSK_Signal,t); % Define QPSK signal in frequency domain
-k0=(2*pi*freq_XQPSK)/c; % Wave index variable
+k0=(2*pi*freq_XQPSK)/c; % Wave index variable in radians
 Reference_SignalFD=(1/L)*X_QPSK.*exp(-1*j*k0*L); % Reference Signal frequency domain
 Surveillance_SignalFD=(1/(R1+R2))*X_QPSK.*exp(-1*j*k0*(R1+R2)); % Surveillance Signal frequency domain
 

@@ -116,8 +116,8 @@ grid on;
 
 %**************** Target description
 
-v=20; %Target speed
-lambda=c/fc; %Wavelength
+v=20; %Target speed in meters/second
+lambda=c/fc; %Wavelength in meters
 dopplershift=2*speed2dop(v,lambda); %Convert speed to doppler shift 
 
 
