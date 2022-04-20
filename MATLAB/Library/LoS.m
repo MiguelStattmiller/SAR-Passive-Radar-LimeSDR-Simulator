@@ -5,8 +5,8 @@ function [P] = LoS(AoI,X_transmitter,Y_transmitter,Lp)
 % If there is not line of sight, P=[-1,-1]
 
 % Pixel coordinates
-x_Pixel=1*Lp; 
-y_Pixel=7*Lp;
+x_Pixel=4*Lp; 
+y_Pixel=3*Lp;
 
 % Define vector between transmitter and pixel
 V=[(X_transmitter-x_Pixel),(Y_transmitter-y_Pixel)];
@@ -23,7 +23,7 @@ reta(:,2)=V(2)*coord+y_Pixel;
                 P=[round(reta(n+1,1)),round(reta(n+1,2))]; % No line of sight with target coordinates
                 break
      else
-                 P=-1; % Line of sight
+                 P=1; % Line of sight
                  
             end
             end
