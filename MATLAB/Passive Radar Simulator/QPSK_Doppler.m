@@ -120,11 +120,12 @@ v=20; %Target speed in meters/second
 lambda=c/fc; %Wavelength in meters
 dopplershift=2*speed2dop(v,lambda); %Convert speed to doppler shift 
 
+[vector_dopplershift]=[1 :23979]; % Create an empty vector with same size of freq
+vector_dopplershift(1,(1:23979)) = dopplershift; % Add variable dopplershift to every column of the vector
+[SurveillanceSignal_FD]=freq+vector_dopplershift; % Create Surveillance signal in Frequency domain
+[tempo_surveillance,Surveillance_Signal]=freq2time(SurveillanceSignal_FD,freq);
 
-f=freq+dopplershift;
-
-[Surveillance_Signal,tempo_surveillance]=freq2time(f);
-
+Surveillance_Signalcut=Surveillance_Signal(1:1200);
 
 %**************** Add White noise to Surveillance_Signal
 
@@ -139,12 +140,12 @@ afmag = afmag*1; % Select plot gain *1
 afmag(afmag>1 )= 1;
 
  %Surveillance_Signal ambiguity function
-[afmag2,doppler2] = ambgfun(Surveillance_Signal,fs,1e6,'Cut','Delay');
+[afmag2,doppler2] = ambgfun(Surveillance_Signalcut,fs,1e6,'Cut','Delay');
 afmag2 = afmag2*1; % Select plot gain *1
 afmag2(afmag2>1 )= 1;
 
 %Cross-ambiguity
-[afmag3,doppler3] = ambgfun(Reference_Signal,Surveillance_Signal,fs,[1e6 1e6],'Cut','Delay');
+[afmag3,doppler3] = ambgfun(Reference_Signal,Surveillance_Signalcut,fs,[1e6 1e6],'Cut','Delay');
 afmag3 = afmag3*1; % Select plot gain *1
 afmag3(afmag3>1 )= 1;
 

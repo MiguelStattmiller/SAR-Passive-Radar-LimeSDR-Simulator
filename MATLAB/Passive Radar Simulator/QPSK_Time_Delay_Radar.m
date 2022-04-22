@@ -120,19 +120,18 @@ Ny= zeros(200,1); % dimension in y, vertical  of surveillance area
 
 
 AoI=Nx.*Ny; % Surveillance area
-AoI(2,(7:10)) = 1; % define target, set row 4, from column 7-10 to 1
-normal_ntarget1=[3 0]; % Define a normal vector to the target
-
+AoI(2,(6:10)) = 1; % define target, set row 4, from column 7-10 to 1
+normal_ntarget1=[4 0]; % Define a normal vector to the target
 
 
 % Receiver antenna position
-X_receiver=6*Lp;
-Y_receiver=12*Lp;
+X_receiver=7*Lp;
+Y_receiver=2*Lp;
 
 % Transmitter antenna position
 
 X_transmitter=6*Lp;
-Y_transmitter=8*Lp;
+Y_transmitter=14*Lp;
 
 
 
