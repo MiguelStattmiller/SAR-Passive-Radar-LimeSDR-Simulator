@@ -120,7 +120,8 @@ Ny= zeros(200*Lp,1); % dimension in y, vertical  of surveillance area
 
 
 AoI=Nx.*Ny; % Surveillance area
-AoI((2:7),2) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+AoI(2,(5:6)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+AoI(4,(4:8))= 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
 normal_ntarget1=[0 50]; % Define a normal vector to the target
 
 
@@ -149,7 +150,7 @@ for xx=1:200
             Vectors_product=dot( VTarget_receiver,normal_ntarget1);
             angle_receiver =acosd(Vectors_product/(norm(VTarget_receiver)*norm(normal_ntarget1)));
             status=snell_function(angle_transmitter,angle_receiver);
-            P=LoS(AoI,X_transmitter,Y_transmitter,Lp);
+            P=LoS(AoI,Lp);
 
              if status==1 && P==1
 
