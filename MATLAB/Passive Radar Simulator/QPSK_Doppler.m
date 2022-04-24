@@ -125,7 +125,9 @@ vector_dopplershift(1,(1:23979)) = dopplershift; % Add variable dopplershift to 
 [SurveillanceSignal_FD]=freq+vector_dopplershift; % Create Surveillance signal in Frequency domain
 [tempo_surveillance,Surveillance_Signal]=freq2time(SurveillanceSignal_FD,freq);
 
-Surveillance_Signalcut=Surveillance_Signal(1:1200);
+
+k=find(tempo_surveillance>0 & tempo_surveillance<9.5e-8);
+Surveillance_Signalcut=Surveillance_Signal(1198902:1199470);
 
 %**************** Add White noise to Surveillance_Signal
 

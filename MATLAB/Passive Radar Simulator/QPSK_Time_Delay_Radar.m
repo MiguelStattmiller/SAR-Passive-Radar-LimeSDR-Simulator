@@ -93,7 +93,7 @@ fig=figure;
 set(fig,'color','white');
 plot(t,QPSK_Signal,'linewidth',2,'color','b');
 xlabel('Time [s]');
-ylabel('QPSK signal');
+ylabel('QPSK signal [dB]');
 set(gca,'fontsize',fontsize);
 %set(gca,'fontsize',fs);
 grid on;
@@ -106,7 +106,7 @@ grid on;
  set(fig,'color','white');
  plot(freq,20*log10(abs(Spectrum)),'b','linewidth',2);
  xlabel('Frequency [Hz]');
- ylabel('QPSK Spectrum');
+ ylabel('QPSK Spectrum [dB]');
  set(gca,'fontsize',fontsize);
  grid on;
  hold off
@@ -114,26 +114,26 @@ grid on;
 %**************** Define targets, Surveillance area and radar positions
 
 % Define surveillance area and targets
-Lp=1; % Pixel length
-Nx= zeros(1,200); % dimension in x, horizontal of surveillance area
-Ny= zeros(200,1); % dimension in y, vertical  of surveillance area
+Lp=10; % Pixel length
+Nx= zeros(1,200*Lp); % dimension in x, horizontal of surveillance area
+Ny= zeros(200*Lp,1); % dimension in y, vertical  of surveillance area
 
 
 AoI=Nx.*Ny; % Surveillance area
-AoI(2,(6:10)) = 1; % define target, set row 4, from column 7-10 to 1
-normal_ntarget1=[4 0]; % Define a normal vector to the target
+AoI((2:7),2) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+normal_ntarget1=[0 50]; % Define a normal vector to the target
 
 
 % Receiver antenna position
-X_receiver=7*Lp;
-Y_receiver=2*Lp;
+X_receiver=8*Lp;
+Y_receiver=15*Lp;
 
 % Transmitter antenna position
 
-X_transmitter=6*Lp;
-Y_transmitter=14*Lp;
+X_transmitter=8*Lp;
+Y_transmitter=5*Lp;
 
-
+%%
 
 % Search for targets in surveillance area
 
@@ -179,23 +179,34 @@ Surveillance_Signal_real=real(Surveillance_SignalFD);
 [time_RS,Reference_Signal]=freq2time(Reference_Signal_real,freq_XQPSK);
 [time_SS,Surveillance_Signal]=freq2time(Surveillance_Signal_real,freq_XQPSK);
 
+%**************** Select Reference and Surveillance Signals Samples Time Domain 
+
+plot(abs(time_RS),abs(Reference_Signal));
+hold on
+plot(abs(time_SS),abs(Surveillance_Signal));
+legend('Reference Signal','Surveillance Signal');
 
 
+k=find(time_RS>1.9e-4 & time_RS<2e-4);
+Reference_SignalCut=Reference_Signal(2337951:2397800);
+
+k2=find(time_SS>1.9e-4 & time_SS<2e-4);
+Surveillance_SignalCut=Surveillance_Signal(2337951:2397800);
 
 %**************** Calculate ambiguity and cross-ambiguity functions 
 
 %Reference_Signal ambiguity function
-[afmag,delay] = ambgfun(Reference_Signal,fs,1e6,'Cut','Doppler');
+[afmag,delay] = ambgfun(Reference_SignalCut,fs,1e6,'Cut','Doppler');
 afmag = afmag*1; % Select plot gain *1
 afmag(afmag>1 )= 1;
 
  %Surveillance_Signal ambiguity function
-[afmag2,delay2] = ambgfun(Surveillance_Signal,fs,1e6,'Cut','Doppler');
+[afmag2,delay2] = ambgfun(Surveillance_SignalCut,fs,1e6,'Cut','Doppler');
 afmag2 = afmag2*1; % Select plot gain *1
 afmag2(afmag2>1 )= 1;
 
 %Cross-ambiguity
-[afmag3,delay3] = ambgfun(Reference_Signal,Surveillance_Signal,fs,[1e6 1e6],'Cut','Doppler');
+[afmag3,delay3] = ambgfun(Reference_SignalCut,Surveillance_SignalCut,fs,[1e6 1e6],'Cut','Doppler');
 afmag3 = afmag3*1; % Select plot gain *1
 afmag3(afmag3>1 )= 1;
 
@@ -210,12 +221,12 @@ yMax = pks1;
 subplot(3,2,1)
 plot(delay,afmag,'LineStyle','-.'); 
 hold on
-plot3(delay(pks1,index),afmag(pks1,index), pks1, '^r')
+%plot3(delay(pks1,index),afmag(pks1,index), pks1, '^r')
 textString = sprintf('(%f, %f)', xMax, yMax);
 text(xMax, yMax,textString,"Color",'b','FontSize',10);
 hold off
 shading interp;
-xlim ([-8e-5 8e-5]);
+xlim auto;
 grid on; 
 colorbar;
 xlabel('Delay \tau (s)');
@@ -230,12 +241,12 @@ yMax2 = pks2;
 subplot(3,2,2)   
 plot(delay2,afmag2,'LineStyle','-'); 
 hold on
-plot3(delay2(pks2,index2), afmag2(pks2,index2), pks2, '^r')
+%plot3(delay2(pks2,index2), afmag2(pks2,index2), pks2, '^r')
 textString2 = sprintf('(%f, %f)', xMax2, yMax2);
 text(xMax2, yMax2,textString2,"Color",'b','FontSize',10);
 hold off
 shading interp;
-xlim([-8e-5 8e-5]);
+xlim auto;
 grid on; 
 colorbar;
 xlabel('Delay \tau (us)');
@@ -256,7 +267,7 @@ textString3 = sprintf('(%f, %f)', xMax3, yMax3);
 text(xMax3, yMax3,textString3,"Color",'b','FontSize',10);
 hold off
 shading interp;
-xlim([-8e-5 8e-5]);
+xlim auto;
 grid on; 
 colorbar;
 xlabel('Delay \tau (s)');
@@ -272,7 +283,7 @@ hold on
 plot(delay2, afmag2,'LineStyle','-','Color','r'); % Red Sr
 plot(delay3, afmag3,'LineStyle','--','Color','g'); % blue cross-ambiguity 
 hold off
-xlim ([-4e-5 4e-5]);
+xlim auto;
 grid on; 
 colorbar;
 xlabel('Delay \tau (s)');
