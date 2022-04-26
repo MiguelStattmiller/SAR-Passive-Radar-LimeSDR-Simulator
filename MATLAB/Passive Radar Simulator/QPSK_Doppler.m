@@ -116,7 +116,7 @@ grid on;
 
 %**************** Target description
 
-v=20; %Target speed in meters/second
+v=3e9; %Target speed in meters/second
 lambda=c/fc; %Wavelength in meters
 dopplershift=2*speed2dop(v,lambda); %Convert speed to doppler shift 
 
@@ -125,14 +125,21 @@ vector_dopplershift(1,(1:23979)) = dopplershift; % Add variable dopplershift to 
 [SurveillanceSignal_FD]=freq+vector_dopplershift; % Create Surveillance signal in Frequency domain
 [tempo_surveillance,Surveillance_Signal]=freq2time(SurveillanceSignal_FD,freq);
 
+%**************** Select Surveillance Signals Samples Time Domain 
 
-k=find(tempo_surveillance>0 & tempo_surveillance<9.5e-8);
-Surveillance_Signalcut=Surveillance_Signal(1198902:1199470);
+plot(abs(tempo_surveillance),abs(Surveillance_Signal));
+hold on;
+plot(abs(t),abs(Reference_Signal));
+legend('Surveillance Signal','Reference Signal');
+
+
+k=find(tempo_surveillance>0 & tempo_surveillance<0.3e-4);
+Surveillance_Signalcut=Surveillance_Signal(1198902:1378750);
 
 %**************** Add White noise to Surveillance_Signal
 
 SNR=20;
-Surveillance_Signal=awgn(Signal_dopplershift,SNR,'measured');
+Surveillance_Signal=awgn(Surveillance_Signalcut,SNR,'measured');
 
 %**************** Calculate ambiguity and cross-ambiguity functions 
 
@@ -166,7 +173,7 @@ textString = sprintf('(%f, %f)', xMax, yMax);
 text(xMax, yMax,textString,"Color",'b','FontSize',10);
 hold off
 shading interp;
-xlim ([-3e-7 3e-7]);
+xlim auto;
 grid on; 
 colorbar;
 xlabel('Doppler (Hz)');
@@ -186,7 +193,7 @@ textString2 = sprintf('(%f, %f)', xMax2, yMax2);
 text(xMax2, yMax2,textString2,"Color",'b','FontSize',10);
 hold off
 shading interp;
-xlim ([-3e-7 3e-7]);
+xlim auto;
 grid on; 
 colorbar;
 xlabel('Doppler (Hz)');
@@ -206,7 +213,7 @@ textString3 = sprintf('(%f, %f)', xMax3, yMax3);
 text(xMax3, yMax3,textString3,"Color",'b','FontSize',10);
 hold off
 shading interp;
-xlim auto;
+xlim ([-3e7 5e7]);
 grid on; 
 colorbar;
 xlabel('Doppler (Hz)');
