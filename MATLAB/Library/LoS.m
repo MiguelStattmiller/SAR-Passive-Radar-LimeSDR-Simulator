@@ -9,8 +9,8 @@ function [P] = LoS(AoI,Lp)
 X_transmitter=8; 
 Y_transmitter=5;
 
-x_Pixel=2; 
-y_Pixel=6;
+x_Pixel=1; 
+y_Pixel=1;
 
 
 % Define vector between transmitter and pixel

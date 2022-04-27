@@ -4,7 +4,7 @@ function [status] = snell_function(angle_transmitter,angle_receiver)
 % receiver)
 % if verification of this law occurs , status=1 else status=0.
 
-teta=40; % Define the flutuation angle value
+teta=1; % Define the flutuation angle value
 
 if angle_transmitter <= angle_receiver + teta && angle_transmitter >= angle_receiver - teta;
 
