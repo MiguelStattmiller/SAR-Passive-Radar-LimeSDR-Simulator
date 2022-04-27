@@ -120,9 +120,8 @@ Ny= zeros(200*Lp,1); % dimension in y, vertical  of surveillance area
 
 
 AoI=Nx.*Ny; % Surveillance area
-AoI(2,(5:6)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
-AoI(4,(4:8))= 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
-normal_ntarget1=[0 50]; % Define a normal vector to the target
+AoI(2,(10:12)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+normal_ntarget1=[2 0]; % Define a normal vector to the target
 
 
 % Receiver antenna position
@@ -141,16 +140,16 @@ Y_transmitter=5*Lp;
 for xx=1:200
     for yy=1:200
          if AoI(xx,yy) ~= 0 % Target detection
-            X_target= xx*Lp;
-            Y_target= yy*Lp;
+            X_target= xx*Lp
+            Y_target= yy*Lp
             VTransmitter_target=[X_target-X_transmitter Y_target-Y_transmitter]; % Vector transmitter-target
             Vectors_product=dot( VTransmitter_target,normal_ntarget1);
             angle_transmitter =180-acosd(Vectors_product/(norm(VTransmitter_target)*norm(normal_ntarget1)));
             VTarget_receiver=[X_receiver-X_target Y_receiver-Y_target]; % Vector Target-receiver
             Vectors_product=dot( VTarget_receiver,normal_ntarget1);
             angle_receiver =acosd(Vectors_product/(norm(VTarget_receiver)*norm(normal_ntarget1)));
-            status=snell_function(angle_transmitter,angle_receiver);
-            P=LoS(AoI,Lp);
+            status=snell_function(angle_transmitter,angle_receiver)
+            P=LoS(AoI,Lp)
 
              if status==1 && P==1
 

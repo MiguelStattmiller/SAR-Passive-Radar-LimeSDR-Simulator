@@ -116,25 +116,37 @@ grid on;
 
 %**************** Target description
 
-v=3e9; %Target speed in meters/second
-lambda=c/fc; %Wavelength in meters
-dopplershift=2*speed2dop(v,lambda); %Convert speed to doppler shift 
+v=800000; %Target speed in meters/second
+lambda=c./freq; %Wavelength in meters
+dopplershift=(2*v)./lambda; %Convert speed to doppler shift in Hz
 
-[vector_dopplershift]=[1 :23979]; % Create an empty vector with same size of freq
-vector_dopplershift(1,(1:23979)) = dopplershift; % Add variable dopplershift to every column of the vector
-[SurveillanceSignal_FD]=freq+vector_dopplershift; % Create Surveillance signal in Frequency domain
-[tempo_surveillance,Surveillance_Signal]=freq2time(SurveillanceSignal_FD,freq);
+doppler_freq=freq+dopplershift; % Create Surveillance signal in Frequency domain
+[tempo_surveillance,Surveillance_Signal]=freq2time(Spectrum,doppler_freq);
 
 %**************** Select Surveillance Signals Samples Time Domain 
 
+% Frequency
+plot(abs(doppler_freq),abs(Spectrum));
+hold on;
+plot(abs(freq),abs(Spectrum));
+legend('Surveillance Signal','Reference Signal');
+xlabel('freq (Hz)');
+ylabel('Spectrum');
+title('Frequency domain');
+
+
+%Time
 plot(abs(tempo_surveillance),abs(Surveillance_Signal));
 hold on;
 plot(abs(t),abs(Reference_Signal));
 legend('Surveillance Signal','Reference Signal');
+xlabel('time (second)');
+ylabel('amplitude');
+title('Time domain');
 
 
-k=find(tempo_surveillance>0 & tempo_surveillance<0.3e-4);
-Surveillance_Signalcut=Surveillance_Signal(1198902:1378750);
+k=find(doppler_freq>2.9e7 & doppler_freq<3.1e7);
+Surveillance_Signalcut=Surveillance_Signal(23528:23979);
 
 %**************** Add White noise to Surveillance_Signal
 
@@ -213,7 +225,7 @@ textString3 = sprintf('(%f, %f)', xMax3, yMax3);
 text(xMax3, yMax3,textString3,"Color",'b','FontSize',10);
 hold off
 shading interp;
-xlim ([-3e7 5e7]);
+xlim auto;
 grid on; 
 colorbar;
 xlabel('Doppler (Hz)');
