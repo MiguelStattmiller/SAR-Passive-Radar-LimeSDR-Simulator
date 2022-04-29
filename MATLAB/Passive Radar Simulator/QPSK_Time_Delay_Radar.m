@@ -114,14 +114,17 @@ grid on;
 %**************** Define targets, Surveillance area and radar positions
 
 % Define surveillance area and targets
-Lp=10; % Pixel length
+Lp=1; % Pixel length
 Nx= zeros(1,200*Lp); % dimension in x, horizontal of surveillance area
 Ny= zeros(200*Lp,1); % dimension in y, vertical  of surveillance area
 
 
 AoI=Nx.*Ny; % Surveillance area
-AoI(2,(10:12)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
-normal_ntarget1=[2 0]; % Define a normal vector to the target
+
+% Horizontal targets
+AoI(2,(5:10)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+AoI(5,(5:7)) = 1;
+normal_ntarget1=[5 0]; % Define a normal vector to the target
 
 
 % Receiver antenna position
@@ -149,16 +152,17 @@ for xx=1:200
             Vectors_product=dot( VTarget_receiver,normal_ntarget1);
             angle_receiver =acosd(Vectors_product/(norm(VTarget_receiver)*norm(normal_ntarget1)));
             status=snell_function(angle_transmitter,angle_receiver)
-            P=LoS(AoI,Lp)
+            P=LoS(X_transmitter,Y_transmitter,X_target,Y_target,AoI)
+           
 
-             if status==1 && P==1
+                 if status==1 && P==1
 
                  R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target in meters
                  R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target in meters
                  L=sqrt( (X_receiver-X_transmitter).^2 + (Y_receiver-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
-
-             end
-        end
+                 
+                 end
+         end
     end
 end
 
