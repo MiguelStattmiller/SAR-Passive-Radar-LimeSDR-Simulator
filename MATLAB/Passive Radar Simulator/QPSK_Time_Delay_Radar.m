@@ -123,7 +123,9 @@ AoI=Nx.*Ny; % Surveillance area
 
 % Horizontal targets
 AoI(2,(5:10)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+AoI(1,12) = 1;
 AoI(5,(5:7)) = 1;
+AoI(6,(10:12)) = 1;
 normal_ntarget1=[5 0]; % Define a normal vector to the target
 
 
@@ -143,28 +145,35 @@ Y_transmitter=5*Lp;
 for xx=1:200
     for yy=1:200
          if AoI(xx,yy) ~= 0 % Target detection
-            X_target= xx*Lp
-            Y_target= yy*Lp
+            X_target= xx*Lp;
+            Y_target= yy*Lp;
             VTransmitter_target=[X_target-X_transmitter Y_target-Y_transmitter]; % Vector transmitter-target
             Vectors_product=dot( VTransmitter_target,normal_ntarget1);
             angle_transmitter =180-acosd(Vectors_product/(norm(VTransmitter_target)*norm(normal_ntarget1)));
             VTarget_receiver=[X_receiver-X_target Y_receiver-Y_target]; % Vector Target-receiver
             Vectors_product=dot( VTarget_receiver,normal_ntarget1);
             angle_receiver =acosd(Vectors_product/(norm(VTarget_receiver)*norm(normal_ntarget1)));
-            status=snell_function(angle_transmitter,angle_receiver)
-            P=LoS(X_transmitter,Y_transmitter,X_target,Y_target,AoI)
+            status=snell_function(angle_transmitter,angle_receiver);
+            P=LoS(X_transmitter,Y_transmitter,X_target,Y_target,AoI);
            
 
-                 if status==1 && P==1
+                 if status ==1 & P ==1
+                        R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target in meters
+                        R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target in meters
+                        Rd=sqrt( (X_receiver-X_transmitter).^2 + (Y_receiver-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
+                        fprintf('\n Coordenadas do alvo(%d,%d)',X_target,Y_target);
+                        fprintf('\n Distância transmissor-alvo %4.2f metros',R1);
+                        fprintf('\n Distância alvo-recetor %4.2f metros',R2);
+                        fprintf('\n Distância transmissor-recetor %4.2f metros',Rd);
+                     continue
+                      
+                 end   
 
-                 R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target in meters
-                 R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target in meters
-                 L=sqrt( (X_receiver-X_transmitter).^2 + (Y_receiver-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
-                 
-                 end
+            end
+             
          end
     end
-end
+
 
 
 
@@ -173,7 +182,7 @@ end
 
 [freq_XQPSK,X_QPSK]=time2freq(QPSK_Signal,t); % Define QPSK signal in frequency domain
 k0=(2*pi*freq_XQPSK)/c; % Wave index variable in radians
-Reference_SignalFD=(1/L)*X_QPSK.*exp(-1*j*k0*L); % Reference Signal frequency domain
+Reference_SignalFD=(1/Rd)*X_QPSK.*exp(-1*j*k0*Rd); % Reference Signal frequency domain
 Surveillance_SignalFD=(1/(R1+R2))*X_QPSK.*exp(-1*j*k0*(R1+R2)); % Surveillance Signal frequency domain
 
 %**************** Calculate Reference and Surveillance Signals in Time Domain  
