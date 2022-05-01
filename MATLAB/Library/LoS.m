@@ -17,7 +17,7 @@ reta(:,2)=V(2)*coord+Y_target;
 
  for n=1:Npixels-1
      if AoI(round(reta(n+1,1)),round(reta(n+1,2))) ~= 0
-           P=[round(reta(n+1,1)),round(reta(n+1,2))]% No line of sight with target coordinates
+           P=[round(reta(n+1,1)),round(reta(n+1,2))];% No line of sight with target coordinates
            break
 
      else
