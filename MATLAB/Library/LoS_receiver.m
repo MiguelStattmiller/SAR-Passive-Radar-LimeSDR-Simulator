@@ -1,10 +1,10 @@
 function [Pr] = LoS_receiver(X_receiver,Y_receiver,X_target,Y_target,AoI)
 %This function allows to determine if there is line of sight between
-%transmitter and a defined pixel
-% If there is line of sight, P returns the coordinates of that target
-% If there is not line of sight, P=1
+%Receiver and a target
+% If there is not line of sight, P returns the coordinates of that target
+% If there is line of sight, P=1
 
-% Define vector between transmitter and pixel
+% Define vector between receiver and pixel
 V=[X_receiver-X_target Y_receiver-Y_target];
 
 
@@ -16,7 +16,7 @@ reta(:,2)=V(2)*coord+Y_target;
 
 
 
-% Line of sight transmitter-target
+% Line of sight receiver-target
 
  for n=1:Npixels-1
      if AoI(round(reta(n+1,1)),round(reta(n+1,2))) ~= 0
