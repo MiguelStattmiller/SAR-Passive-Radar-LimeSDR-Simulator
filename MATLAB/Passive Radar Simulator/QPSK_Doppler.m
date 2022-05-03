@@ -113,10 +113,10 @@ grid on;
  grid on;
  hold off
 
-
+%%
 %**************** Target description
 
-v=800000; %Target speed in meters/second
+v=600; %Target speed in meters/second
 lambda=c./freq; %Wavelength in meters
 dopplershift=(2*v)./lambda; %Convert speed to doppler shift in Hz
 
@@ -136,17 +136,17 @@ title('Frequency domain');
 
 
 %Time
-plot(abs(tempo_surveillance),abs(Surveillance_Signal));
+plot(tempo_surveillance,abs(Surveillance_Signal));
 hold on;
-plot(abs(t),abs(Reference_Signal));
+plot(t,abs(Reference_Signal));
 legend('Surveillance Signal','Reference Signal');
 xlabel('time (second)');
 ylabel('amplitude');
 title('Time domain');
 
 
-k=find(doppler_freq>2.9e7 & doppler_freq<3.1e7);
-Surveillance_Signalcut=Surveillance_Signal(23528:23979);
+k=find(tempo_surveillance>-2e-4 & tempo_surveillance<-1.5e-4);
+Surveillance_Signalcut=Surveillance_Signal(1:299647);
 
 %**************** Add White noise to Surveillance_Signal
 
@@ -225,7 +225,7 @@ textString3 = sprintf('(%f, %f)', xMax3, yMax3);
 text(xMax3, yMax3,textString3,"Color",'b','FontSize',10);
 hold off
 shading interp;
-xlim auto;
+xlim ([0 5000]);
 grid on; 
 colorbar;
 xlabel('Doppler (Hz)');
@@ -241,7 +241,7 @@ hold on
 plot(doppler2, afmag2,'LineStyle','-','Color','r'); % Red Sr
 plot(doppler3, afmag3,'LineStyle','--','Color','g'); % blue cross-ambiguity 
 hold off
-xlim auto;
+xlim ([0 16000]);
 grid on; 
 colorbar;
 xlabel('Doppler (Hz)');
