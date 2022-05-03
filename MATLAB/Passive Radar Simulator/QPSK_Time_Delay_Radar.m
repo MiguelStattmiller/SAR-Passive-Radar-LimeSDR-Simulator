@@ -125,7 +125,7 @@ AoI=Nx.*Ny; % Surveillance area
 AoI(2,(5:10)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
 AoI(1,12) = 1;
 AoI(5,(5:7)) = 1;
-AoI(6,(9:10)) = 1;
+AoI(6,10) = 1;
 normal_ntarget1=[5 0]; % Define a normal vector to the target
 
 
@@ -154,11 +154,10 @@ for xx=1:200
             Vectors_product=dot( VTarget_receiver,normal_ntarget1);
             angle_receiver =acosd(Vectors_product/(norm(VTarget_receiver)*norm(normal_ntarget1)));
             status=snell_function(angle_transmitter,angle_receiver);
-            Pt=LoS_transmitter(X_transmitter,Y_transmitter,X_target,Y_target,AoI);
-            Pr=LoS_receiver(X_receiver,Y_receiver,X_target,Y_target,AoI);
+            P=LoS(X_transmitter,Y_transmitter,X_receiver,Y_receiver,X_target,Y_target,AoI);
 
            
-                 if status ==1 & Pt ==1 & Pr ==1
+                 if status ==1 & P ==1
                         R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target in meters
                         R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target in meters
                         Rd=sqrt( (X_receiver-X_transmitter).^2 + (Y_receiver-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
