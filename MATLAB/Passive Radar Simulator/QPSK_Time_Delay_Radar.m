@@ -115,8 +115,8 @@ grid on;
 
 % Define surveillance area and targets
 Lp=1; % Pixel length
-Nx= zeros(1,400); % dimension in x, horizontal of surveillance area
-Ny= zeros(400,1); % dimension in y, vertical  of surveillance area
+Nx= zeros(1,401); % dimension in x, horizontal of surveillance area
+Ny= zeros(401,1); % dimension in y, vertical  of surveillance area
 
 
 AoI=Nx.*Ny; % Surveillance area
@@ -127,8 +127,8 @@ AoI(10,(260:360)) = 1;
 normal_ntarget1=[1 0]; % Define a normal vector to the target
 
 % Receiver antenna position
-X_receiver=400;
-Y_receiver=400;
+X_receiver=401;
+Y_receiver=401;
 
 % Transmitter antenna position
 
@@ -136,8 +136,12 @@ X_transmitter=310;
 
 
 % Aeroplane movement
-
-waypoints=[1,81,161,241,321,400];
+number_stops=5;
+Vr=250; %In meters/second
+distance=length(Ny); %In meters
+total_time=distance/Vr; %In seconds
+time_waypoints=total_time/number_stops;
+waypoints=[1:Vr*time_waypoints:distance];
 
 
 
