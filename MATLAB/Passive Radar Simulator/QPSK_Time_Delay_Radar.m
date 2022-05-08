@@ -115,44 +115,51 @@ grid on;
 
 % Define surveillance area and targets
 Lp=1; % Pixel length
-Nx= zeros(1,200*Lp); % dimension in x, horizontal of surveillance area
-Ny= zeros(200*Lp,1); % dimension in y, vertical  of surveillance area
+Nx= zeros(1,400); % dimension in x, horizontal of surveillance area
+Ny= zeros(400,1); % dimension in y, vertical  of surveillance area
 
 
 AoI=Nx.*Ny; % Surveillance area
 
 % Horizontal targets
-AoI(2,(5:10)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
-AoI(1,12) = 1;
-AoI(5,(5:7)) = 1;
-AoI(6,(10:12)) = 1;
-normal_ntarget1=[5 0]; % Define a normal vector to the target
-
+AoI(10,(40:140)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+AoI(10,(260:360)) = 1;
+normal_ntarget1=[1 0]; % Define a normal vector to the target
 
 % Receiver antenna position
-X_receiver=8*Lp;
-Y_receiver=15*Lp;
+X_receiver=400;
+Y_receiver=400;
 
 % Transmitter antenna position
 
-X_transmitter=8*Lp;
-Y_transmitter=5*Lp;
+X_transmitter=310;
+
+
+% Aeroplane movement
+
+waypoints=[1,81,161,241,321,400];
+
+
 
 %%
 
 % Search for targets in surveillance area
 
-for xx=1:200
+
+for i=1:numel(waypoints)
+    Y_transmitter = waypoints(i);
+
+   for xx=1:200
     for yy=1:200
          if AoI(xx,yy) ~= 0 % Target detection
-            X_target= xx*Lp;
-            Y_target= yy*Lp;
+            X_target= xx;
+            Y_target= yy;
             VTransmitter_target=[X_target-X_transmitter Y_target-Y_transmitter]; % Vector transmitter-target
-            Vectors_product=dot( VTransmitter_target,normal_ntarget1);
-            angle_transmitter =180-acosd(Vectors_product/(norm(VTransmitter_target)*norm(normal_ntarget1)));
+            Vectors_product=dot( VTransmitter_target,normal_ntarget1)/norm(VTransmitter_target);
+            angle_transmitter =180-acosd(Vectors_product);
             VTarget_receiver=[X_receiver-X_target Y_receiver-Y_target]; % Vector Target-receiver
-            Vectors_product=dot( VTarget_receiver,normal_ntarget1);
-            angle_receiver =acosd(Vectors_product/(norm(VTarget_receiver)*norm(normal_ntarget1)));
+            Vectors_product=dot( VTarget_receiver,normal_ntarget1)/norm(VTarget_receiver);
+            angle_receiver =acosd(Vectors_product);
             status=snell_function(angle_transmitter,angle_receiver);
             Pr = LoS_receiver(X_receiver,Y_receiver,X_target,Y_target,AoI);
             Pt = LoS_transmitter(X_transmitter,Y_transmitter,X_target,Y_target,AoI);
@@ -173,7 +180,9 @@ for xx=1:200
             end
              
          end
-    end
+   end
+end
+
 
 
 
@@ -193,17 +202,28 @@ Surveillance_SignalFD=(1/(R1+R2))*X_QPSK.*exp(-1*j*k0*(R1+R2)); % Surveillance S
 
 %**************** Select Reference and Surveillance Signals Samples Time Domain 
 
+% Plot signals in Time Domain
 plot(time_RS,abs(Reference_Signal));
 hold on
 plot(time_SS,abs(Surveillance_Signal));
 legend('Reference Signal','Surveillance Signal');
 
 
-k=find(time_RS>1.9e-4 & time_RS<2e-4);
-Reference_SignalCut=Reference_Signal(2337951:2397800);
+% Frequency
+plot(abs(freq_XQPSK),abs(Surveillance_SignalFD));
+hold on;
+plot(abs(freq_XQPSK),abs(Reference_SignalFD));
+legend('Surveillance Signal','Reference Signal');
+xlabel('freq (Hz)');
+ylabel('Spectrum');
+title('Frequency domain');
 
-k2=find(time_SS>1.9e-4 & time_SS<2e-4);
-Surveillance_SignalCut=Surveillance_Signal(2337951:2397800);
+
+k=find(time_RS>-2e-4 & time_RS<-1.7e-4);
+Reference_SignalCut=Reference_Signal(1:179751);
+
+k2=find(time_SS>-2e-4 & time_SS<-1.7e-4);
+Surveillance_SignalCut=Surveillance_Signal(1:179751);
 
 %**************** Calculate ambiguity and cross-ambiguity functions 
 
