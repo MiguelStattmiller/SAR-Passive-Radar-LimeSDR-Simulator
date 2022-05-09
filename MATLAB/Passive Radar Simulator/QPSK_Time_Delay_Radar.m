@@ -115,8 +115,8 @@ grid on;
 
 % Define surveillance area and targets
 Lp=1; % Pixel length
-Nx= zeros(1,401); % dimension in x, horizontal of surveillance area
-Ny= zeros(401,1); % dimension in y, vertical  of surveillance area
+Nx= zeros(1,400); % dimension in x, horizontal of surveillance area
+Ny= zeros(400,1); % dimension in y, vertical  of surveillance area
 
 
 AoI=Nx.*Ny; % Surveillance area
@@ -127,8 +127,8 @@ AoI(10,(260:360)) = 1;
 normal_ntarget1=[1 0]; % Define a normal vector to the target
 
 % Receiver antenna position
-X_receiver=401;
-Y_receiver=401;
+X_receiver=400;
+Y_receiver=400;
 
 % Transmitter antenna position
 
@@ -136,13 +136,13 @@ X_transmitter=310;
 
 
 % Aeroplane movement
-number_stops=5;
+number_stops=20;
 Vr=250; %In meters/second
-distance=length(Ny); %In meters
+distance=length(Ny)*Lp; %In meters
 total_time=distance/Vr; %In seconds
 time_waypoints=total_time/number_stops;
 waypoints=[1:Vr*time_waypoints:distance];
-
+waypoints=round(waypoints);
 
 
 %%
@@ -173,6 +173,7 @@ for i=1:numel(waypoints)
                         R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target in meters
                         R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target in meters
                         Rd=sqrt( (X_receiver-X_transmitter).^2 + (Y_receiver-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
+                        fprintf('\n Coordenadas do avião(%d,%d)',X_transmitter,Y_transmitter);
                         fprintf('\n Coordenadas do alvo(%d,%d)',X_target,Y_target);
                         fprintf('\n Distância transmissor-alvo R1 %4.2f metros',R1);
                         fprintf('\n Distância alvo-recetor R2 %4.2f metros',R2);
