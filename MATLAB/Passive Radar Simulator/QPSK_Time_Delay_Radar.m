@@ -100,11 +100,11 @@ grid on;
 
 %**************** Plot frequency spectrum of QPSK signal
 
- [freq,Spectrum]=time2freq(QPSK_Signal,t);
+ [freq_XQPSK,X_QPSK]=time2freq(QPSK_Signal,t);
  fig=figure;
  hold on
  set(fig,'color','white');
- plot(freq,20*log10(abs(Spectrum)),'b','linewidth',2);
+ plot(freq_XQPSK,20*log10(abs(X_QPSK)),'b','linewidth',2);
  xlabel('Frequency [Hz]');
  ylabel('QPSK Spectrum [dB]');
  set(gca,'fontsize',fontsize);
@@ -137,7 +137,9 @@ normal_ntarget1=[1 0]; % Define a normal vector to the target
 % Surveillance antenna
 X_receiver=400;
 Y_receiver=400;
+
 % Reference antenna
+
 X_receiverref=399;
 Y_receiverref=399;
 
@@ -187,6 +189,9 @@ for i=1:numel(waypoints)
                         R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target in meters
                         R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target in meters
                         Rd=sqrt( (X_receiver-X_transmitter).^2 + (Y_receiver-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
+                        k0=(2*pi*freq_XQPSK)/c; % Wave index variable in radians
+                        Surveillance_SignalFD=(1/(R1+R2))*X_QPSK.*exp(-1*j*k0*(R1+R2)); % Surveillance Signal frequency domain
+                        Reference_SignalFD=(1/Rd)*X_QPSK.*exp(-1*j*k0*Rd); % Reference Signal frequency domain
                         fprintf('\n Coordenadas do avião(%d,%d)',X_transmitter,Y_transmitter);
                         fprintf('\n Coordenadas do alvo(%d,%d)',X_target,Y_target);
                         fprintf('\n Distância transmissor-alvo R1 %4.2f metros',R1);
@@ -203,16 +208,6 @@ for i=1:numel(waypoints)
 end
 
 
-
-
-
-%**********Calculate Reference and Surveillance Signals in Frequency Domain
-
-
-[freq_XQPSK,X_QPSK]=time2freq(QPSK_Signal,t); % Define QPSK signal in frequency domain
-k0=(2*pi*freq_XQPSK)/c; % Wave index variable in radians
-Reference_SignalFD=(1/Rd)*X_QPSK.*exp(-1*j*k0*Rd); % Reference Signal frequency domain
-Surveillance_SignalFD=(1/(R1+R2))*X_QPSK.*exp(-1*j*k0*(R1+R2)); % Surveillance Signal frequency domain
 
 %**************** Calculate Reference and Surveillance Signals in Time Domain  
 
