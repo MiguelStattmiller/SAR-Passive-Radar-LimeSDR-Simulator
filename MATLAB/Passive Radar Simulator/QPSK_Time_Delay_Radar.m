@@ -20,7 +20,7 @@ clear
 close all
 clc
 
-%***************** INPUTS ******************
+%***************** INPUTS QPSK Modulator ******************
 fc=30e6; %Carrier frequency
 c=3e8; % Speed of light 
 lambda=c/fc; %Wavelength
@@ -111,24 +111,35 @@ grid on;
  grid on;
  hold off
 
+%******************************************** Passive Radar Simulator
+
+%***************** INPUTS  ******************
+
+
+
 %**************** Define targets, Surveillance area and radar positions
+
 
 % Define surveillance area and targets
 Lp=1; % Pixel length
 Nx= zeros(1,400); % dimension in x, horizontal of surveillance area
 Ny= zeros(400,1); % dimension in y, vertical  of surveillance area
-
-
 AoI=Nx.*Ny; % Surveillance area
 
 % Horizontal targets
 AoI(10,(40:140)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+AoI(20,(40:140)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
 AoI(10,(260:360)) = 1;
 normal_ntarget1=[1 0]; % Define a normal vector to the target
 
 % Receiver antenna position
+
+% Surveillance antenna
 X_receiver=400;
 Y_receiver=400;
+% Reference antenna
+X_receiverref=399;
+Y_receiverref=399;
 
 % Transmitter antenna position
 
@@ -136,16 +147,19 @@ X_transmitter=310;
 
 
 % Aeroplane movement
-number_stops=20;
+number_stops=50;
 Vr=250; %In meters/second
+
+
 distance=length(Ny)*Lp; %In meters
 total_time=distance/Vr; %In seconds
 time_waypoints=total_time/number_stops;
 waypoints=[1:Vr*time_waypoints:distance];
 waypoints=round(waypoints);
 
-
 %%
+%***************** Processing code  ******************
+
 
 % Search for targets in surveillance area
 

@@ -145,9 +145,11 @@ ylabel('amplitude');
 title('Time domain');
 
 
-k=find(tempo_surveillance>-2e-4 & tempo_surveillance<-1.5e-4);
-Surveillance_Signalcut=Surveillance_Signal(1:299647);
+k=find(doppler_freq>2.5e7 & doppler_freq<3e7);
+Surveillance_Signalcut=Surveillance_Signal(21990:23979);
 
+k2=find(freq>2.5e7 & freq<3e7);
+Reference_Signalcut=Spectrum(21990:23979);
 %**************** Add White noise to Surveillance_Signal
 
 SNR=20;
@@ -156,7 +158,7 @@ Surveillance_Signal=awgn(Surveillance_Signalcut,SNR,'measured');
 %**************** Calculate ambiguity and cross-ambiguity functions 
 
 %Reference_Signal ambiguity function
-[afmag,doppler] = ambgfun(Reference_Signal,fs,1e6,'Cut','Delay');
+[afmag,doppler] = ambgfun(Reference_Signalcut,fs,1e6,'Cut','Delay');
 afmag = afmag*1; % Select plot gain *1
 afmag(afmag>1 )= 1;
 
@@ -166,7 +168,7 @@ afmag2 = afmag2*1; % Select plot gain *1
 afmag2(afmag2>1 )= 1;
 
 %Cross-ambiguity
-[afmag3,doppler3] = ambgfun(Reference_Signal,Surveillance_Signalcut,fs,[1e6 1e6],'Cut','Delay');
+[afmag3,doppler3] = ambgfun(Reference_Signalcut,Surveillance_Signalcut,fs,[1e6 1e6],'Cut','Delay');
 afmag3 = afmag3*1; % Select plot gain *1
 afmag3(afmag3>1 )= 1;
 
@@ -225,7 +227,7 @@ textString3 = sprintf('(%f, %f)', xMax3, yMax3);
 text(xMax3, yMax3,textString3,"Color",'b','FontSize',10);
 hold off
 shading interp;
-xlim ([0 5000]);
+xlim ([-0.2e7 0.2e7]);
 grid on; 
 colorbar;
 xlabel('Doppler (Hz)');
@@ -241,7 +243,7 @@ hold on
 plot(doppler2, afmag2,'LineStyle','-','Color','r'); % Red Sr
 plot(doppler3, afmag3,'LineStyle','--','Color','g'); % blue cross-ambiguity 
 hold off
-xlim ([0 16000]);
+xlim ([0.5e6 1.2e6]);
 grid on; 
 colorbar;
 xlabel('Doppler (Hz)');
