@@ -116,6 +116,20 @@ grid on;
 %***************** INPUTS  ******************
 
 
+% Surveillance antenna
+
+alpha_zero_surv=3*pi/4; % Introduce desired receiver antenna angle in radians
+theta_3dB_surv=2; % In radians
+
+% Reference antenna
+
+alpha_zeroSVref=3*pi/4; % Introduce desired receiver antenna angle in radians
+theta_3dB_ref=2; % In radians
+
+% snell function
+
+teta_flutuations=3; % Define the flutuation angle value
+
 
 %**************** Define targets, Surveillance area and radar positions
 
@@ -127,9 +141,9 @@ Ny= zeros(400,1); % dimension in y, vertical  of surveillance area
 AoI=Nx.*Ny; % Surveillance area
 
 % Horizontal targets
-AoI(10,(40:140)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
-AoI(20,(40:140)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
-AoI(10,(260:360)) = 1;
+%AoI(2,(8:10)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+AoI(20,(40:50)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+AoI(20,(80:90)) = 1;
 normal_ntarget1=[1 0]; % Define a normal vector to the target
 
 % Receiver antenna position
@@ -140,8 +154,8 @@ Y_receiver=400;
 
 % Reference antenna
 
-X_receiverref=399;
-Y_receiverref=399;
+X_receiverref=400;
+Y_receiverref=390;
 
 % Transmitter antenna position
 
@@ -149,7 +163,7 @@ X_transmitter=310;
 
 
 % Aeroplane movement
-number_stops=50;
+number_stops=20;
 Vr=250; %In meters/second
 
 
@@ -180,7 +194,7 @@ for i=1:numel(waypoints)
             VTarget_receiver=[X_receiver-X_target Y_receiver-Y_target]; % Vector Target-receiver
             Vectors_product=dot( VTarget_receiver,normal_ntarget1)/norm(VTarget_receiver);
             angle_receiver =acosd(Vectors_product);
-            status=snell_function(angle_transmitter,angle_receiver);
+            status=snell_function(angle_transmitter,angle_receiver,teta_flutuations);
             Pr = LoS_receiver(X_receiver,Y_receiver,X_target,Y_target,AoI);
             Pt = LoS_transmitter(X_transmitter,Y_transmitter,X_target,Y_target,AoI);
 
@@ -188,7 +202,7 @@ for i=1:numel(waypoints)
                  if status ==1 & Pt ==1 & Pr ==1
                         R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target in meters
                         R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target in meters
-                        Rd=sqrt( (X_receiver-X_transmitter).^2 + (Y_receiver-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
+                        Rd=sqrt( (X_receiverref-X_transmitter).^2 + (Y_receiverref-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
                         k0=(2*pi*freq_XQPSK)/c; % Wave index variable in radians
                         Surveillance_SignalFD=(1/(R1+R2))*X_QPSK.*exp(-1*j*k0*(R1+R2)); % Surveillance Signal frequency domain
                         Reference_SignalFD=(1/Rd)*X_QPSK.*exp(-1*j*k0*Rd); % Reference Signal frequency domain
@@ -213,6 +227,7 @@ end
 
 [time_RS,Reference_Signal]=freq2time(Reference_SignalFD,freq_XQPSK);
 [time_SS,Surveillance_Signal]=freq2time(Surveillance_SignalFD,freq_XQPSK);
+
 
 %**************** Select Reference and Surveillance Signals Samples Time Domain 
 
