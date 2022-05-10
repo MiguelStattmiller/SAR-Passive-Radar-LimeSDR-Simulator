@@ -1,4 +1,4 @@
-function [Wi_ref] = RXGaussian_ref(X_receiver,Y_receiver,X_transmitter,Y_transmitter,alpha_zeroSVref,D_ref)
+function [Wi_ref] = RXGaussian_ref(X_receiverref,Y_receiverref,X_transmitter,Y_transmitter,alpha_zeroSVref,D_ref)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -7,19 +7,20 @@ function [Wi_ref] = RXGaussian_ref(X_receiver,Y_receiver,X_transmitter,Y_transmi
 
 alpha_zeroSVref=2 % Introduce desired receiver antenna angle in radians
 D_ref=1 % Antenna length in meters
+n=1; % Antenna directivity
 
 
 %**************** Function Calculus
 
 % Define vector between receiver and transmitter
-V=[X_receiver-X_transmitter Y_receiver-Y_transmitter]
+V=[X_receiverref-X_transmitter Y_receiverref-Y_transmitter];
+angle = atan2(abs(V(2)), V(1));
 
 
 u = [cos(alpha_zeroSVref),sin(alpha_zeroSVref)]; % direction beam of receiver antenna
-Vectors_product=dot( V,u)/norm(V); % Calculate angle between vector target-receiver and direction beam antenna vector
-DoA_ref =acos(Vectors_product);
-tetha_3dBref= sqrt((4*pi)/D_ref);
+angle2 = atan2(abs(u(2)), u(1));
 
 
 
-Wi_ref=exp(-(DoA_ref-alpha_zeroSVref).^2 / (c*(tetha_3dBref.^2))) 
+
+Wi_ref=cos(angle-angle2)^n;
