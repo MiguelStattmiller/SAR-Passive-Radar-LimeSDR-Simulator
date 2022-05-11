@@ -190,7 +190,7 @@ for i=1:numel(waypoints)
             Y_target= yy;
             VTransmitter_target=[X_target-X_transmitter Y_target-Y_transmitter]; % Vector transmitter-target
             Vectors_product=dot( VTransmitter_target,normal_ntarget1)/norm(VTransmitter_target);
-            angle_transmitter =180-acosd(Vectors_product);
+            angle_transmitter =acosd(Vectors_product);
             VTarget_receiver=[X_receiver-X_target Y_receiver-Y_target]; % Vector Target-receiver
             Vectors_product=dot( VTarget_receiver,normal_ntarget1)/norm(VTarget_receiver);
             angle_receiver =acosd(Vectors_product);
@@ -200,12 +200,15 @@ for i=1:numel(waypoints)
 
            
                  if status ==1 & Pt ==1 & Pr ==1
+
+                        Wi_ref = RXGaussian_ref(X_receiverref,Y_receiverref,X_transmitter,Y_transmitter,alpha_zeroSVref,theta_3dB_ref);
+                        Wi_Surv= RXGaussian(X_receiver,Y_receiver,X_target,Y_target,alpha_zero_surv,theta_3dB_surv);
                         R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target in meters
                         R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target in meters
                         Rd=sqrt( (X_receiverref-X_transmitter).^2 + (Y_receiverref-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
                         k0=(2*pi*freq_XQPSK)/c; % Wave index variable in radians
-                        Surveillance_SignalFD=(1/(R1+R2))*X_QPSK.*exp(-1*j*k0*(R1+R2)); % Surveillance Signal frequency domain
-                        Reference_SignalFD=(1/Rd)*X_QPSK.*exp(-1*j*k0*Rd); % Reference Signal frequency domain
+                        Surveillance_SignalFD=Wi_Surv*(1/(R1+R2))*X_QPSK.*exp(-1*j*k0*(R1+R2)); % Surveillance Signal frequency domain
+                        Reference_SignalFD=Wi_ref*(1/Rd)*X_QPSK.*exp(-1*j*k0*Rd); % Reference Signal frequency domain
                         fprintf('\n Coordenadas do avião(%d,%d)',X_transmitter,Y_transmitter);
                         fprintf('\n Coordenadas do alvo(%d,%d)',X_target,Y_target);
                         fprintf('\n Distância transmissor-alvo R1 %4.2f metros',R1);
