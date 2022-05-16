@@ -104,7 +104,8 @@ grid on;
  fig=figure;
  hold on
  set(fig,'color','white');
- plot(freq_XQPSK,20*log10(abs(X_QPSK)),'b','linewidth',2);
+ plot(abs(freq_XQPSK),20*log10(abs(X_QPSK)),'b','linewidth',2);
+ xlim ([20e6 40e6]);
  xlabel('Frequency [Hz]');
  ylabel('QPSK Spectrum [dB]');
  set(gca,'fontsize',fontsize);
@@ -121,14 +122,10 @@ grid on;
 alpha_zero_surv=0.68; % Introduce desired receiver antenna angle in radians
 D_surv=11; % Antenna directivity in dBi
 
-D_surv=10^(D_surv/10);
-
 % Reference antenna
 
 alpha_zeroSVref=pi; % Introduce desired receiver antenna angle in radians
 D_ref=11; % Antenna directivity in dBi
-
-D_ref=10^(D_ref/10);
 
 % snell function
 
@@ -144,33 +141,35 @@ SNR=-26; %dB
 
 % Define surveillance area and targets
 Lp=1; % Pixel length
-Nx= zeros(1,400); % dimension in x, horizontal of surveillance area
-Ny= zeros(400,1); % dimension in y, vertical  of surveillance area
+Nx= zeros(1,200); % dimension in x, horizontal of surveillance area
+Ny= zeros(200,1); % dimension in y, vertical  of surveillance area
 AoI=Nx.*Ny; % Surveillance area
 
 % Horizontal targets
-AoI(10,(100:110)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
-%AoI(10,300) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+AoI(1,12) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+AoI(2,(5:10)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+AoI(5,(5:7)) = 1;
+AoI(6,(10:12)) = 1;
 normal_ntarget1=[1 0]; % Define a normal vector to the target
 
 % Receiver antenna position
 
 % Surveillance antenna
-X_receiver=400;
-Y_receiver=400;
+X_receiver=8;
+Y_receiver=16;
 
 % Reference antenna
 
-X_receiverref=400;
-Y_receiverref=390;
+X_receiverref=8;
+Y_receiverref=13;
 
 % Transmitter antenna position
 
-X_transmitter=310;
+X_transmitter=7;
 
 
 % Aeroplane movement
-number_stops=100;
+number_stops=200;
 Vr=250; %In meters/second
 
 distance=length(Ny)*Lp; %In meters
@@ -190,8 +189,8 @@ waypoints=round(waypoints);
 for i=1:numel(waypoints)
     Y_transmitter = waypoints(i);
 
-   for xx=1:400
-    for yy=1:400
+   for xx=1:200
+    for yy=1:200
          if AoI(xx,yy) ~= 0 % Target detection
             X_target= xx;
             Y_target= yy;
@@ -215,8 +214,9 @@ for i=1:numel(waypoints)
                         Rd=sqrt( (X_receiverref-X_transmitter).^2 + (Y_receiverref-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
                         k0=(2*pi*freq_XQPSK)/c; % Wave index variable in radians
                         Vr=Vr*cos(angle_transmitter);
-                        dopplershift=(2*Vr)./lambda; %Convert speed to doppler shift in Hz
-                        Kd=2*pi*dopplershift/c;
+                        lambda2=c./freq_XQPSK; %Wavelength in meters
+                        fB=(2*Vr)./lambda2; %Convert speed to doppler shift in Hz
+                        Kd=2*pi*fB/c;
                         Surveillance_SignalFD=Wi_Surv*(1/(R1+R2))*X_QPSK.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
                         Surveillance_SignalFD=awgn(Surveillance_SignalFD,SNR,'measured'); % Introduce white gaussian Noise 
                         Reference_SignalFD=Wi_ref*(1/Rd)*X_QPSK.*exp(-1*j*(k0+Kd)*Rd); % Reference Signal frequency domain
