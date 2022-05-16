@@ -1,9 +1,11 @@
-function [Wi_ref] = RXGaussian_ref(X_receiverref,Y_receiverref,X_transmitter,Y_transmitter,alpha_zeroSVref,theta_3dB_ref)
+function [Wi_ref] = RXGaussian_ref(X_receiverref,Y_receiverref,X_transmitter,Y_transmitter,alpha_zeroSVref,D_ref)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
 %**************** Function Calculus
-n=real((1/2*log10(2))/(log10(cos(theta_3dB_ref))));
+theta_3dB_ref=sqrt(4*pi/(10^(D_ref/10))); %desired HPBW
+n=fit2Directivity_ref(D_ref);
+%n=real((1/2*log10(2))/(log10(cos(theta_3dB_ref))));
 alpha=linspace(alpha_zeroSVref-pi/2,pi/2+alpha_zeroSVref);
 
 % Define vector between receiver and transmitter

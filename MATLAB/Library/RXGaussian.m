@@ -1,10 +1,12 @@
-function [Wi_Surv] = RXGaussian(X_receiver,Y_receiver,X_target,Y_target,alpha_zero_surv,theta_3dB_surv)
+function [Wi_Surv] = RXGaussian(X_receiver,Y_receiver,X_target,Y_target,alpha_zero_surv,D_surv)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
 
 %**************** Function Calculus
-n=real((1/2*log10(2))/(log10(cos(theta_3dB_surv))));
+theta_3dB_surv=sqrt(4*pi/(10^(D_surv/10))); %desired HPBW
+n=fit2Directivity_surv(D_surv);
+%n=real((1/2*log10(2))/(log10(cos(theta_3dB_surv))));
 alpha=linspace(alpha_zero_surv-pi/2,pi/2+alpha_zero_surv);
 
 % Define vector between receiver and target
