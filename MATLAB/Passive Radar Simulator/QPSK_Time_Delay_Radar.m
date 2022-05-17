@@ -136,40 +136,40 @@ teta_flutuations=0.5; % Define the flutuation angle value
 
 % White Noise addition 
 
-SNR=-26; %dB
+SNR=-35; %dB
 
 
 % Define surveillance area and targets
 Lp=1; % Pixel length
-Nx= zeros(1,200); % dimension in x, horizontal of surveillance area
-Ny= zeros(200,1); % dimension in y, vertical  of surveillance area
+Nx= zeros(1,400); % dimension in x, horizontal of surveillance area
+Ny= zeros(400,1); % dimension in y, vertical  of surveillance area
 AoI=Nx.*Ny; % Surveillance area
 
 % Horizontal targets
-AoI(1,12) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
-AoI(2,(5:10)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
-AoI(5,(5:7)) = 1;
-AoI(6,(10:12)) = 1;
+AoI(10,200) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+%AoI(2,(5:10)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+%AoI(5,(5:7)) = 1;
+%AoI(6,(10:12)) = 1;
 normal_ntarget1=[1 0]; % Define a normal vector to the target
 
 % Receiver antenna position
 
 % Surveillance antenna
-X_receiver=8;
-Y_receiver=16;
+X_receiver=20;
+Y_receiver=300;
 
 % Reference antenna
 
-X_receiverref=8;
-Y_receiverref=13;
+X_receiverref=20;
+Y_receiverref=300;
 
 % Transmitter antenna position
 
-X_transmitter=7;
+X_transmitter=20;
 
-
+%%
 % Aeroplane movement
-number_stops=200;
+number_stops=100;
 Vr=250; %In meters/second
 
 distance=length(Ny)*Lp; %In meters
@@ -189,18 +189,19 @@ waypoints=round(waypoints);
 for i=1:numel(waypoints)
     Y_transmitter = waypoints(i);
 
-   for xx=1:200
-    for yy=1:200
+   for xx=1:400
+    for yy=1:400
          if AoI(xx,yy) ~= 0 % Target detection
             X_target= xx;
             Y_target= yy;
             VTransmitter_target=[X_target-X_transmitter Y_target-Y_transmitter]; % Vector transmitter-target
-            Vectors_product=dot( VTransmitter_target,normal_ntarget1)/norm(VTransmitter_target)*norm(normal_ntarget1);
-            angle_transmitter =180-acosd(Vectors_product);
-            VTarget_receiver=[X_receiver-X_target Y_receiver-Y_target]; % Vector Target-receiver
-            Vectors_product=dot( VTarget_receiver,normal_ntarget1)/norm(VTarget_receiver)*norm(normal_ntarget1);
+            Vectors_product=dot( VTransmitter_target,normal_ntarget1)/(norm(VTransmitter_target)*norm(normal_ntarget1));
+            angle_transmitter =acosd(Vectors_product);
+            VTarget_receiver=[X_target-X_receiver Y_target-Y_receiver]; % Vector Target-receiver
+            Vectors_product=dot( VTarget_receiver,normal_ntarget1)/(norm(VTarget_receiver)*norm(normal_ntarget1));
             angle_receiver =acosd(Vectors_product);
-            status=snell_function(angle_transmitter,angle_receiver,teta_flutuations);
+            Vectors_product_2= Colin_vectors(VTransmitter_target,VTarget_receiver);
+            status=snell_function(angle_transmitter,angle_receiver,teta_flutuations,Vectors_product_2);
             Pr = LoS_receiver(X_receiver,Y_receiver,X_target,Y_target,AoI);
             Pt = LoS_transmitter(X_transmitter,Y_transmitter,X_target,Y_target,AoI);
 
