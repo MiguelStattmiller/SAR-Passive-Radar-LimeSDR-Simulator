@@ -124,7 +124,7 @@ D_surv=11; % Antenna directivity in dBi
 
 % Reference antenna
 
-alpha_zeroSVref=pi; % Introduce desired receiver antenna angle in radians
+alpha_zeroSVref=0.68; % Introduce desired receiver antenna angle in radians
 D_ref=11; % Antenna directivity in dBi
 
 % snell function
@@ -136,7 +136,7 @@ teta_flutuations=0.5; % Define the flutuation angle value
 
 % White Noise addition 
 
-SNR=-35; %dB
+SNR=30; %dB
 
 
 % Define surveillance area and targets
@@ -146,38 +146,36 @@ Ny= zeros(400,1); % dimension in y, vertical  of surveillance area
 AoI=Nx.*Ny; % Surveillance area
 
 % Horizontal targets
-AoI(10,200) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
-%AoI(2,(5:10)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
-%AoI(5,(5:7)) = 1;
-%AoI(6,(10:12)) = 1;
-normal_ntarget1=[1 0]; % Define a normal vector to the target
+AoI(20,300) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+AoI(20,(300:320)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+normal_ntarget1=[0 -1]; % Define a normal vector to the target
 
 % Receiver antenna position
 
 % Surveillance antenna
-X_receiver=20;
-Y_receiver=300;
+X_receiver=400;
+Y_receiver=400;
 
 % Reference antenna
 
-X_receiverref=20;
-Y_receiverref=300;
+X_receiverref=400;
+Y_receiverref=400;
 
 % Transmitter antenna position
 
-X_transmitter=20;
+X_transmitter=400;
 
-%%
+
 % Aeroplane movement
-number_stops=100;
-Vr=250; %In meters/second
+number_stops=400;
+Vr=3e8; %In meters/second
+
 
 distance=length(Ny)*Lp; %In meters
 total_time=distance/Vr; %In seconds
 time_waypoints=total_time/number_stops;
 waypoints=[1:Vr*time_waypoints:distance];
 waypoints=round(waypoints);
-
 
 %%
 %***************** Processing code  ******************
@@ -196,7 +194,7 @@ for i=1:numel(waypoints)
             Y_target= yy;
             VTransmitter_target=[X_target-X_transmitter Y_target-Y_transmitter]; % Vector transmitter-target
             Vectors_product=dot( VTransmitter_target,normal_ntarget1)/(norm(VTransmitter_target)*norm(normal_ntarget1));
-            angle_transmitter =acosd(Vectors_product);
+            angle_transmitter =180-acosd(Vectors_product);
             VTarget_receiver=[X_target-X_receiver Y_target-Y_receiver]; % Vector Target-receiver
             Vectors_product=dot( VTarget_receiver,normal_ntarget1)/(norm(VTarget_receiver)*norm(normal_ntarget1));
             angle_receiver =acosd(Vectors_product);
@@ -214,13 +212,13 @@ for i=1:numel(waypoints)
                         R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target in meters
                         Rd=sqrt( (X_receiverref-X_transmitter).^2 + (Y_receiverref-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
                         k0=(2*pi*freq_XQPSK)/c; % Wave index variable in radians
-                        Vr=Vr*cos(angle_transmitter);
+                        Vr=Vr*cos(90-angle_transmitter);
                         lambda2=c./freq_XQPSK; %Wavelength in meters
                         fB=(2*Vr)./lambda2; %Convert speed to doppler shift in Hz
-                        Kd=2*pi*fB/c;
+                        Kd=(2*pi*fB)/c;
                         Surveillance_SignalFD=Wi_Surv*(1/(R1+R2))*X_QPSK.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
                         Surveillance_SignalFD=awgn(Surveillance_SignalFD,SNR,'measured'); % Introduce white gaussian Noise 
-                        Reference_SignalFD=Wi_ref*(1/Rd)*X_QPSK.*exp(-1*j*(k0+Kd)*Rd); % Reference Signal frequency domain
+                        Reference_SignalFD=Wi_ref*(1/Rd)*X_QPSK.*exp(-1*j*k0*Rd); % Reference Signal frequency domain
                         fprintf('\n Coordenadas do avião(%d,%d)',X_transmitter,Y_transmitter);
                         fprintf('\n Coordenadas do alvo(%d,%d)',X_target,Y_target);
                         fprintf('\n Distância transmissor-alvo R1 %4.2f metros',R1);
@@ -235,6 +233,16 @@ for i=1:numel(waypoints)
          end
    end
 end
+
+
+%***************** Image formation  ******************
+
+% Range compression
+
+
+range_compression = conv(Surveillance_SignalFD,X_QPSK);
+
+
 
 
 
@@ -263,13 +271,15 @@ ylabel('Spectrum');
 title('Frequency domain');
 
 
-k=find(time_RS>-2e-4 & time_RS<-1.7e-4);
-Reference_SignalCut=Reference_Signal(1:179751);
+k=find(time_RS>-2e-4 & time_RS<-1.5e-4);
+Reference_SignalCut=Reference_Signal(1:299651);
 
-k2=find(time_SS>-2e-4 & time_SS<-1.7e-4);
-Surveillance_SignalCut=Surveillance_Signal(1:179751);
+k2=find(time_SS>-2e-4 & time_SS<-1.5e-4);
+Surveillance_SignalCut=Surveillance_Signal(1:299651);
 
-%**************** Calculate ambiguity and cross-ambiguity functions 
+
+
+%************* Calculate ambiguity and cross-ambiguity functions-time delay
 
 %Reference_Signal ambiguity function
 [afmag,delay] = ambgfun(Reference_SignalCut,fs,1e6,'Cut','Doppler');
@@ -287,7 +297,27 @@ afmag3 = afmag3*1; % Select plot gain *1
 afmag3(afmag3>1 )= 1;
 
 
-%**************** Plot ambiguity and cross-ambiguity functions
+%*********** Calculate ambiguity and cross-ambiguity functions-doppler delay
+
+
+%Reference_Signal ambiguity function
+[afmag,doppler] = ambgfun(Reference_SignalCut,fs,1e6,'Cut','Delay');
+afmag = afmag*1; % Select plot gain *1
+afmag(afmag>1 )= 1;
+
+ %Surveillance_Signal ambiguity function
+[afmag2,doppler2] = ambgfun(Surveillance_SignalCut,fs,1e6,'Cut','Delay');
+afmag2 = afmag2*1; % Select plot gain *1
+afmag2(afmag2>1 )= 1;
+
+%Cross-ambiguity
+[afmag3,doppler3] = ambgfun(Reference_SignalCut,Surveillance_SignalCut,fs,[1e6 1e6],'Cut','Delay');
+afmag3 = afmag3*1; % Select plot gain *1
+afmag3(afmag3>1 )= 1;
+
+
+
+%**************** Plot ambiguity and cross-ambiguity functions time delay
 
 
 %Plot Ambiguity Function of Sref
@@ -363,6 +393,86 @@ xlim auto;
 grid on; 
 colorbar;
 xlabel('Delay \tau (s)');
+ylabel('Ambiguity Function Magnitude');
+title('Sref, Sr and cross-ambiguity');
+legend('Sref','Sr','cross-ambiguity');
+
+
+
+%**************** Plot ambiguity and cross-ambiguity functions doppler delay
+
+%Plot Ambiguity Function of Sref
+[pks1, index] = max(afmag);
+xMax = doppler(index);
+yMax = pks1;
+subplot(3,2,1)
+plot(doppler,afmag,'LineStyle','-.'); 
+hold on
+%plot3(doppler(pks1,index),afmag(pks1,index), pks1, '^r')
+textString = sprintf('(%f, %f)', xMax, yMax);
+text(xMax, yMax,textString,"Color",'b','FontSize',10);
+hold off
+shading interp;
+xlim auto;
+grid on; 
+colorbar;
+xlabel('Doppler (Hz)');
+ylabel('Ambiguity Function Magnitude');
+title('Ambiguity Function Sref');
+
+
+%Plot Ambiguity Function of Sr
+[pks2,index2] = max(afmag2);
+xMax2 = doppler2(index2);
+yMax2 = pks2;
+subplot(3,2,2)   
+plot(doppler2,afmag2,'LineStyle','-'); 
+hold on
+%plot3(doppler2(pks2,index2), afmag2(pks2,index2), pks2, '^r')
+textString2 = sprintf('(%f, %f)', xMax2, yMax2);
+text(xMax2, yMax2,textString2,"Color",'b','FontSize',10);
+hold off
+shading interp;
+xlim auto;
+grid on; 
+colorbar;
+xlabel('Doppler (Hz)');
+ylabel('Ambiguity Function Magnitude');
+title('Ambiguity Function Sr');
+
+
+% Plot cross-ambiguity function of Sref and Sr
+
+[pks3,index3] = max(afmag3);
+xMax3 = doppler3(index3);
+yMax3 = pks3;
+subplot(3,2,3)
+plot(doppler3,afmag3,'LineStyle','-'); 
+hold on
+textString3 = sprintf('(%f, %f)', xMax3, yMax3);
+text(xMax3, yMax3,textString3,"Color",'b','FontSize',10);
+hold off
+shading interp;
+xlim auto;
+grid on; 
+colorbar;
+xlabel('Doppler (Hz)');
+ylabel('Ambiguity Function Magnitude');
+title('Cross-ambiguity');
+
+
+% Plot ambiguity function of Sref, Sr and cross-ambiguity
+
+subplot(3,2,4)
+plot(doppler,afmag,'LineStyle','-.','Color','b'); % Green Sref
+hold on
+plot(doppler2, afmag2,'LineStyle','-','Color','r'); % Red Sr
+plot(doppler3, afmag3,'LineStyle','--','Color','g'); % blue cross-ambiguity 
+hold off
+xlim ([0.5e6 1.2e6]);
+grid on; 
+colorbar;
+xlabel('Doppler (Hz)');
 ylabel('Ambiguity Function Magnitude');
 title('Sref, Sr and cross-ambiguity');
 legend('Sref','Sr','cross-ambiguity');
