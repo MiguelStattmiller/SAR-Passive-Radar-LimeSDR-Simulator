@@ -105,7 +105,7 @@ grid on;
  hold on
  set(fig,'color','white');
  plot(abs(freq_XQPSK),20*log10(abs(X_QPSK)),'b','linewidth',2);
- xlim ([20e6 40e6]);
+ xlim ([20e6 60e6]);
  xlabel('Frequency [Hz]');
  ylabel('QPSK Spectrum [dB]');
  set(gca,'fontsize',fontsize);
@@ -146,8 +146,10 @@ Ny= zeros(400,1); % dimension in y, vertical  of surveillance area
 AoI=Nx.*Ny; % Surveillance area
 
 % Horizontal targets
+%AoI(100,300) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
 AoI(20,300) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
-AoI(20,(300:320)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+%AoI(300,350) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
+
 normal_ntarget1=[0 -1]; % Define a normal vector to the target
 
 % Receiver antenna position
@@ -159,7 +161,7 @@ Y_receiver=400;
 % Reference antenna
 
 X_receiverref=400;
-Y_receiverref=400;
+Y_receiverref=390;
 
 % Transmitter antenna position
 
@@ -184,6 +186,10 @@ waypoints=round(waypoints);
 % Search for targets in surveillance area
 
 
+surv_matrix=zeros(length(X_QPSK),length(waypoints));
+ref_matrix=zeros(length(X_QPSK),length(waypoints));
+
+
 for i=1:numel(waypoints)
     Y_transmitter = waypoints(i);
 
@@ -206,19 +212,23 @@ for i=1:numel(waypoints)
            
                  if status ==1 & Pt ==1 & Pr ==1
 
-                        Wi_ref = RXGaussian_ref(X_receiverref,Y_receiverref,X_transmitter,Y_transmitter,alpha_zeroSVref,D_ref);
-                        Wi_Surv= RXGaussian(X_receiver,Y_receiver,X_target,Y_target,alpha_zero_surv,D_surv);
+                        %Wi_ref = RXGaussian_ref(X_receiverref,Y_receiverref,X_transmitter,Y_transmitter,alpha_zeroSVref,D_ref);
+                        %Wi_Surv= RXGaussian(X_receiver,Y_receiver,X_target,Y_target,alpha_zero_surv,D_surv);
                         R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target in meters
                         R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target in meters
                         Rd=sqrt( (X_receiverref-X_transmitter).^2 + (Y_receiverref-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
                         k0=(2*pi*freq_XQPSK)/c; % Wave index variable in radians
-                        Vr=Vr*cos(90-angle_transmitter);
+                        V=Vr*cos(90-angle_transmitter);
                         lambda2=c./freq_XQPSK; %Wavelength in meters
-                        fB=(2*Vr)./lambda2; %Convert speed to doppler shift in Hz
+                        fB=(2*V)./lambda2; %Convert speed to doppler shift in Hz
                         Kd=(2*pi*fB)/c;
-                        Surveillance_SignalFD=Wi_Surv*(1/(R1+R2))*X_QPSK.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
-                        Surveillance_SignalFD=awgn(Surveillance_SignalFD,SNR,'measured'); % Introduce white gaussian Noise 
-                        Reference_SignalFD=Wi_ref*(1/Rd)*X_QPSK.*exp(-1*j*k0*Rd); % Reference Signal frequency domain
+                        fB_ref=(2*Vr)./lambda2; %Convert speed to doppler shift in Hz
+                        kd_ref=(2*pi*fB_ref)/c;
+                        Surveillance_SignalFD=Wi_Surv.*(1/(R1+R2))*X_QPSK.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
+                        %Surveillance_SignalFD=awgn(Surveillance_SignalFD,SNR,'measured'); % Introduce white gaussian Noise
+                        surv_matrix(:,i)=Surveillance_SignalFD;
+                        Reference_SignalFD=Wi_ref.*(1/Rd)*X_QPSK.*exp(-1*j*(k0+kd_ref)*Rd); % Reference Signal frequency domain
+                        ref_matrix(:,i)=Reference_SignalFD;
                         fprintf('\n Coordenadas do avião(%d,%d)',X_transmitter,Y_transmitter);
                         fprintf('\n Coordenadas do alvo(%d,%d)',X_target,Y_target);
                         fprintf('\n Distância transmissor-alvo R1 %4.2f metros',R1);
@@ -235,14 +245,12 @@ for i=1:numel(waypoints)
 end
 
 
-%***************** Image formation  ******************
 
-% Range compression
+%***************** Spectrum formation  ******************
 
-
-range_compression = conv(Surveillance_SignalFD,X_QPSK);
-
-
+ic=find(~all(surv_matrix==0));
+hL=plot(abs(freq_XQPSK),abs(surv_matrix(:,ic)));
+hLg=legend('1 coluna do avião','2 coluna do avião','3 coluna do avião','4 coluna do avião','5 coluna do avião','6 coluna do avião','7 coluna do avião');
 
 
 
