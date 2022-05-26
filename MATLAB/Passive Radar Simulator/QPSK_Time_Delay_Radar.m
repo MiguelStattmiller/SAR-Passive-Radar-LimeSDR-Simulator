@@ -226,9 +226,9 @@ for i=1:numel(waypoints)
                         kd_ref=(2*pi*fB_ref)/c;
                         Surveillance_SignalFD=Wi_Surv.*(1/(R1+R2))*X_QPSK.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
                         %Surveillance_SignalFD=awgn(Surveillance_SignalFD,SNR,'measured'); % Introduce white gaussian Noise
-                        surv_matrix(:,i)=Surveillance_SignalFD;
+                        %surv_matrix(:,i)=Surveillance_SignalFD;
                         Reference_SignalFD=Wi_ref.*(1/Rd)*X_QPSK.*exp(-1*j*(k0+kd_ref)*Rd); % Reference Signal frequency domain
-                        ref_matrix(:,i)=Reference_SignalFD;
+                        %ref_matrix(:,i)=Reference_SignalFD;
                         fprintf('\n Coordenadas do avião(%d,%d)',X_transmitter,Y_transmitter);
                         fprintf('\n Coordenadas do alvo(%d,%d)',X_target,Y_target);
                         fprintf('\n Distância transmissor-alvo R1 %4.2f metros',R1);
@@ -244,7 +244,11 @@ for i=1:numel(waypoints)
    end
 end
 
-
+ plot(abs(freq_XQPSK),(abs(Reference_SignalFD)));
+ hold on
+ plot(abs(freq_XQPSK),(abs(Surveillance_SignalFD)));
+ legend('reference Signal','surveillance Signal');
+ xlim([2.5e7 3e7]);
 
 %***************** Spectrum formation  ******************
 
