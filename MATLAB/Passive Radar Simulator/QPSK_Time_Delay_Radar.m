@@ -105,7 +105,7 @@ grid on;
  hold on
  set(fig,'color','white');
  plot(abs(freq_XQPSK),20*log10(abs(X_QPSK)),'b','linewidth',2);
- xlim ([20e6 60e6]);
+ xlim ([20e6 40e6]);
  xlabel('Frequency [Hz]');
  ylabel('QPSK Spectrum [dB]');
  set(gca,'fontsize',fontsize);
@@ -179,7 +179,7 @@ X_transmitter=400;
 
 % Aeroplane movement
 number_stops=400;
-Vr=2000; %In meters/second
+Vr=250; %In meters/second
 
 
 distance=length(Ny)*Lp; %In meters
@@ -257,11 +257,44 @@ for i=1:numel(waypoints)
 end
 
 
+
 %***************** Spectrum formation  ******************
 
 ic=find(~all(surv_matrix==0));
 hL=plot(abs(freq_XQPSK),abs(surv_matrix(:,ic)));
 hLg=legend('1 coluna do avião','2 coluna do avião','3 coluna do avião','4 coluna do avião','5 coluna do avião','6 coluna do avião','7 coluna do avião');
+xlim([2.5e7 3.5e7]);
+%***************** Data Visualization  ******************
+
+figure;
+contour(waypoints,doppler_freqSurv,real(surv_matrix));
+colorbar;
+xlabel('Waypoints (m)');
+ylabel('Frequency (Hz)');
+title('Surveillance matrix contour');
+
+figure;
+contour(waypoints,doppler_freqRef,real(ref_matrix));
+colorbar;
+xlabel('Waypoints (m)');
+ylabel('frequency (Hz)');
+title('Reference matrix contour');
+
+%***************** Signals Correlation Calculation  ******************
+
+[n,m]=size(surv_matrix);
+[n2,m2]=size(ref_matrix);
+
+for i=1:m
+    for ii=1:m2
+        Reference_SignalCut=ref_matrix(:,ii);
+        Surveillance_SignalCut=surv_matrix(:,i);
+        [afmag3,delay3,doppler3] = ambgfun(Reference_SignalCut,Surveillance_SignalCut,fs,[1e6 1e6]);
+        afmag3 = afmag3*1; % Select plot gain *1
+        afmag3(afmag3>1 )= 1;
+    end
+end
+
 
 
 
