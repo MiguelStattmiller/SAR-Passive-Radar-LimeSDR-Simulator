@@ -11,7 +11,7 @@
 clc
 clear all
 
-addpath('C:\Program Files\PothosSDR\bin') % add path with LimeSuite library
+addpath('C:\Program Files\PothosSDR') % add path with LimeSuite library
 
 % Initialize parameters
 TotalTime   = 1;       % Time of observation, s
@@ -93,7 +93,7 @@ pause(1)
 dev.stop();
 clear dev;
 fprintf('Stop of LimeSDR\n');
-
+%%
 % Select a few samples to get the process quicker
 t = bufferRx(1:6000);
 x = transpose(t);
@@ -107,9 +107,11 @@ x1 = transpose(t1);
 figure(1)
 subplot(3,2,1);
 spectrogram(bufferRx,2^12,2^10,2^12,'centered','yaxis')
+title('Reference Signal');
 
 subplot(3,2,2);
 spectrogram(bufferRx1,2^12,2^10,2^12,'centered','yaxis')
+title('Surveillance Signal');
 
 
 %**************** Samples of the receiving channels spectrum
@@ -143,17 +145,17 @@ hold off
 %**************** Calculate ambiguity and cross-ambiguity functions
 
 %Sref ambiguity function
-[afmag,delay] = ambgfun(x,Fs,250000,'cut','Doppler');
+[afmag,delay] = ambgfun(bufferRx,Fs,250000,'cut','Doppler');
 afmag = afmag*1; % Select plot gain *1
 afmag(afmag>1 )= 1;
 
  %Sr ambiguity function
-[afmag2,delay2] = ambgfun(x1,Fs,250000,'cut','Doppler');
+[afmag2,delay2] = ambgfun(bufferRx1,Fs,250000,'cut','Doppler');
 afmag2 = afmag2*1; % Select plot gain *1
 afmag2(afmag2>1 )= 1;
 
 % Sref and Sr Cross-ambiguity function
-[afmag3,delay3] = ambgfun(x,x1,Fs,[250000 250000],'cut','Doppler');
+[afmag3,delay3] = ambgfun(bufferRx,bufferRx1,Fs,[250000 250000],'cut','Doppler');
 afmag3 = afmag3*1; % Select plot gain *1
 afmag3(afmag3>1 )= 1;
 
@@ -214,7 +216,8 @@ textString3 = sprintf('(%f, %f)', xMax3, yMax3);
 text(xMax3, yMax3,textString3,"Color",'b','FontSize',10);
 hold off
 shading interp;
-xlim([-0.5e-5 16e-5]);
+%xlim([-0.5e-5 16e-5]);
+xlim auto;
 grid on; 
 colorbar;
 xlabel('Delay \tau (s)');
@@ -228,28 +231,16 @@ hold on
 plot(delay2, afmag2,'LineStyle','-','Color','r'); % Red Sr
 plot(delay3,afmag3,'LineStyle','-','Color','b'); 
 hold off
-xlim ([15.5e-5 16.5e-5]);
+xlim ([-0.2 0.2]);
+%xlim auto
 grid on; 
 colorbar;
 xlabel('Delay \tau (s)');
 ylabel('Ambiguity Function Magnitude');
 title('Sref, Sr and cross-ambiguity');
-legend('Sref','Sr');
+legend('Sref','Sr','Cross-ambiguity');
 
 
 
 
 
-%**************** Read data from channels  
-
-%[n,m]=size(Reference_Signal);
-%[n2,m2]=size(Surveillance_Signal);
-
-
-%for column=1:3000:m
-     %samples =(Reference_Signal(:,column:column+999));
-       % x = transpose(samples);
-       % [afmag,delay,doppler] = ambgfun(x,fs,1e6);
-       % afmag = afmag*1;
-       % afmag(afmag>1 )= 1;
-   % end
