@@ -118,20 +118,20 @@ grid on;
 
 % Transmitting antenna
 
-alpha_zero_transmit=5*pi/6; % Introduce desired receiver antenna angle in radians
-D_transmit=11; % Antenna directivity in dBi
+alpha_zero_transmit=3.07; % Introduce desired receiver antenna angle in radians
+D_transmit=25; % Antenna directivity in dBi
 theta_3dB_transmit=sqrt(4*pi/(10^(D_transmit/10))); %desired HPBW
 teta_flutuations_transm=theta_3dB_transmit/2; % Define the flutuation angle value
 
 
 % Surveillance antenna
 
-alpha_zero_surv=0.68; % Introduce desired receiver antenna angle in radians
-D_surv=11; % Antenna directivity in dBi
+alpha_zero_surv=3.36; % Introduce desired receiver antenna angle in radians
+D_surv=16; % Antenna directivity in dBi
 
 % Reference antenna
 
-alpha_zeroSVref=0.68; % Introduce desired receiver antenna angle in radians
+alpha_zeroSVref=3.36; % Introduce desired receiver antenna angle in radians
 D_ref=11; % Antenna directivity in dBi
 
 % snell function
@@ -155,7 +155,6 @@ AoI=Nx.*Ny; % Surveillance area
 
 % Horizontal targets
 %AoI(100,300) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
-AoI(20,300) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
 AoI(20,(250:300)) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
 %AoI(300,350) = 1; % define target, set row 4, from column 7-10 to 1, no correlation to Lp
 
