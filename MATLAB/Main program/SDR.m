@@ -1,4 +1,4 @@
-% Author of the LimeSDR MATLAB compatibility program:
+ % Author of the LimeSDR MATLAB compatibility program:
 %    Damir Rakhimov, CRL, TU Ilmenau, Dec 2019
 
 % Author of the time2freq function:
