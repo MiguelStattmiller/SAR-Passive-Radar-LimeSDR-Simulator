@@ -8,14 +8,14 @@
 clc
 clear all
 
-addpath('C:\Program Files\PothosSDR\bin')          % add path with LimeSuite library
+addpath('C:\Program Files\PothosSDR')          % add path with LimeSuite library
 addpath(genpath('../_tools'))   % add folder and subfolders with additional scripts to path
-addpath('../_results')          % add path to folder with results
+addpath('C:\Users\black\OneDrive\Ambiente de Trabalho\resultados')          % add path to folder with results
 
 
 
 fprintf('====================== Script for evaluation of phase coherence between RX channels ====================== \n');
-fprintf('%s - Current folder: "%s"\n',currTimeLine(),pwd);
+%fprintf('%s - Current folder: "%s"\n',currTimeLine(),pwd);
 filefolder_script  	= pwd; % to get path to current folder on the cluster
 filefolder_result  	= sprintf('%s/../_results', filefolder_script);
 savebool           	= true; % save results
@@ -23,10 +23,10 @@ plotbool = true; % plot figures
 
 
 % Initialize parameters
-TotalTime           = 60e0;     % Time of observation for one experiment, s
-Fc                  = 100;    % Carrier Frequency, Hz5
-Fs                  = 1e6;      % Frequency of sampling frequency, Hz
-Ts                  = 0.2e0;    % Signal duration, s
+TotalTime           = 1;     % Time of observation for one experiment, s
+Fc                  = 2.45e9;    % Carrier Frequency, Hz5
+Fs                  = 10e6;      % Frequency of sampling frequency, Hz
+Ts                  = 1;    % Signal duration, s
 Fdev                = 0.5e6;      % Frequency of deviation, Hz
 Fi                  = 0.0e6;    % Intermediate frequency, Hz
 Asig                = 1;        % Amplitude of signal, [-1,1]
@@ -41,7 +41,7 @@ phase_drift         = zeros(Nstat, 1);
 phase_drift_stat    = zeros(200, round(TotalTime/Ts), Nstat);
 
 for idxLoopStat = 1:Nstat
-    fprintf('%s============================= Iteration #%d/%d ========================== \n',currTimeLine(),idxLoopStat,Nstat);
+    %fprintf('%s============================= Iteration #%d/%d ========================== \n',currTimeLine(),idxLoopStat,Nstat);
     % (1) Open a device handle:
     dev = limeSDR(); % Open device
     
@@ -65,7 +65,7 @@ for idxLoopStat = 1:Nstat
     dev.rx1.antenna     = 2;     % LNA_L
     
     % (3) Read parameters from the devices
-    ChipTemp       = dev.chiptemp;
+    %ChipTemp       = dev.chiptemp;
     
     Fs_dev_tx      = dev.tx0.samplerate;  % in SPS
     Fc_dev_tx      = dev.tx0.frequency;
@@ -79,7 +79,7 @@ for idxLoopStat = 1:Nstat
     Ant_dev_rx     = dev.rx0.antenna;
     RxGain_dev     = dev.rx0.gain;
     
-    fprintf('Device temperature: %3.1fC\n', ChipTemp);
+    %fprintf('Device temperature: %3.1fC\n', ChipTemp);
 
     fprintf('Tx Device antenna:  %1d \n', Ant_dev_tx);
     fprintf('Tx Device sampling frequency: %12.1fHz, \tInitial sampling frequency: %12.1fHz\n', Fs_dev_tx, Fs);
@@ -111,12 +111,12 @@ for idxLoopStat = 1:Nstat
     dev.rx1.enable;
     
     % (7) Calibrate TX and RX channels
-    dev.tx0.calibrate;
-    dev.rx0.calibrate;
-    dev.rx1.calibrate;
+    %dev.tx0.calibrate;
+    %dev.rx0.calibrate;
+    %dev.rx1.calibrate;
     
     % (8) Start the module
-    dev.start(); fprintf('%s - LimeSDR Started\n', currTimeLine()); % pause(0.1)
+    dev.start(); %fprintf('%s - LimeSDR Started\n', currTimeLine()); % pause(0.1)
     
     % (9) Transmit and Receive samples
     indRx0          = 1;  % index of the last received sample
@@ -183,7 +183,7 @@ for idxLoopStat = 1:Nstat
     fprintf('\tTotal number of samples from Rx1: %8d\n', indRx1-1);
     
     % (10) Cleanup and shutdown by stopping the RX stream and having MATLAB delete the handle object.
-    dev.stop(); clear dev; fprintf('%s - LimeSDR Stopped\n', currTimeLine());
+    dev.stop(); clear dev; %fprintf('%s - LimeSDR Stopped\n', currTimeLine());
     
     % (11) Process samples
     % calculate phase error between channels
@@ -212,7 +212,7 @@ end
 
 
 % (12) Postprocessing
-fprintf('%s============================== Postprocessing =========================== \n',currTimeLine());
+%fprintf('%s============================== Postprocessing =========================== \n',currTimeLine());
 
 % save variables
 timestring 	= currTimeToStr();
@@ -241,7 +241,7 @@ if plotbool
         spectrogram(bufferRx0,2^12,2^10,2^12,'centered','yaxis')
     subplot(2,1,2)
         spectrogram(bufferRx1,2^12,2^10,2^12,'centered','yaxis')
-    fprintf('%s - Visualisation of Spectrogram:   %7.4fs\n', currTimeLine(), toc);
+    %fprintf('%s - Visualisation of Spectrogram:   %7.4fs\n', currTimeLine(), toc);
 
     
     % Received Signal
@@ -251,7 +251,7 @@ if plotbool
         plot([real(bufferRx0(1:100:end));imag(bufferRx0(1:100:end))])
     subplot(2,1,2)
         plot([real(bufferRx1(1:100:end));imag(bufferRx1(1:100:end))])
-    fprintf('%s - Visualisation of Signal:        %7.4fs\n', currTimeLine(), toc);
+    %fprintf('%s - Visualisation of Signal:        %7.4fs\n', currTimeLine(), toc);
 
     
     % Phase (1 and 2) for each channel
@@ -267,7 +267,7 @@ if plotbool
         plot(rad2deg(rem(phase_diff(1:100:end), 2*pi)))
     subplot(3,1,3)
         plot(freqs, rad2deg(phase_FD_stat(:,end)));
-    fprintf('%s - Visualisation of Phase Rx0-Rx1: %7.4fs\n', currTimeLine(), toc);
+    %fprintf('%s - Visualisation of Phase Rx0-Rx1: %7.4fs\n', currTimeLine(), toc);
 
     
     % Histograms of phases for different frequencies
@@ -295,7 +295,7 @@ if plotbool
         print(filename_image,'-dpng','-r600' )
         %eps
         saveas(fig(4),filename_image,'epsc')
-        fprintf('%s - Plot saved to:    "%s"\n', currTimeLine(), filefolder_result)
+        %fprintf('%s - Plot saved to:    "%s"\n', currTimeLine(), filefolder_result)
     end  
     
     
@@ -322,7 +322,7 @@ if plotbool
         print(filename_image,'-dpng','-r600' )
         %eps
         saveas(fig(5),filename_image,'epsc')
-        fprintf('%s - Plot saved to:    "%s"\n', currTimeLine(), filefolder_result)    
+        %fprintf('%s - Plot saved to:    "%s"\n', currTimeLine(), filefolder_result)    
     end
     
     % Histograms of phases drift
@@ -351,7 +351,7 @@ if plotbool
         print(filename_image,'-dpng','-r600' )
         %eps
         saveas(fig(6),filename_image,'epsc')
-        fprintf('%s - Plot saved to:    "%s"\n', currTimeLine(), filefolder_result)
+        %fprintf('%s - Plot saved to:    "%s"\n', currTimeLine(), filefolder_result)
     end     
 
 end
