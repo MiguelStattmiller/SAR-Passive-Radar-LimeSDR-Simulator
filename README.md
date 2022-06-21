@@ -37,7 +37,12 @@ In order to start programming SDR at a high level end, it was used Gnu radio com
   LIBRARY- All the functions needed for the main program and SAR passive radar simulator.
   
   Main program- Main program for real tests of SAR passive radar using LimeSDR.
+   *SDR*- Program to receive samples with LimeSDR USB on two different channels.
+   
+   *SDR_Rx0*- Program to receive samples with LimeSDR USB in channel Rx0.
   
+   *SDR_Rx1*- Program to receive samples with LimeSDR USB in channel Rx1.
+   
   Passive Radar Simulator- Simulator for SAR passive radar using a QPSK modulator.
   
      *QPSK_Time_Delay*- Allows to study the relation between delay and range response in the cross-ambiguity function,with white noise addition for static targets with zero-doppler values.
