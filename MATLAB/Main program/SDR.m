@@ -22,7 +22,7 @@ Fsig        = 2.45e9;    % Frequency of desired signal, Hz
 Asig        = 1;        % Amplitude of signal, V
 BW          = 5e6;      % Bandwidth of the signal, Hz (5-40MHz and 50-130Mhz)
 Gain        = 20;       % Receiver Gain, dB
-tempo=0:1/Fs:1000/Fs-1/Fs;
+tempo=0:1/Fs:10000000/Fs-1/Fs;
 fontsize=12;
 
 % Open LimeSDR:
@@ -93,16 +93,9 @@ pause(1)
 dev.stop();
 clear dev;
 fprintf('Stop of LimeSDR\n');
-%%
-% Select a few samples to get the process quicker
-t = bufferRx(1:6000);
-x = transpose(t);
 
-
-t1 = bufferRx1(1:6000);
-x1 = transpose(t1);
 %%
-%**************** Plot spectrograms of the recieved signals
+%**************** Plot spectrograms of the received signals
 
 figure(1)
 subplot(3,2,1);
@@ -113,14 +106,63 @@ subplot(3,2,2);
 spectrogram(bufferRx1,2^12,2^10,2^12,'centered','yaxis')
 title('Surveillance Signal');
 
+%**************** Plot Received signals TD
 
-%**************** Samples of the receiving channels spectrum
+fig=figure;
+set(fig,'color','white');
+plot(tempo,20*log10(bufferRx),'linewidth',2,'color','b');
+xlabel('Time [s]');
+ylabel('Reference signal [dB]');
+set(gca,'fontsize',fontsize);
+grid on;
+
+fig=figure;
+set(fig,'color','white');
+plot(tempo,20*log10(bufferRx1),'linewidth',2,'color','b');
+xlabel('Time [s]');
+ylabel('Surveillance signal [dB]');
+set(gca,'fontsize',fontsize);
+grid on;
+
+
+%**************** Plot Received signals FD
+
+[Rs_FreqD,Rs_FD]=time2freq(bufferRx,tempo);
+fig=figure;
+set(fig,'color','white');
+plot(abs(Rs_FreqD),20*log10(abs(Rs_FD)),'linewidth',2,'color','b');
+xlabel('Frequency [Hz]');
+ylabel('Reference signal [dB]');
+set(gca,'fontsize',fontsize);
+grid on;
+
+
+[Rs_FreqD,Rs_FD]=time2freq(bufferRx1,tempo);
+fig=figure;
+set(fig,'color','white');
+plot(abs(Rs_FreqD),20*log10(abs(Rs_FD)),'linewidth',2,'color','b');
+xlabel('Frequency [Hz]');
+ylabel('Surveillance signal [dB]');
+set(gca,'fontsize',fontsize);
+grid on;
+
+%%
+% Select a few samples to get the process quicker
+t = bufferRx(1:1000);
+x = transpose(t);
+
+
+t1 = bufferRx1(1:1000);
+x1 = transpose(t1);
+
+%%
+%**************** FD of the receiving Samples
 
 [freq,Spectrum]=time2freq(x,tempo);
 fig=figure;
 hold on
 set(fig,'color','white');
-plot(freq,20*log10(abs(Spectrum)),'b','linewidth',2);
+plot(abs(freq),20*log10(abs(Spectrum)),'b','linewidth',2);
 xlabel('Frequency [Hz]');
 xlim auto; 
 ylabel('Spectrum');
@@ -133,16 +175,34 @@ hold off
 fig=figure;
 hold on
 set(fig,'color','white');
-plot(freq1,20*log10(abs(Spectrum1)),'b','linewidth',2);
+plot(abs(freq1),20*log10(abs(Spectrum1)),'b','linewidth',2);
 xlabel('Frequency [Hz]');
 ylabel('Spectrum');
 set(gca,'fontsize',fontsize);
 grid on;
 hold off
 
+%**************** Plot of the receiving Samples TD
+
+fig=figure;
+set(fig,'color','white');
+plot(tempo,20*log10(abs(x)),'linewidth',2,'color','b');
+xlabel('Time [s]');
+ylabel('Reference signal [dB]');
+set(gca,'fontsize',fontsize);
+grid on;
+
+fig=figure;
+set(fig,'color','white');
+plot(tempo,20*log10(abs(x1)),'linewidth',2,'color','b');
+xlabel('Time [s]');
+ylabel('Surveillance signal [dB]');
+set(gca,'fontsize',fontsize);
+grid on;
 
 
-%**************** Calculate ambiguity and cross-ambiguity functions
+%**************** Calculate ambiguity and cross-ambiguity functions Time
+%delay
 
 %Sref ambiguity function
 [afmag,delay] = ambgfun(bufferRx,Fs,250000,'cut','Doppler');
@@ -240,7 +300,82 @@ ylabel('Ambiguity Function Magnitude');
 title('Sref, Sr and cross-ambiguity');
 legend('Sref','Sr','Cross-ambiguity');
 
+%************* Calculate ambiguity and cross-ambiguity functions-time and doppler delay
+
+%Reference_Signal ambiguity function
+[afmag,delay,doppler] = ambgfun(x,Fs,250000);
+afmag = afmag*1; % Select plot gain *1
+afmag(afmag>1 )= 1;
+
+ %Surveillance_Signal ambiguity function
+[afmag2,delay2,doppler2] = ambgfun(x1,Fs,250000);
+afmag2 = afmag2*1; % Select plot gain *1
+afmag2(afmag2>1 )= 1;
+
+%Cross-ambiguity
+[afmag3,delay3,doppler3] = ambgfun(x,x1,Fs,[250000 250000]);
+afmag3 = afmag3*1; % Select plot gain *1
+afmag3(afmag3>1 )= 1;
+
+%**************** Plot ambiguity and cross-ambiguity functions time and doppler delay
+
+%Plot Ambiguity Function of Sref
+subplot(3,2,1)
+surf(delay,doppler,afmag,'LineStyle','-.');
+shading interp;
+axis([-0.5e-5 0.5e-5 -10000 10000]); 
+grid on; 
+view([140,35]); 
+colorbar;
+xlabel('Doppler (Hz)');
+ylabel('Ambiguity Function Magnitude');
+title('Ambiguity Function Sref');
 
 
+%Plot Ambiguity Function of Sr
+subplot(3,2,2)
+surf(delay2,doppler2,afmag2,'LineStyle','-.');
+shading interp;
+axis([-0.5e-5 0.5e-5 -10000 10000]); 
+grid on; 
+view([140,35]); 
+colorbar;
+xlabel('Doppler (Hz)');
+ylabel('Ambiguity Function Magnitude');
+title('Ambiguity Function Sref');
 
 
+% Plot cross-ambiguity function of Sref and Sr
+
+figure;
+subplot(3,2,3)
+surf(delay3,doppler3,afmag3,'LineStyle','-.');
+shading interp;
+axis([-0.5e-5 0.5e-5 -10000 10000]); 
+grid on; 
+view([140,35]); 
+colorbar;
+xlabel('Doppler (Hz)');
+ylabel('Ambiguity Function Magnitude');
+title('Ambiguity Function Sref');
+
+%**************** SAR Processing
+
+% Range compression with reference signal
+
+Range_compression=bufferRx1.*conj(bufferRx); % Range compression FD domain
+
+% Set each column of range compression to Time Domain
+[rows,columns]=size(Range_compression);
+for col = 1 : columns
+    thisColumn = Range_compression(:, col);
+    if max(thisColumn)>0
+        deebug=1;
+    end
+    [time_compression,range_compressed]=freq2time(thisColumn, Rs_FreqD);
+    idx1=find(time_compression>=0,1);
+    idx2=find(time_compression<=7e-6,1,'last');
+    time_compression_cut=time_compression(idx1:idx2);
+    range_compressed_cut=range_compressed(idx1:idx2);
+    range_compressed_matrix(:,col)=range_compressed_cut;
+end
