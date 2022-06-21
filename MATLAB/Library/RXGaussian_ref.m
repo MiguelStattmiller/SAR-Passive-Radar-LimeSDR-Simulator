@@ -5,12 +5,11 @@ function [Wi_ref] = RXGaussian_ref(X_receiverref,Y_receiverref,X_transmitter,Y_t
 %**************** Function Calculus
 theta_3dB_ref=sqrt(4*pi/(10^(D_ref/10))); %desired HPBW
 n=fit2Directivity_ref(D_ref);
-%n=real((1/2*log10(2))/(log10(cos(theta_3dB_ref))));
-alpha=linspace(alpha_zeroSVref-pi/2,pi/2+alpha_zeroSVref);
+alpha=linspace(alpha_zeroSVref-theta_3dB_ref/2,alpha_zeroSVref+theta_3dB_ref/2);
 
 % Define vector between receiver and transmitter
 V=[X_receiverref-X_transmitter Y_receiverref-Y_transmitter];
-alpha_DoA = atan2(abs(V(2)), V(1));
+alpha_DoA =pi/2+atan2(abs(V(2)), V(1));
 
 
 %u = [cos(alpha_zeroSVref),sin(alpha_zeroSVref)]; % direction beam of receiver antenna

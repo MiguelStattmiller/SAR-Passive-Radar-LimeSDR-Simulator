@@ -6,12 +6,12 @@ function [Wi_transmit] = RXGaussian_transmit(X_target,Y_target,X_transmitter,Y_t
 %**************** Function Calculus
 theta_3dB_transmit=sqrt(4*pi/(10^(D_transmit/10))); %desired HPBW
 n=fit2Directivity_transmit(D_transmit);
-alpha=linspace(alpha_zero_transmit-pi/2,pi/2+alpha_zero_transmit);
+alpha=linspace(alpha_zero_transmit-theta_3dB_transmit/2,alpha_zero_transmit+theta_3dB_transmit/2);
 
 % Define vector between target and transmitter
 
 V=[X_target-X_transmitter Y_target-Y_transmitter];
-alpha_DoA = atan2(abs(V(2)), V(1));
+alpha_DoA = abs(atan2((V(1)), V(2)));
 
 %u = [cos(alpha_zero_surv),sin(alpha_zero_surv)]; % direction beam of receiver antenna
 %alpha_zero = atan2(abs(u(2)), u(1));
