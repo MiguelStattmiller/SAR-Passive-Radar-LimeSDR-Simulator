@@ -4,10 +4,11 @@ clear all
 addpath('C:\Program Files\PothosSDR') % add path with LimeSuite library
 
 % Initialize parameters
+filename='Canal zero';
 TotalTime   = 1;       % Time of observation, s
 Fc          = 2.45e9;   % Carrier Frequency, Hz
 Fs          = 10e6;      % Frequency of sampling frequency, Hz   2x> B
-Ts          = 1;      % Signal duration, s
+Ts          = 10;      % Signal duration, s
 Fsig        = 2.45e9;    % Frequency of desired signal, Hz
 Asig        = 1;        % Amplitude of signal, V
 BW          = 5e6;      % Bandwidth of the signal, Hz (5-40MHz and 50-130Mhz)
@@ -48,23 +49,34 @@ dev.rx0.enable;
 % Start the module
 dev.start();
 fprintf('Start of LimeSDR\n');
-tic;
 start_time=datetime('now','Format','dd-MMM-uuuu HH:mm:ss.SSS');
 
+    
+counter=1;
+samples1=[];
+
+while true
+
+
+timestamp(counter,:)=datestr(now,'HH-MM-SS_FFF');
 
 % Receive samples on RX0 channel
 indRx = 1;
-    [samples, ~, samplesLength]             = dev.receive(Fs*Ts,0);
-    bufferRx(indRx:indRx+samplesLength-1)   = samples;
-    
-pause(1)
+    [samples1_temp, ~, samplesLength]             = dev.receive(Fs*Ts,0);
+    %bufferRx(indRx:indRx+samplesLength-1)   = samples1_temp;
+
+samples1=[samples1 samples1_temp];
+counter=counter+1
+
+end
+
+save(sprintf('%s_samples',filename),'samples1','-v7.3');
+save(sprintf('%s_timestamp',filename),'timestamp','-v7.3');
 
 % Cleanup and shutdown by stopping the RX stream and having MATLAB delete the handle object.
 dev.stop();
-tempo_rececao=toc;
 stop_time=datetime('now','Format','dd-MMM-uuuu HH:mm:ss.SSS');
 clear dev;
 fprintf('Stop of LimeSDR\n');
 
-TT2=array2timetable(samples,'SampleRate',Fs,'StartTime',start_time);
-writetimetable(TT2,'Timetable_Rx0.txt','Delimiter','bar');
+
