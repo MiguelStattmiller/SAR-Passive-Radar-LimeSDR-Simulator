@@ -126,7 +126,7 @@ X_QPSK_cut=X_QPSK(idxx:idx2);
 
 % Transmitting antenna
 
-alpha_zero_transmit=0.8; % Introduce desired receiver antenna pointing angle in radians
+alpha_zero_transmit=1.6; % Introduce desired receiver antenna pointing angle in radians
 D_transmit=18; % Desired Antenna directivity in dBi
 
 theta_3dB_transmit=sqrt(4*pi/(10^(D_transmit/10))); % Transmitter antenna HPBW
@@ -135,13 +135,9 @@ teta_flutuations_transm=theta_3dB_transmit/2; % Define the flutuation angle valu
 
 % Surveillance antenna
 
-alpha_zero_surv=2; % Introduce desired receiver pointing antenna angle in radians
+alpha_zero_surv=1.6; % Introduce desired receiver pointing antenna angle in radians
 D_surv=18; % Desired Antenna directivity in dBi
 
-% Reference antenna
-
-alpha_zeroSVref=3.1; % Introduce desired receiver antenna angle in radians
-D_ref=18; % Desired Antenna directivity in dBi
 
 % snell function
 
@@ -172,12 +168,7 @@ normal_ntarget1=[0 -1]; % Introduce a normal vector to the targets, used for ang
 
 % Surveillance antenna coordinates
 X_receiver=400;
-Y_receiver=400;
 
-% Reference antenna coordinates
-
-X_receiverref=400;
-Y_receiverref=400;
 
 % Transmitter antenna x coordinate
 
@@ -202,11 +193,11 @@ waypoints=round(waypoints);
 
 
 surv_matrix=zeros(length(X_QPSK_cut),length(waypoints)); % Define surveillance Signal matrix
-ref_matrix=zeros(length(X_QPSK_cut),length(waypoints)); % Define Reference Signal matrix
 
 
 for i=1:numel(waypoints) % For each waypoint
     Y_transmitter = waypoints(i);
+    Y_receiver = waypoints(i);
 
    for xx=1:400
     for yy=1:400
@@ -223,7 +214,6 @@ for i=1:numel(waypoints) % For each waypoint
             status=snell_function(angle_transmitter,angle_receiver,teta_flutuations_reflec,teta_flutuations_transm,Vectors_product_2);
             Pr = LoS_receiver(X_receiver,Y_receiver,X_target,Y_target,AoI); % Line of sight between target-receiver
             Pt = LoS_transmitter(X_transmitter,Y_transmitter,X_target,Y_target,AoI); % Line of sight between transmitter-target
-            Wi_ref = RXGaussian_ref(X_receiverref,Y_receiverref,X_transmitter,Y_transmitter,alpha_zeroSVref,D_ref); % Reference antenna radiation pattern
             Wi_Surv= RXGaussian(X_receiver,Y_receiver,X_target,Y_target,alpha_zero_surv,D_surv); % Surveillance antenna radiation pattern
             Wi_transmit=RXGaussian_transmit(X_target,Y_target,X_transmitter,Y_transmitter,alpha_zero_transmit,D_transmit); % Transmitter antenna radiation pattern
 
@@ -232,29 +222,19 @@ for i=1:numel(waypoints) % For each waypoint
 
                         
                         R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target in meters
-                        R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target in meters
-                        Rd=sqrt( (X_receiverref-X_transmitter).^2 + (Y_receiverref-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
                         k0=(2*pi*freq_XQPSK_cut)/c; % Wave index variable in radians
                         V=Vr*cosd(90-angle_transmitter); % Platform velocity for doppler information
                         lambda2=c./F_rf; % Wavelength in meters
-                        fB=V./lambda2; % Convert speed to doppler shift in Hz
+                        fB=(2*V)./lambda2; % Convert speed to doppler shift in Hz
                         Kd=(2*pi*fB)/c; % Surveillance Doppler information
-                        fB_ref=Vr./lambda2; % Convert speed to doppler shift in Hz
-                        kd_ref=(2*pi*fB_ref)/c; % Reference Doppler information
                         doppler_freqSurv=freq_XQPSK_cut+fB; % Surveillance Doppler frequency
-                        doppler_freqRef=freq_XQPSK_cut+fB_ref; % Reference Doppler frequency
-                        Surveillance_SignalFD=Wi_transmit*Wi_Surv*(1/(R1+R2))*X_QPSK_cut.*exp(-1*j*(k0+0)*(R1+R2)); % Surveillance Signal frequency domain
-                        Reference_SignalFD=Wi_transmit*Wi_ref*(1/Rd)*X_QPSK_cut.*exp(-1*j*(k0+0)*Rd); % Reference Signal frequency domain
-                        %Surveillance_SignalFD=Wi_transmit*Wi_Surv*(1/(R1+R2))*X_QPSK_cut.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
+                        %Surveillance_SignalFD=X_QPSK_cut.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
+                        Surveillance_SignalFD=Wi_transmit*Wi_Surv*(1/(2*R1))*X_QPSK_cut.*exp(-1*j*(k0+Kd)*(2*R1)); % Surveillance Signal frequency domain
                         %Surveillance_SignalFD=awgn(Surveillance_SignalFD,SNR,'measured'); % Introduce white gaussian Noise
-                        %surv_matrix(:,i)=Surveillance_SignalFD;  % Surveillance Signal of entire detections in frequency domain
-                        %Reference_SignalFD=Wi_transmit*Wi_ref*(1/Rd)*X_QPSK_cut.*exp(-1*j*(k0+kd_ref)*Rd); % Reference Signal frequency domain
-                        %ref_matrix(:,i)=Reference_SignalFD; % Reference Signal of entire detections in frequency domain
+                        surv_matrix(:,i)=Surveillance_SignalFD;  % Surveillance Signal of entire detections in frequency domain
                         fprintf('\n Coordenadas do avião(%d,%d)',X_transmitter,Y_transmitter);
                         fprintf('\n Coordenadas do alvo(%d,%d)',X_target,Y_target);
-                        fprintf('\n Distância transmissor-alvo R1 %4.2f metros',R1);
-                        fprintf('\n Distância alvo-recetor R2 %4.2f metros',R2);
-                        fprintf('\n Distância transmissor-recetor Rd %4.2f metros',Rd);
+                        fprintf('\n Distância 2*R1 %4.2f metros',2*R1);
                      continue
                       
                  end   
@@ -277,13 +257,6 @@ ylabel('Spectrum (dB)');
 title('Surveillance Spectrum');
 
 
-figure;
-ic=find(~all(ref_matrix==0));
-hL=plot(abs(doppler_freqRef),20*log10(abs(ref_matrix(:,ic))));
-hLg=legend('1 coluna do avião','2 coluna do avião','3 coluna do avião','4 coluna do avião','5 coluna do avião','6 coluna do avião','7 coluna do avião');
-xlabel('Frequency (Hz)');
-ylabel('Spectrum (dB)');
-title('Reference Spectrum');
 %***************** Data Visualization of both signals  ******************
 
 figure;
@@ -294,13 +267,6 @@ ylabel('Frequency (Hz)');
 ylim([2.7e7 3.3e7]);
 title('Surveillance matrix contour');
 
-figure;
-contour(1:400,freq_XQPSK_cut,20*log10(abs(ref_matrix)));
-colorbar;
-xlabel('Waypoints (m)');
-ylabel('frequency (Hz)');
-ylim([2.7e7 3.3e7]);
-title('Reference matrix contour');
 
 figure;
 imagesc(1:400,freq_XQPSK_cut,20*log10(abs(surv_matrix)));
@@ -311,26 +277,17 @@ ylabel('Frequency Signal (Hz)');
 ylim([2.7e7 3.3e7]);
 xlim([0 400]);
 
-figure;
-imagesc(1:400,freq_XQPSK_cut,20*log10(abs(ref_matrix)));
-title('Reference Signal Raw Data');
-colorbar;
-xlabel('Waypoints (m)');
-ylabel('Frequency Signal (Hz)');
-ylim([2.7e7 3.3e7]);
-xlim([0 400]);
-
 
 %**************** Calculate Reference and Surveillance Signals in Time Domain  
 
-[time_RS,Reference_Signal]=freq2time(Reference_SignalFD,doppler_freqRef);
+[time_ts,Transmitted_signal]=freq2time(X_QPSK_cut,freq_XQPSK_cut);
 [time_SS,Surveillance_Signal]=freq2time(Surveillance_SignalFD,doppler_freqSurv);
 
 
 %**************** Select Reference and Surveillance Signals Samples Time Domain 
 
 % Plot signals in Time Domain
-plot(time_RS,abs(Reference_Signal));
+plot(time_ts,abs(Transmitted_signal));
 hold on
 plot(time_SS,abs(Surveillance_Signal));
 legend('Reference Signal','Surveillance Signal');
@@ -343,9 +300,8 @@ xlim([-2e-4 -1.5e-4]);
 % Frequency
 plot(abs(doppler_freqSurv),abs(Surveillance_SignalFD));
 hold on;
-plot(abs(doppler_freqRef),abs(Reference_SignalFD));
 plot(abs(freq_XQPSK_cut),abs(X_QPSK_cut));
-legend('Surveillance Signal','Reference Signal','QPSK');
+legend('Surveillance Signal','XQPSK');
 xlabel('freq (Hz)');
 ylabel('Spectrum');
 title('Frequency domain');
