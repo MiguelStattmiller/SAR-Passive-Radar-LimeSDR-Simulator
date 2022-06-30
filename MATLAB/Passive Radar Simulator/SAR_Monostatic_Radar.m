@@ -123,6 +123,7 @@ X_QPSK_cut=X_QPSK(idxx:idx2);
  hold off
 
  total_BW=max(freq_XQPSK_cut)-min(freq_XQPSK_cut); % Bandwidth of the transmitted signal
+ Range_resolution=c/(2*total_BW);
 
 % Transmitting antenna
 
@@ -193,6 +194,7 @@ waypoints=round(waypoints);
 
 
 surv_matrix=zeros(length(X_QPSK_cut),length(waypoints)); % Define surveillance Signal matrix
+QPSK_matrix=zeros(length(X_QPSK_cut),length(waypoints)); % Define QPSK Signal matrix
 
 
 for i=1:numel(waypoints) % For each waypoint
@@ -211,7 +213,7 @@ for i=1:numel(waypoints) % For each waypoint
             Vectors_product_3=dot( VTarget_receiver,normal_ntarget1)/(norm(VTarget_receiver)*norm(normal_ntarget1));
             angle_receiver =acosd(Vectors_product_3); % angle between target-receiver
             Vectors_product_2= Colin_vectors(VTransmitter_target,VTarget_receiver);
-            status=snell_function(angle_transmitter,angle_receiver,teta_flutuations_reflec,teta_flutuations_transm,Vectors_product_2);
+            status=snell_function_monostatic(angle_transmitter,angle_receiver,teta_flutuations_reflec,teta_flutuations_transm,Vectors_product_2);
             Pr = LoS_receiver(X_receiver,Y_receiver,X_target,Y_target,AoI); % Line of sight between target-receiver
             Pt = LoS_transmitter(X_transmitter,Y_transmitter,X_target,Y_target,AoI); % Line of sight between transmitter-target
             Wi_Surv= RXGaussian(X_receiver,Y_receiver,X_target,Y_target,alpha_zero_surv,D_surv); % Surveillance antenna radiation pattern
@@ -231,6 +233,7 @@ for i=1:numel(waypoints) % For each waypoint
                         %Surveillance_SignalFD=X_QPSK_cut.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
                         Surveillance_SignalFD=Wi_transmit*Wi_Surv*(1/(2*R1))*X_QPSK_cut.*exp(-1*j*(k0+Kd)*(2*R1)); % Surveillance Signal frequency domain
                         %Surveillance_SignalFD=awgn(Surveillance_SignalFD,SNR,'measured'); % Introduce white gaussian Noise
+                        QPSK_matrix(:,i)=X_QPSK_cut;
                         surv_matrix(:,i)=Surveillance_SignalFD;  % Surveillance Signal of entire detections in frequency domain
                         fprintf('\n Coordenadas do avião(%d,%d)',X_transmitter,Y_transmitter);
                         fprintf('\n Coordenadas do alvo(%d,%d)',X_target,Y_target);
@@ -318,7 +321,7 @@ time_SS=time_SS(1:34490);
 Surveillance_Signal=Surveillance_Signal(1:34490);
 
 
-fs=1/(time_RS(2)-time_RS(1));
+fs=1/(time_ts(2)-time_ts(1));
 
 % Interpolation
 

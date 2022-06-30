@@ -165,7 +165,8 @@ AoI=Nx.*Ny; % Surveillance area
 % Horizontal targets
 %AoI(20,200) = 1; % define targets, set row 4, from column 7-10 to 1.
 %AoI(100,(100:200)) = 1; % define targets, set row 4, from column 7-10 to 1.
-AoI(100,337) = 1; % define targets, set row 4, from column 7-10 to 1.
+%AoI(100,337) = 1; % define targets, set row 4, from column 7-10 to 1.
+AoI(300,340) = 1; % define targets, set row 4, from column 7-10 to 1.
 normal_ntarget1=[0 -1]; % Introduce a normal vector to the targets, used for angles calculations
 
 % Receiver antenna position
@@ -203,6 +204,7 @@ waypoints=round(waypoints);
 
 surv_matrix=zeros(length(X_QPSK_cut),length(waypoints)); % Define surveillance Signal matrix
 ref_matrix=zeros(length(X_QPSK_cut),length(waypoints)); % Define Reference Signal matrix
+QPSK_matrix=zeros(length(X_QPSK_cut),length(waypoints)); % Define Reference Signal matrix
 
 
 for i=1:numel(waypoints) % For each waypoint
@@ -247,9 +249,10 @@ for i=1:numel(waypoints) % For each waypoint
                         Reference_SignalFD=Wi_transmit*Wi_ref*(1/Rd)*X_QPSK_cut.*exp(-1*j*(k0+0)*Rd); % Reference Signal frequency domain
                         %Surveillance_SignalFD=Wi_transmit*Wi_Surv*(1/(R1+R2))*X_QPSK_cut.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
                         %Surveillance_SignalFD=awgn(Surveillance_SignalFD,SNR,'measured'); % Introduce white gaussian Noise
-                        %surv_matrix(:,i)=Surveillance_SignalFD;  % Surveillance Signal of entire detections in frequency domain
+                        surv_matrix(:,i)=Surveillance_SignalFD;  % Surveillance Signal of entire detections in frequency domain
                         %Reference_SignalFD=Wi_transmit*Wi_ref*(1/Rd)*X_QPSK_cut.*exp(-1*j*(k0+kd_ref)*Rd); % Reference Signal frequency domain
-                        %ref_matrix(:,i)=Reference_SignalFD; % Reference Signal of entire detections in frequency domain
+                        ref_matrix(:,i)=Reference_SignalFD; % Reference Signal of entire detections in frequency domain
+                        QPSK_matrix(:,i)=X_QPSK_cut; % Reference Signal of entire detections in frequency domain
                         fprintf('\n Coordenadas do avião(%d,%d)',X_transmitter,Y_transmitter);
                         fprintf('\n Coordenadas do alvo(%d,%d)',X_target,Y_target);
                         fprintf('\n Distância transmissor-alvo R1 %4.2f metros',R1);
