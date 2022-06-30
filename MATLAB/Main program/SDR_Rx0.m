@@ -1,7 +1,7 @@
 clc
 clear all
 
-addpath('C:\Program Files\PothosSDR') % add path with LimeSuite library
+addpath('C:\Users\black\OneDrive\Ambiente de Trabalho\Tese\programação\SDR') % add path with LimeSuite library
 
 % Initialize parameters
 filename='Canal zero';

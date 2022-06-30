@@ -1,14 +1,14 @@
 clc
 clear all
 
-addpath('C:\Program Files\PothosSDR') % add path with LimeSuite library
+addpath('C:\Users\black\OneDrive\Ambiente de Trabalho\Tese\programação\SDR') % add path with LimeSuite library
 
 % Initialize parameters
 filename='Canal 1';
 TotalTime   = 1;       % Time of observation, s
 Fc          = 2.45e9;   % Carrier Frequency, Hz
 Fs          = 10e6;      % Frequency of sampling frequency, Hz   2x> B
-Ts          = 10;      % Signal duration, s
+Ts          = 50;      % Signal duration, s
 Fsig        = 2.45e9;    % Frequency of desired signal, Hz
 Asig        = 1;        % Amplitude of signal, V
 BW          = 5e6;      % Bandwidth of the signal, Hz (5-40MHz and 50-130Mhz)
