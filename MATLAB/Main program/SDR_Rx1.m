@@ -4,12 +4,12 @@ clear all
 addpath('C:\Users\black\OneDrive\Ambiente de Trabalho\Tese\programação\SDR') % add path with LimeSuite library
 
 % Initialize parameters
-filename='Canal 1';
+filename='Canal gabinete';
 TotalTime   = 1;       % Time of observation, s
-Fc          = 2.45e9;   % Carrier Frequency, Hz
+Fc          = 2.4e9;   % Carrier Frequency, Hz
 Fs          = 10e6;      % Frequency of sampling frequency, Hz   2x> B
-Ts          = 50;      % Signal duration, s
-Fsig        = 2.45e9;    % Frequency of desired signal, Hz
+Ts          = 30;      % Signal duration, s
+Fsig        = 2.4e9;    % Frequency of desired signal, Hz
 Asig        = 1;        % Amplitude of signal, V
 BW          = 5e6;      % Bandwidth of the signal, Hz (5-40MHz and 50-130Mhz)
 Gain        = 20;       % Receiver Gain, dB
@@ -50,13 +50,14 @@ dev.rx1.enable;
 
 
 % Start the module
+gong
 dev.start();
 fprintf('Start of LimeSDR\n');
 start_time=datetime('now','Format','dd-MMM-uuuu HH:mm:ss.SSS');
 
 counter=1;
 samples1=[];
-while true
+% while true
 
 timestamp(counter,:)=datestr(now,'HH-MM-SS_FFF');
 
@@ -71,8 +72,8 @@ samples1=[samples1 samples1_temp];
 %writetimetable(TT,'Timetable_Rx1.txt','Delimiter','bar');
 counter=counter+1
 
-end
-
+% end
+gong
 save(sprintf('%s_samples',filename),'samples1','-v7.3');
 save(sprintf('%s_timestamp',filename),'timestamp','-v7.3');
 

@@ -4,15 +4,15 @@ clear all
 addpath('C:\Users\black\OneDrive\Ambiente de Trabalho\Tese\programação\SDR') % add path with LimeSuite library
 
 % Initialize parameters
-filename='Canal zero';
+filename='Canal câmara 3';
 TotalTime   = 1;       % Time of observation, s
-Fc          = 2.45e9;   % Carrier Frequency, Hz
+Fc          = 2.40e9;   % Carrier Frequency, Hz
 Fs          = 10e6;      % Frequency of sampling frequency, Hz   2x> B
 Ts          = 10;      % Signal duration, s
-Fsig        = 2.45e9;    % Frequency of desired signal, Hz
+Fsig        = 2.40e9;    % Frequency of desired signal, Hz
 Asig        = 1;        % Amplitude of signal, V
 BW          = 5e6;      % Bandwidth of the signal, Hz (5-40MHz and 50-130Mhz)
-Gain        = 20;       % Receiver Gain, dB
+Gain        = 20;       % Receiver Gain, dB 
 tempo=0:1/Fs:10000000/Fs-1/Fs;
 fontsize=12;
 
