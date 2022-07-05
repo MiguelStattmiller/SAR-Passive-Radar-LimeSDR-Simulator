@@ -46,7 +46,7 @@ Ac=1; %Amplitude
 wc=2*pi*fc;
 Tc=1/fc; %Period
 Tb=1/Rb; %Bit period
-fs=4*fc; %Sampling frequency
+fs=2*20e6; %Sampling frequency
 t_bit=linspace(0,Tb,round(Tb*fs)); %Time base of bit
 
 QPSK_Signal=[];
@@ -104,8 +104,8 @@ F_rf=2.45e9; % Desired central frequency for the simulator
 % Bandwith
 
 %idxx= find(20*log10(abs(X_QPSK))>-140); % Produce a cut in transmitted spectrum of 30dB
-idxx=find(freq_XQPSK>=27e6,1);
-idx2=find(freq_XQPSK<=33e6,1,'last');
+idxx=find(freq_XQPSK>=6e6,1);
+idx2=find(freq_XQPSK<=14e6,1,'last');
 
 freq_XQPSK_cut=freq_XQPSK(idxx:idx2);
 X_QPSK_cut=X_QPSK(idxx:idx2);
@@ -121,8 +121,10 @@ X_QPSK_cut=X_QPSK(idxx:idx2);
  set(gca,'fontsize',fontsize);
  grid on;
  hold off
+ 
 
  total_BW=max(freq_XQPSK_cut)-min(freq_XQPSK_cut); % Bandwidth of the transmitted signal
+
 
 % Transmitting antenna
 
@@ -166,7 +168,7 @@ AoI=Nx.*Ny; % Surveillance area
 %AoI(20,200) = 1; % define targets, set row 4, from column 7-10 to 1.
 %AoI(100,(100:200)) = 1; % define targets, set row 4, from column 7-10 to 1.
 %AoI(100,337) = 1; % define targets, set row 4, from column 7-10 to 1.
-AoI(300,340) = 1; % define targets, set row 4, from column 7-10 to 1.
+AoI(300,337) = 1; % define targets, set row 4, from column 7-10 to 1.
 normal_ntarget1=[0 -1]; % Introduce a normal vector to the targets, used for angles calculations
 
 % Receiver antenna position
@@ -245,14 +247,12 @@ for i=1:numel(waypoints) % For each waypoint
                         kd_ref=(2*pi*fB_ref)/c; % Reference Doppler information
                         doppler_freqSurv=freq_XQPSK_cut+fB; % Surveillance Doppler frequency
                         doppler_freqRef=freq_XQPSK_cut+fB_ref; % Reference Doppler frequency
-                        Surveillance_SignalFD=Wi_transmit*Wi_Surv*(1/(R1+R2))*X_QPSK_cut.*exp(-1*j*(k0+0)*(R1+R2)); % Surveillance Signal frequency domain
-                        Reference_SignalFD=Wi_transmit*Wi_ref*(1/Rd)*X_QPSK_cut.*exp(-1*j*(k0+0)*Rd); % Reference Signal frequency domain
-                        %Surveillance_SignalFD=Wi_transmit*Wi_Surv*(1/(R1+R2))*X_QPSK_cut.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
+                        Surveillance_SignalFD=Wi_transmit*Wi_Surv*(1/(R1+R2))*X_QPSK_cut.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
                         %Surveillance_SignalFD=awgn(Surveillance_SignalFD,SNR,'measured'); % Introduce white gaussian Noise
-                        surv_matrix(:,i)=Surveillance_SignalFD;  % Surveillance Signal of entire detections in frequency domain
-                        %Reference_SignalFD=Wi_transmit*Wi_ref*(1/Rd)*X_QPSK_cut.*exp(-1*j*(k0+kd_ref)*Rd); % Reference Signal frequency domain
-                        ref_matrix(:,i)=Reference_SignalFD; % Reference Signal of entire detections in frequency domain
-                        QPSK_matrix(:,i)=X_QPSK_cut; % Reference Signal of entire detections in frequency domain
+                        surv_matrix(:,i)=Surveillance_SignalFD.';  % Surveillance Signal of entire detections in frequency domain
+                        Reference_SignalFD=Wi_transmit*Wi_ref*(1/Rd)*X_QPSK_cut.*exp(-1*j*(k0+kd_ref)*Rd); % Reference Signal frequency domain
+                        ref_matrix(:,i)=Reference_SignalFD.'; % Reference Signal of entire detections in frequency domain
+                        %QPSK_matrix(:,i)=X_QPSK_cut.'; % Reference Signal of entire detections in frequency domain
                         fprintf('\n Coordenadas do avião(%d,%d)',X_transmitter,Y_transmitter);
                         fprintf('\n Coordenadas do alvo(%d,%d)',X_target,Y_target);
                         fprintf('\n Distância transmissor-alvo R1 %4.2f metros',R1);

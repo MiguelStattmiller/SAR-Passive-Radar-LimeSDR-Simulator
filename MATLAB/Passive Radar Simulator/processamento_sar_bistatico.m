@@ -16,7 +16,7 @@ for col = 1 : columns
     if max(thisColumn)>0
         deebug=1;
     end
-    [time_compression,range_compressed]=freq2time(thisColumn, doppler_freqRef);
+    [time_compression,range_compressed]=freq2time(thisColumn, freq_XQPSK_cut);
     idx1=find(time_compression>=0,1);
     idx2=find(time_compression<=7e-6,1,'last');
     time_compression_cut=time_compression(idx1:idx2);
@@ -25,13 +25,14 @@ for col = 1 : columns
 end
 
 
+
 % Range compressed data representation
 figure;
 maxcolorbar=max(max(20*log10(abs(range_compressed_matrix))));
 contourf(1:400,time_compression_cut*c,abs(range_compressed_matrix),'edgecolor','none');
 %contourf(20*log10(abs(range_compressed_matrix)),'edgecolor','none');
 colorbar;
-%colormap(jet);
+colormap(jet);
 %caxis([maxcolorbar-30 maxcolorbar]);
 title('Range Compressed Data');
 xlabel('Waypoints (m)');
@@ -43,11 +44,45 @@ figure;
 imagesc(1:400,time_compression_cut*c,abs(range_compressed_matrix));
 colorbar;
 colormap(jet);
-caxis([maxcolorbar-30 maxcolorbar-10]);
+%caxis([maxcolorbar-20 maxcolorbar]);
 title('Range Compressed Data');
 xlabel('Waypoints (m)');
 ylabel('Range (m)');
-ylim([0 200]);
+
+
+% Identify all the maximum of range compressed
+[max_correlation, row_idx] = max(range_compressed_matrix, [], 1);
+y_max = time_compression_cut(row_idx);
+y_max = y_max*c;
+x_max = waypoints;
+
+% Plot the maximum of range compression
+
+plot(x_max,y_max);
+title('Distance over aeroplane movement');
+xlabel('Waypoints (m)');
+ylabel('Range to target (m)');
+
+
+
+
+
+
+% Plot the maximum of range compression
+
+figure;
+imagesc(1:400,time_compression_cut*c,abs(range_compressed_matrix));
+colorbar;
+colormap(jet);
+hold on
+title('Range Compressed Data');
+xlabel('Waypoints (m)');
+ylabel('Range (m)');
+textString3 = sprintf('(%u,%3.f)',x_max, y_max);
+text(x_max, y_max,textString3,"Color",'b','FontSize',10);
+hold off
+shading interp;
+
 
 % azimuth compression 
 
