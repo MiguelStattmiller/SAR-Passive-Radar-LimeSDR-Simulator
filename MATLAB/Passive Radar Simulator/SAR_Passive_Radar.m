@@ -46,7 +46,7 @@ Ac=1; %Amplitude
 wc=2*pi*fc;
 Tc=1/fc; %Period
 Tb=1/Rb; %Bit period
-fs=2*20e6; %Sampling frequency
+fs=2*40e6; %Sampling frequency
 t_bit=linspace(0,Tb,round(Tb*fs)); %Time base of bit
 
 QPSK_Signal=[];
@@ -104,20 +104,21 @@ F_rf=2.45e9; % Desired central frequency for the simulator
 % Bandwith
 
 %idxx= find(20*log10(abs(X_QPSK))>-140); % Produce a cut in transmitted spectrum of 30dB
-idxx=find(freq_XQPSK>=6e6,1);
-idx2=find(freq_XQPSK<=14e6,1,'last');
+idxx=find(freq_XQPSK>=20e6,1);
+idx2=find(freq_XQPSK<=40e6,1,'last');
 
 freq_XQPSK_cut=freq_XQPSK(idxx:idx2);
 X_QPSK_cut=X_QPSK(idxx:idx2);
 
 %********** Plot the part of the spectrum of QPSK signal used to transmit
-
+ maxval1=max(X_QPSK_cut);
+ X_QPSK_cut=X_QPSK_cut/maxval1;
  fig=figure;
  hold on
  set(fig,'color','white');
  plot(freq_XQPSK_cut,20*log10(X_QPSK_cut),'b','linewidth',2);
  xlabel('Frequency [Hz]');
- ylabel('QPSK Spectrum [dB]');
+ ylabel('QPSK Normalized Spectrum [dB]');
  set(gca,'fontsize',fontsize);
  grid on;
  hold off
@@ -165,9 +166,6 @@ Ny= zeros(400,1); % dimension in y, vertical  of surveillance area
 AoI=Nx.*Ny; % Surveillance area
 
 % Horizontal targets
-%AoI(20,200) = 1; % define targets, set row 4, from column 7-10 to 1.
-%AoI(100,(100:200)) = 1; % define targets, set row 4, from column 7-10 to 1.
-%AoI(100,337) = 1; % define targets, set row 4, from column 7-10 to 1.
 AoI(300,337) = 1; % define targets, set row 4, from column 7-10 to 1.
 normal_ntarget1=[0 -1]; % Introduce a normal vector to the targets, used for angles calculations
 
@@ -206,7 +204,11 @@ waypoints=round(waypoints);
 
 surv_matrix=zeros(length(X_QPSK_cut),length(waypoints)); % Define surveillance Signal matrix
 ref_matrix=zeros(length(X_QPSK_cut),length(waypoints)); % Define Reference Signal matrix
-QPSK_matrix=zeros(length(X_QPSK_cut),length(waypoints)); % Define Reference Signal matrix
+QPSK_matrix=zeros(length(X_QPSK_cut),length(waypoints)); % Define QPSK Signal matrix
+distance_matrix=zeros(1,length(waypoints)); % Define distance Signal matrix
+R1_matrix=zeros(1,length(waypoints)); % Define distance Signal matrix
+Rm_matrix=zeros(1,length(waypoints)); % Define distance Signal matrix
+
 
 
 for i=1:numel(waypoints) % For each waypoint
@@ -243,16 +245,21 @@ for i=1:numel(waypoints) % For each waypoint
                         lambda2=c./F_rf; % Wavelength in meters
                         fB=V./lambda2; % Convert speed to doppler shift in Hz
                         Kd=(2*pi*fB)/c; % Surveillance Doppler information
-                        fB_ref=Vr./lambda2; % Convert speed to doppler shift in Hz
+                        fB_ref=Vr./lambda; % Convert speed to doppler shift in Hz
                         kd_ref=(2*pi*fB_ref)/c; % Reference Doppler information
                         doppler_freqSurv=freq_XQPSK_cut+fB; % Surveillance Doppler frequency
                         doppler_freqRef=freq_XQPSK_cut+fB_ref; % Reference Doppler frequency
+                        %Surveillance_SignalFD=Wi_transmit*Wi_Surv*X_QPSK_cut.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
+                        %Reference_SignalFD=Wi_transmit*Wi_ref*X_QPSK_cut.*exp(-1*j*(k0+kd_ref)*Rd); % Reference Signal frequency domain
                         Surveillance_SignalFD=Wi_transmit*Wi_Surv*(1/(R1+R2))*X_QPSK_cut.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
                         %Surveillance_SignalFD=awgn(Surveillance_SignalFD,SNR,'measured'); % Introduce white gaussian Noise
                         surv_matrix(:,i)=Surveillance_SignalFD.';  % Surveillance Signal of entire detections in frequency domain
                         Reference_SignalFD=Wi_transmit*Wi_ref*(1/Rd)*X_QPSK_cut.*exp(-1*j*(k0+kd_ref)*Rd); % Reference Signal frequency domain
                         ref_matrix(:,i)=Reference_SignalFD.'; % Reference Signal of entire detections in frequency domain
-                        %QPSK_matrix(:,i)=X_QPSK_cut.'; % Reference Signal of entire detections in frequency domain
+                        distance_matrix(:,i)=R1+R2-Rd;
+                        %distance_matrix(:,i)=[distance_matrix(:,i), R1+R2-Rd];
+                        R1_matrix(:,i)=R1;
+                        Rm_matrix(:,i)=X_transmitter-X_target;
                         fprintf('\n Coordenadas do avião(%d,%d)',X_transmitter,Y_transmitter);
                         fprintf('\n Coordenadas do alvo(%d,%d)',X_target,Y_target);
                         fprintf('\n Distância transmissor-alvo R1 %4.2f metros',R1);
@@ -344,15 +351,19 @@ xlim([-2e-4 -1.5e-4]);
 
 
 % Frequency
+
 plot(abs(doppler_freqSurv),abs(Surveillance_SignalFD));
 hold on;
-plot(abs(doppler_freqRef),abs(Reference_SignalFD));
+%plot(abs(doppler_freqRef),abs(Reference_SignalFD));
 plot(abs(freq_XQPSK_cut),abs(X_QPSK_cut));
 legend('Surveillance Signal','Reference Signal','QPSK');
 xlabel('freq (Hz)');
 ylabel('Spectrum');
 title('Frequency domain');
-xlim([3e7 3.01e7]);
+ylim([0 1.1]);
+
+
+
 
 % Time delay cut
 

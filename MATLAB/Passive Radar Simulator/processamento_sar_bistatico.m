@@ -24,12 +24,12 @@ for col = 1 : columns
     range_compressed_matrix(:,col)=range_compressed_cut;
 end
 
-
+range=time_compression_cut*c;
 
 % Range compressed data representation
 figure;
 maxcolorbar=max(max(20*log10(abs(range_compressed_matrix))));
-contourf(1:400,time_compression_cut*c,abs(range_compressed_matrix),'edgecolor','none');
+contourf(1:400,range,abs(range_compressed_matrix),'edgecolor','none');
 %contourf(20*log10(abs(range_compressed_matrix)),'edgecolor','none');
 colorbar;
 colormap(jet);
@@ -41,7 +41,7 @@ ylabel('Range (m)');
 
 figure;
 %maxcolorbar=max(max(20*log10(abs(range_compressed_matrix))));
-imagesc(1:400,time_compression_cut*c,abs(range_compressed_matrix));
+imagesc(1:400,range,abs(range_compressed_matrix));
 colorbar;
 colormap(jet);
 %caxis([maxcolorbar-20 maxcolorbar]);
@@ -58,45 +58,36 @@ x_max = waypoints;
 
 % Plot the maximum of range compression
 
+Error=(y_max/distance_matrix)*100;
 plot(x_max,y_max);
-title('Distance over aeroplane movement');
+hold on
+plot(x_max,distance_matrix);
+title('Range over aeroplane movement');
 xlabel('Waypoints (m)');
 ylabel('Range to target (m)');
-
-
-
-
-
-
-% Plot the maximum of range compression
-
-figure;
-imagesc(1:400,time_compression_cut*c,abs(range_compressed_matrix));
-colorbar;
-colormap(jet);
-hold on
-title('Range Compressed Data');
-xlabel('Waypoints (m)');
-ylabel('Range (m)');
-textString3 = sprintf('(%u,%3.f)',x_max, y_max);
-text(x_max, y_max,textString3,"Color",'b','FontSize',10);
-hold off
-shading interp;
+legend('Calculated Distance','Estimated Distance');
 
 
 % azimuth compression 
 
-[rows,columns]=size(range_compressed_matrix);
-for col = 1 : columns
-    thisColumn = range_compressed_matrix(:, col);
-    if max(thisColumn)>0
-        deebug=1;
-    end
-    [range_compressed_freq,range_compressed_matrixFD]=time2freq(thisColumn, time_compression_cut);
-  
-end
 
-slow_time=time_waypoints;
-SR = (swst + (0:Ns-1)/fs)*c0/2;
+% Plot the Signals
+
+figure;
+imagesc(doppler_freqSurv,range,abs(range_compressed_matrix));
+colorbar;
+colormap(jet);
+title('Range Compressed Data');
+xlabel('Doppler (Hz)');
+ylabel('Range (m)');
+
+
+n=1;
+u=2;
+D=sqrt(1-((u.^2*doppler_freqSurv.^2*c.^2)/4*Vr.^2*fc.^2));
+temp = ((R1_matrix-Rm_matrix+n*Lp)/c)*fc;
+H_BAC=exp(1*j*2*pi*(temp.*D));
+
+
 
 
