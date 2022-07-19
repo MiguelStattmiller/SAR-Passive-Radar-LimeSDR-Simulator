@@ -167,6 +167,7 @@ AoI=Nx.*Ny; % Surveillance area
 
 % Horizontal targets
 AoI(300,337) = 1; % define targets, set row 4, from column 7-10 to 1.
+
 normal_ntarget1=[0 -1]; % Introduce a normal vector to the targets, used for angles calculations
 
 % Receiver antenna position
@@ -178,7 +179,7 @@ Y_receiver=400;
 % Reference antenna coordinates
 
 X_receiverref=400;
-Y_receiverref=400;
+Y_receiverref=390;
 
 % Transmitter antenna x coordinate
 
@@ -208,8 +209,8 @@ QPSK_matrix=zeros(length(X_QPSK_cut),length(waypoints)); % Define QPSK Signal ma
 distance_matrix=zeros(1,length(waypoints)); % Define distance Signal matrix
 R1_matrix=zeros(1,length(waypoints)); % Define distance Signal matrix
 Rm_matrix=zeros(1,length(waypoints)); % Define distance Signal matrix
-
-
+R2_matrix=zeros(1,length(waypoints)); % Define distance Signal matrix
+target=0;
 
 for i=1:numel(waypoints) % For each waypoint
     Y_transmitter = waypoints(i);
@@ -236,7 +237,7 @@ for i=1:numel(waypoints) % For each waypoint
            
                  if status ==1 & Pt ==1 & Pr ==1  & Wi_Surv ~=0 & Wi_transmit ~=0  % SAR Passive detection
 
-                        
+                       
                         R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target in meters
                         R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target in meters
                         Rd=sqrt( (X_receiverref-X_transmitter).^2 + (Y_receiverref-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
@@ -257,8 +258,8 @@ for i=1:numel(waypoints) % For each waypoint
                         Reference_SignalFD=Wi_transmit*Wi_ref*(1/Rd)*X_QPSK_cut.*exp(-1*j*(k0+kd_ref)*Rd); % Reference Signal frequency domain
                         ref_matrix(:,i)=Reference_SignalFD.'; % Reference Signal of entire detections in frequency domain
                         distance_matrix(:,i)=R1+R2-Rd;
-                        %distance_matrix(:,i)=[distance_matrix(:,i), R1+R2-Rd];
                         R1_matrix(:,i)=R1;
+                        R2_matrix(:,i)=R2;
                         Rm_matrix(:,i)=X_transmitter-X_target;
                         fprintf('\n Coordenadas do avião(%d,%d)',X_transmitter,Y_transmitter);
                         fprintf('\n Coordenadas do alvo(%d,%d)',X_target,Y_target);
