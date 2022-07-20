@@ -53,7 +53,7 @@ In order to start programming SDR at a high level end, it was used Gnu radio com
      
      *QPSK_Doppler*- Allows to study the relation between doppler and range response in the cross-ambiguity function,with white noise addition for non-static targets with doppler values
      
-      *Sar_Passive_Radar*- SAR Passive Radar simulator, combinining Delay and doppler responses from targets. Includes Passive SAR processing.
+     *Sar_Passive_Radar*- SAR Passive Radar simulator, combinining Delay and doppler responses from targets. Includes Passive SAR processing.
 
 **REFERENCES:**
 
