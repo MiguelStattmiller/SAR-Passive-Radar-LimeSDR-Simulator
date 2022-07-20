@@ -1,8 +1,10 @@
 # Passive Radar| SDR | MATLAB | GNU RADIO
 
 **OBJECTIVE:**
-
- The main purpose of this work is to develop a SAR passive radar,based on ISM spectrum (central frequency of 2.45 GHz) with MATLAB using LimeSDR (https://limemicro.com/products/boards/limesdr/).
+ The two main goals of this work are:
+  Develop a passive SAR simulator in MATLAB. In order to study passive SAR evaluation.
+  
+  Develop a software for real SAR passive radar,based on ISM spectrum (central frequency of 2.45 GHz) on MATLAB using LimeSDR (https://limemicro.com/products/boards/limesdr/).
  
 **WORKING PROCESS ABSTRACT:**
  
