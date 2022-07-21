@@ -168,6 +168,7 @@ AoI=Nx.*Ny; % Surveillance area
 % Horizontal targets
 AoI(300,337) = 1; % define targets, set row 4, from column 7-10 to 1.
 
+
 normal_ntarget1=[0 -1]; % Introduce a normal vector to the targets, used for angles calculations
 
 % Receiver antenna position
@@ -210,7 +211,6 @@ distance_matrix=zeros(1,length(waypoints)); % Define distance Signal matrix
 R1_matrix=zeros(1,length(waypoints)); % Define distance Signal matrix
 Rm_matrix=zeros(1,length(waypoints)); % Define distance Signal matrix
 R2_matrix=zeros(1,length(waypoints)); % Define distance Signal matrix
-target=0;
 
 for i=1:numel(waypoints) % For each waypoint
     Y_transmitter = waypoints(i);
@@ -237,7 +237,7 @@ for i=1:numel(waypoints) % For each waypoint
            
                  if status ==1 & Pt ==1 & Pr ==1  & Wi_Surv ~=0 & Wi_transmit ~=0  % SAR Passive detection
 
-                       
+                        target=yy;
                         R1=sqrt( (X_transmitter-X_target).^2 + (Y_transmitter-Y_target).^2); % Distance transmitter-target in meters
                         R2=sqrt( (X_receiver-X_target).^2 + (Y_receiver-Y_target).^2); % Distance Receiver-target in meters
                         Rd=sqrt( (X_receiverref-X_transmitter).^2 + (Y_receiverref-Y_transmitter).^2); % Distance Transmitter-Receiver in meters
@@ -257,10 +257,9 @@ for i=1:numel(waypoints) % For each waypoint
                         surv_matrix(:,i)=Surveillance_SignalFD.';  % Surveillance Signal of entire detections in frequency domain
                         Reference_SignalFD=Wi_transmit*Wi_ref*(1/Rd)*X_QPSK_cut.*exp(-1*j*(k0+kd_ref)*Rd); % Reference Signal frequency domain
                         ref_matrix(:,i)=Reference_SignalFD.'; % Reference Signal of entire detections in frequency domain
-                        distance_matrix(:,i)=R1+R2-Rd;
-                        R1_matrix(:,i)=R1;
-                        R2_matrix(:,i)=R2;
-                        Rm_matrix(:,i)=X_transmitter-X_target;
+                        distance_matrix(yy,i)=R1+R2-Rd;
+                        R1_matrix(yy,i)=R1;
+                        R2_matrix(yy,i)=R2;
                         fprintf('\n Coordenadas do avião(%d,%d)',X_transmitter,Y_transmitter);
                         fprintf('\n Coordenadas do alvo(%d,%d)',X_target,Y_target);
                         fprintf('\n Distância transmissor-alvo R1 %4.2f metros',R1);
@@ -275,62 +274,12 @@ for i=1:numel(waypoints) % For each waypoint
          end
    end
 end
+distance_matrix( ~any(distance_matrix,2), : ) = [];  %rows
+R1_matrix( ~any(R1_matrix,2), : ) = [];  %rows
+R2_matrix( ~any(R2_matrix,2), : ) = [];  %rows
+
 
 %%
-
-%***************** Spectrum formation of both signals ******************
-figure;
-ic=find(~all(surv_matrix==0));
-hL=plot(abs(doppler_freqSurv),20*log10(abs(surv_matrix(:,ic))));
-hLg=legend('1 coluna do avião','2 coluna do avião','3 coluna do avião','4 coluna do avião','5 coluna do avião','6 coluna do avião','7 coluna do avião');
-xlabel('Frequency (Hz)');
-ylabel('Spectrum (dB)');
-title('Surveillance Spectrum');
-
-
-figure;
-ic=find(~all(ref_matrix==0));
-hL=plot(abs(doppler_freqRef),20*log10(abs(ref_matrix(:,ic))));
-hLg=legend('1 coluna do avião','2 coluna do avião','3 coluna do avião','4 coluna do avião','5 coluna do avião','6 coluna do avião','7 coluna do avião');
-xlabel('Frequency (Hz)');
-ylabel('Spectrum (dB)');
-title('Reference Spectrum');
-%***************** Data Visualization of both signals  ******************
-
-figure;
-contour(waypoints,freq_XQPSK_cut,20*log10(abs(surv_matrix)));
-colorbar;
-xlabel('Waypoints (m)');
-ylabel('Frequency (Hz)');
-ylim([2.7e7 3.3e7]);
-title('Surveillance matrix contour');
-
-figure;
-contour(1:400,freq_XQPSK_cut,20*log10(abs(ref_matrix)));
-colorbar;
-xlabel('Waypoints (m)');
-ylabel('frequency (Hz)');
-ylim([2.7e7 3.3e7]);
-title('Reference matrix contour');
-
-figure;
-imagesc(1:400,freq_XQPSK_cut,20*log10(abs(surv_matrix)));
-title('Surveillance Signal Raw Data');
-colorbar;
-xlabel('Waypoints (m)');
-ylabel('Frequency Signal (Hz)');
-ylim([2.7e7 3.3e7]);
-xlim([0 400]);
-
-figure;
-imagesc(1:400,freq_XQPSK_cut,20*log10(abs(ref_matrix)));
-title('Reference Signal Raw Data');
-colorbar;
-xlabel('Waypoints (m)');
-ylabel('Frequency Signal (Hz)');
-ylim([2.7e7 3.3e7]);
-xlim([0 400]);
-
 
 %**************** Calculate Reference and Surveillance Signals in Time Domain  
 
@@ -338,35 +287,10 @@ xlim([0 400]);
 [time_SS,Surveillance_Signal]=freq2time(Surveillance_SignalFD,doppler_freqSurv);
 
 
-%**************** Select Reference and Surveillance Signals Samples Time Domain 
-
-% Plot signals in Time Domain
-plot(time_RS,abs(Reference_Signal));
-hold on
-plot(time_SS,abs(Surveillance_Signal));
-legend('Reference Signal','Surveillance Signal');
-xlabel('Time (s)');
-ylabel('Spectrum');
-title('Time domain');
-xlim([-2e-4 -1.5e-4]);
+%**************** Select samples from Reference and Surveillance Signals in Time Domain  
 
 
-% Frequency
-
-plot(abs(doppler_freqSurv),abs(Surveillance_SignalFD));
-hold on;
-%plot(abs(doppler_freqRef),abs(Reference_SignalFD));
-plot(abs(freq_XQPSK_cut),abs(X_QPSK_cut));
-legend('Surveillance Signal','Reference Signal','QPSK');
-xlabel('freq (Hz)');
-ylabel('Spectrum');
-title('Frequency domain');
-ylim([0 1.1]);
-
-
-
-
-% Time delay cut
+% Selection of samples
 
 k=find(time_RS>-2e-4 & time_RS<-1.7e-4);
 time_RS=time_RS(1:34490);
@@ -379,7 +303,8 @@ Surveillance_Signal=Surveillance_Signal(1:34490);
 
 fs=1/(time_RS(2)-time_RS(1));
 
-% Interpolation
+%**************** Linear Interpolation  
+
 
 RSInterp_time=[time_RS(1):16/fs:time_RS(end)];
 Reference_interp=interp1(time_RS,Reference_Signal,RSInterp_time);
@@ -390,16 +315,6 @@ Surveillance_interp=interp1(time_SS,Surveillance_Signal,SSInterp_time);
 % SSInterp_time time reference for sinal Surveillance_interp 
 
 fs=1/(RSInterp_time(2)-RSInterp_time(1));
-
-% Time Domain
-plot(RSInterp_time,abs(Reference_interp));
-hold on
-plot(SSInterp_time,abs(Surveillance_interp));
-legend('Reference Signal','Surveillance Signal');
-xlabel('Time (s)');
-ylabel('Spectrum');
-title('Interp Time domain');
-
 
 [RSInterp_FD,Reference_interpFD]=time2freq(Reference_interp,RSInterp_time);
 
@@ -460,205 +375,6 @@ afmag3 = afmag3*1; % Select plot gain *1
 afmag3(afmag3>1 )= 1;
 
 
-%**************** Plot ambiguity and cross-ambiguity functions time delay
-
-
-%Plot Ambiguity Function of Sref
-[pks1, index] = max(afmag);
-xMax = delay(index);
-yMax = pks1;
-subplot(3,2,1)
-plot(delay,afmag,'LineStyle','-.'); 
-hold on
-textString = sprintf('(%f, %f)', xMax, yMax);
-text(xMax, yMax,textString,"Color",'b','FontSize',10);
-hold off
-shading interp;
-xlim auto;
-grid on; 
-colorbar;
-xlabel('Delay \tau (s)');
-ylabel('Ambiguity Function Magnitude');
-title('Ambiguity Function Sref');
-
-
-%Plot Ambiguity Function of Sr
-[pks2,index2] = max(afmag2);
-xMax2 = delay2(index2);
-yMax2 = pks2;
-subplot(3,2,2)   
-plot(delay2,afmag2,'LineStyle','-'); 
-hold on
-textString2 = sprintf('(%f, %f)', xMax2, yMax2);
-text(xMax2, yMax2,textString2,"Color",'b','FontSize',10);
-hold off
-shading interp;
-xlim auto;
-grid on; 
-colorbar;
-xlabel('Delay \tau (us)');
-ylabel('Ambiguity Function Magnitude');
-title('Ambiguity Function Sr');
-
-
-% Plot cross-ambiguity function of Sref and Sr
-
-[pks3,index3] = max(afmag3);
-xMax3 =delay3(index3);
-yMax3 = pks3;
-subplot(3,2,3)
-plot(delay3,afmag3,'LineStyle','-'); 
-hold on
-textString3 = sprintf('(%.2e,%f)',xMax3, yMax3);
-text(xMax3, yMax3,textString3,"Color",'b','FontSize',10);
-hold off
-shading interp;
-xlim auto;
-grid on; 
-colorbar;
-xlabel('delay (s)');
-ylabel('Ambiguity Function Magnitude');
-title('Cross-ambiguity');
-
-
-% Plot ambiguity function of Sref, Sr and cross-ambiguity
-
-subplot(3,2,4)
-plot(delay,afmag,'LineStyle','-.','Color','b'); % Green Sref
-hold on
-plot(delay2, afmag2,'LineStyle','-','Color','r'); % Red Sr
-plot(delay3, afmag3,'LineStyle','--','Color','g'); % blue cross-ambiguity 
-hold off
-xlim auto;
-grid on; 
-colorbar;
-xlabel('Delay \tau (s)');
-ylabel('Ambiguity Function Magnitude');
-title('Sref, Sr and cross-ambiguity');
-legend('Sref','Sr','cross-ambiguity');
-
-
-
-%**************** Plot ambiguity and cross-ambiguity functions doppler delay
-
-%Plot Ambiguity Function of Sref
-[pks1, index] = max(afmag);
-xMax = doppler(index);
-yMax = pks1;
-subplot(3,2,1)
-plot(doppler,afmag,'LineStyle','-.'); 
-hold on
-%plot3(doppler(pks1,index),afmag(pks1,index), pks1, '^r')
-textString = sprintf('(%f, %f)', xMax, yMax);
-text(xMax, yMax,textString,"Color",'b','FontSize',10);
-hold off
-shading interp;
-xlim auto;
-grid on; 
-colorbar;
-xlabel('Doppler (Hz)');
-ylabel('Ambiguity Function Magnitude');
-title('Ambiguity Function Sref');
-
-
-%Plot Ambiguity Function of Sr
-[pks2,index2] = max(afmag2);
-xMax2 = doppler2(index2);
-yMax2 = pks2;
-subplot(3,2,2)   
-plot(doppler2,afmag2,'LineStyle','-'); 
-hold on
-%plot3(doppler2(pks2,index2), afmag2(pks2,index2), pks2, '^r')
-textString2 = sprintf('(%f, %f)', xMax2, yMax2);
-text(xMax2, yMax2,textString2,"Color",'b','FontSize',10);
-hold off
-shading interp;
-xlim auto;
-grid on; 
-colorbar;
-xlabel('Doppler (Hz)');
-ylabel('Ambiguity Function Magnitude');
-title('Ambiguity Function Sr');
-
-
-% Plot cross-ambiguity function of Sref and Sr
-
-[pks3,index3] = max(afmag3);
-xMax3 = doppler3(index3);
-yMax3 = pks3;
-subplot(3,2,3)
-plot(doppler3,afmag3,'LineStyle','-'); 
-hold on
-textString3 = sprintf('(%.2e, %f)', xMax3, yMax3);
-text(xMax3, yMax3,textString3,"Color",'b','FontSize',10);
-hold off
-shading interp;
-grid on; 
-colorbar;
-xlabel('Doppler (Hz)');
-ylabel('Ambiguity Function Magnitude');
-title('Cross-ambiguity');
-
-
-% Plot ambiguity function of Sref, Sr and cross-ambiguity
-
-subplot(3,2,4)
-plot(doppler,afmag,'LineStyle','-.','Color','b'); % Green Sref
-hold on
-plot(doppler2, afmag2,'LineStyle','-','Color','r'); % Red Sr
-plot(doppler3, afmag3,'LineStyle','--','Color','g'); % blue cross-ambiguity 
-hold off
-xlim ([0.5e6 1.2e6]);
-grid on; 
-colorbar;
-xlabel('Doppler (Hz)');
-ylabel('Ambiguity Function Magnitude');
-title('Sref, Sr and cross-ambiguity');
-legend('Sref','Sr','cross-ambiguity');
-
-%**************** Plot ambiguity and cross-ambiguity functions time and doppler delay
-
-%Plot Ambiguity Function of Sref
-subplot(3,2,1)
-surf(delay,doppler,afmag,'LineStyle','-.');
-shading interp;
-%axis([-0.5e-5 0.5e-5 -10 10]); 
-grid on; 
-view([140,35]); 
-colorbar;
-xlabel('delay (s)');
-ylabel('doppler (Hz)');
-zlabel('Ambiguity Function Magnitude');
-title('Ambiguity Function Sref');
-
-
-%Plot Ambiguity Function of Sr
-subplot(3,2,2)
-surf(delay2,doppler2,afmag2,'LineStyle','-.');
-shading interp;
-%axis([-0.5e-5 0.5e-5 -10000 10000]); 
-grid on; 
-view([140,35]); 
-colorbar;
-xlabel('delay (s)');
-ylabel('doppler (Hz)');
-zlabel('Ambiguity Function Magnitude');
-title('Ambiguity Function Sr');
-
-
-% Plot cross-ambiguity function of Sref and Sr
-
-figure;
-surf(delay3,doppler3,afmag3,'LineStyle','-.');
-shading interp;
-%axis([-0.5e-5 0.5e-5 -4e6 4e6]); 
-grid on; 
-view([140,35]); 
-colorbar;
-xlabel('delay (s)');
-ylabel('doppler (Hz)');
-zlabel('Ambiguity Function Magnitude');
-title('Cross-ambiguity Function');
 
 
 
