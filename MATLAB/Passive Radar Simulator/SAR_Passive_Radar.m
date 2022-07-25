@@ -13,7 +13,7 @@
 % For the SAR passive radar: 
 % .Transmitter is on board of a moving platform.
 % .There are 2 static antenna receivers.
-% .Transmitted signal= Sequence of bits modulated by a QPSK modulator.
+
 
 % The simulator contains:
 % . Doppler information, delay information, white noise addition, antennas radiation patterns influence, snell function between transmitter and receiver,
@@ -86,7 +86,7 @@ grid on;
  hold on
  set(fig,'color','white');
  plot(abs(freq_XQPSK),20*log10(abs(X_QPSK)),'b','linewidth',2);
- %xlim ([20e6 40e6]);
+ xlim ([20e6 40e6]);
  xlabel('Frequency [Hz]');
  ylabel('QPSK Spectrum [dB]');
  set(gca,'fontsize',fontsize);
@@ -200,7 +200,7 @@ time_waypoints=total_time/number_stops; % Time between transmissions
 waypoints=[1:Vr*time_waypoints:distance]; % Y coordinates for radar transmissions
 waypoints=round(waypoints);
 
-%%
+
 %***************** Targets detection code  ******************
 
 
@@ -227,12 +227,15 @@ for i=1:numel(waypoints) % For each waypoint
             Vectors_product_3=dot( VTarget_receiver,normal_ntarget1)/(norm(VTarget_receiver)*norm(normal_ntarget1));
             angle_receiver =acosd(Vectors_product_3); % angle between target-receiver
             Vectors_product_2= Colin_vectors(VTransmitter_target,VTarget_receiver);
-            status=snell_function(angle_transmitter,angle_receiver,teta_flutuations_reflec,teta_flutuations_transm,Vectors_product_2);
+            status=snell_function(angle_transmitter,angle_receiver, ...
+            teta_flutuations_reflec,teta_flutuations_transm,Vectors_product_2);
             Pr = LoS_receiver(X_receiver,Y_receiver,X_target,Y_target,AoI); % Line of sight between target-receiver
             Pt = LoS_transmitter(X_transmitter,Y_transmitter,X_target,Y_target,AoI); % Line of sight between transmitter-target
-            Wi_ref = RXGaussian_ref(X_receiverref,Y_receiverref,X_transmitter,Y_transmitter,alpha_zeroSVref,D_ref); % Reference antenna radiation pattern
+            Wi_ref = RXGaussian_ref(X_receiverref,Y_receiverref,X_transmitter, ...
+            Y_transmitter,alpha_zeroSVref,D_ref); % Reference antenna radiation pattern
             Wi_Surv= RXGaussian(X_receiver,Y_receiver,X_target,Y_target,alpha_zero_surv,D_surv); % Surveillance antenna radiation pattern
-            Wi_transmit=RXGaussian_transmit(X_target,Y_target,X_transmitter,Y_transmitter,alpha_zero_transmit,D_transmit); % Transmitter antenna radiation pattern
+            Wi_transmit=RXGaussian_transmit(X_target,Y_target,X_transmitter, ...
+            Y_transmitter,alpha_zero_transmit,D_transmit); % Transmitter antenna radiation pattern
 
            
                  if status ==1 & Pt ==1 & Pr ==1  & Wi_Surv ~=0 & Wi_transmit ~=0  % SAR Passive detection
@@ -274,108 +277,8 @@ for i=1:numel(waypoints) % For each waypoint
          end
    end
 end
-distance_matrix( ~any(distance_matrix,2), : ) = [];  %rows
-R1_matrix( ~any(R1_matrix,2), : ) = [];  %rows
-R2_matrix( ~any(R2_matrix,2), : ) = [];  %rows
-
-
-%%
-
-%**************** Calculate Reference and Surveillance Signals in Time Domain  
-
-[time_RS,Reference_Signal]=freq2time(Reference_SignalFD,doppler_freqRef);
-[time_SS,Surveillance_Signal]=freq2time(Surveillance_SignalFD,doppler_freqSurv);
-
-
-%**************** Select samples from Reference and Surveillance Signals in Time Domain  
-
-
-% Selection of samples
-
-k=find(time_RS>-2e-4 & time_RS<-1.7e-4);
-time_RS=time_RS(1:34490);
-Reference_Signal=Reference_Signal(1:34490);
-
-k2=find(time_SS>-2e-4 & time_SS<-1.7e-4);
-time_SS=time_SS(1:34490);
-Surveillance_Signal=Surveillance_Signal(1:34490);
-
-
-fs=1/(time_RS(2)-time_RS(1));
-
-%**************** Linear Interpolation  
-
-
-RSInterp_time=[time_RS(1):16/fs:time_RS(end)];
-Reference_interp=interp1(time_RS,Reference_Signal,RSInterp_time);
-% RSInterp_time time reference for sinal reference_interp 
-
-SSInterp_time=[time_SS(1):16/fs:time_SS(end)];
-Surveillance_interp=interp1(time_SS,Surveillance_Signal,SSInterp_time);
-% SSInterp_time time reference for sinal Surveillance_interp 
-
-fs=1/(RSInterp_time(2)-RSInterp_time(1));
-
-[RSInterp_FD,Reference_interpFD]=time2freq(Reference_interp,RSInterp_time);
-
-
-
-%************* Calculate ambiguity and cross-ambiguity functions-time delay
-
-
-%Reference_Signal ambiguity function
-[afmag,delay] = ambgfun(Reference_Signal,fs,250000,'Cut','Doppler');
-afmag = afmag*1; % Select plot gain *1
-afmag(afmag>1 )= 1;
-
- %Surveillance_Signal ambiguity function
-[afmag2,delay2] = ambgfun(Surveillance_Signal,fs,250000,'Cut','Doppler');
-afmag2 = afmag2*1; % Select plot gain *1
-afmag2(afmag2>1 )= 1;
-
-%Cross-ambiguity
-[afmag3,delay3] = ambgfun(Reference_Signal,Surveillance_Signal,fs,[250000 250000],'Cut','Doppler');
-afmag3 = afmag3*1; % Select plot gain *1
-afmag3(afmag3>1 )= 1;
-
-
-%*********** Calculate ambiguity and cross-ambiguity functions-doppler delay
-
-
-%Reference_Signal ambiguity function
-[afmag,doppler] = ambgfun(Reference_SignalCut,fs,1e6,'Cut','Delay');
-afmag = afmag*1; % Select plot gain *1
-afmag(afmag>1 )= 1;
-
- %Surveillance_Signal ambiguity function
-[afmag2,doppler2] = ambgfun(Surveillance_SignalCut,fs,1e6,'Cut','Delay');
-afmag2 = afmag2*1; % Select plot gain *1
-afmag2(afmag2>1 )= 1;
-
-%Cross-ambiguity
-[afmag3,doppler3] = ambgfun(Reference_Signal,Surveillance_Signal,fs,[250000 250000],'Cut','Delay');
-afmag3 = afmag3*1; % Select plot gain *1
-afmag3(afmag3>1 )= 1;
-
-%************* Calculate ambiguity and cross-ambiguity functions-time and doppler delay
-
-%Reference_Signal ambiguity function
-[afmag,delay,doppler] = ambgfun(Reference_interp,fs,1e6);
-afmag = afmag*1; % Select plot gain *1
-afmag(afmag>1 )= 1;
-
- %Surveillance_Signal ambiguity function
-[afmag2,delay2,doppler2] = ambgfun(Surveillance_interp,fs,1e6);
-afmag2 = afmag2*1; % Select plot gain *1
-afmag2(afmag2>1 )= 1;
-
-%Cross-ambiguity
-[afmag3,delay3,doppler3] = ambgfun(Reference_interp,Surveillance_interp,fs,[250000 250000]);
-afmag3 = afmag3*1; % Select plot gain *1
-afmag3(afmag3>1 )= 1;
-
-
-
-
+distance_matrix( ~any(distance_matrix,2), : ) = [];  
+R1_matrix( ~any(R1_matrix,2), : ) = [];  
+R2_matrix( ~any(R2_matrix,2), : ) = [];  
 
 
