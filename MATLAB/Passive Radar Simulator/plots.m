@@ -315,7 +315,7 @@ ylabel('Range (m)');
 ylim([0 125]);
 
 subplot(3,2,2);
-maxcolorbar=max(max(20*log10(abs(range_compressed_matrix))));
+%maxcolorbar=max(max(20*log10(abs(range_compressed_matrix))));
 contourf(1:400,range,abs(range_compressed_matrix),'edgecolor','none');
 %contourf(20*log10(abs(range_compressed_matrix)),'edgecolor','none');
 colorbar;
@@ -407,18 +407,18 @@ legend('Range Cell Migration correction','Azimuth compression');
 ylim([0 98]);
 
 figure;
-maxcolorbar=max(max(20*log10(abs(range_compressed_matrix))));
-contourf(1:400,range,20*log10(abs(migration_compressed_matrix)),'edgecolor','none');
+%maxcolorbar=max(max(20*log10(abs(range_compressed_matrix))));
+contourf(1:400,range,abs(migration_compressed_matrix),'edgecolor','none');
 colorbar;
 colormap(jet);
-caxis([maxcolorbar-30 maxcolorbar-10]);
+%caxis([maxcolorbar-30 maxcolorbar-10]);
 title('Migration Compressed Data');
 xlabel('Waypoints (m)');
 ylabel('Range (m)');
 
 %***************** Plot azimuth correction    ******************
 
-contourf(azimuth2,range,abs(azimuth_compressed_matrix),'edgecolor','none');
+contourf(waypoints,range,abs(azimuth3),'edgecolor','none');
 colorbar;
 colormap(jet);
 title('Azimuth Compressed Data');
