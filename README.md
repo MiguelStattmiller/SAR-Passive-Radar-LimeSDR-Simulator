@@ -38,7 +38,7 @@ In order to start programming SDR at a high level end, it was used Gnu radio com
  
   LIBRARY- All the functions needed for the main program and SAR passive radar simulator.
   
-  Main program- Main program for real tests of SAR passive radar using LimeSDR.
+  Main program- Program for the real tests of passive radar using LimeSDR.
   
      *SDR*- Program to receive samples with LimeSDR USB on two different channels.
    
