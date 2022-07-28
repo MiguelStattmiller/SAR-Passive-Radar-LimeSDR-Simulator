@@ -5,7 +5,7 @@
  
   Develop a passive SAR simulator in MATLAB. In order to study passive SAR evaluation.
   
-  Develop a software for real SAR passive radar,based on ISM spectrum (central frequency of 2.45 GHz) on MATLAB using LimeSDR (https://limemicro.com/products/boards/limesdr/), for detection of real targets(aeroplanes in this case).
+  Develop a software for real passive radar,based on ISM spectrum (central frequency of 2.45 GHz) on MATLAB using LimeSDR (https://limemicro.com/products/boards/limesdr/), for detection of real targets(aeroplanes in this case).
  
 **WORKING PROCESS ABSTRACT:**
  
