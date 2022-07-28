@@ -1,4 +1,4 @@
-# Passive Radar| SDR | MATLAB | GNU RADIO
+# SAR Passive Radar Simulator| SAR Passive Radar with SDR | MATLAB | GNU RADIO
 
 **OBJECTIVE:**
  The two main goals of this work are:
