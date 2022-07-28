@@ -1,3 +1,8 @@
+
+% Author of the current program:
+% Miguel Albuquerque, Escola Naval, 2022
+
+
 %***************** Spectrum formation of both signals ******************
 figure;
 ic=find(~all(surv_matrix==0));
