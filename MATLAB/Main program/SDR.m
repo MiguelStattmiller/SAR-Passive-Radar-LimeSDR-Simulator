@@ -1,4 +1,4 @@
- % Author of the LimeSDR MATLAB compatibility program:
+% Author of the LimeSDR MATLAB compatibility program:
 %    Damir Rakhimov, CRL, TU Ilmenau, Dec 2019
 
 % Author of the time2freq function:
@@ -8,6 +8,7 @@
 % Author of the current program:
 % Miguel Albuquerque, Escola Naval, 2022
 
+%This program allows the detection of signals with SDR in two channels.
 clc
 clear all
 
@@ -94,7 +95,7 @@ dev.stop();
 clear dev;
 fprintf('Stop of LimeSDR\n');
 
-%%
+
 %**************** Plot spectrograms of the received signals
 
 figure(1)
@@ -106,7 +107,7 @@ subplot(3,2,2);
 spectrogram(bufferRx1,2^12,2^10,2^12,'centered','yaxis')
 title('Surveillance Signal');
 
-%**************** Plot Received signals TD
+%**************** Plot Received signals Time Domaim
 
 fig=figure;
 set(fig,'color','white');
@@ -125,7 +126,7 @@ set(gca,'fontsize',fontsize);
 grid on;
 
 
-%**************** Plot Received signals FD
+%**************** Plot Received signals Frequency Domain
 
 [Rs_FreqD,Rs_FD]=time2freq(bufferRx,tempo);
 fig=figure;
@@ -146,7 +147,7 @@ ylabel('Surveillance signal [dB]');
 set(gca,'fontsize',fontsize);
 grid on;
 
-%%
+
 % Select a few samples to get the process quicker
 t = bufferRx(1:1000);
 x = transpose(t);
@@ -155,8 +156,8 @@ x = transpose(t);
 t1 = bufferRx1(1:1000);
 x1 = transpose(t1);
 
-%%
-%**************** FD of the receiving Samples
+
+%**************** Frequency Domain of the receiving Samples
 
 [freq,Spectrum]=time2freq(x,tempo);
 fig=figure;
@@ -182,7 +183,7 @@ set(gca,'fontsize',fontsize);
 grid on;
 hold off
 
-%**************** Plot of the receiving Samples TD
+%**************** Plot the receiving Samples Time Domain
 
 fig=figure;
 set(fig,'color','white');
@@ -201,8 +202,7 @@ set(gca,'fontsize',fontsize);
 grid on;
 
 
-%**************** Calculate ambiguity and cross-ambiguity functions Time
-%delay
+%**************** Calculate ambiguity and cross-ambiguity functions
 
 %Sref ambiguity function
 [afmag,delay] = ambgfun(bufferRx,Fs,250000,'cut','Doppler');
@@ -221,7 +221,7 @@ afmag3(afmag3>1 )= 1;
 
 
 
-%% Plot the ambiguity and cross-ambiguity functions of Sref and Sr
+%Plot the ambiguity and cross-ambiguity functions of Sref and Sr
 
 %Ambiguity Function Sref
 [pks1, index] = max(afmag);
@@ -359,23 +359,3 @@ xlabel('Doppler (Hz)');
 ylabel('Ambiguity Function Magnitude');
 title('Ambiguity Function Sref');
 
-%**************** SAR Processing
-
-% Range compression with reference signal
-
-Range_compression=bufferRx1.*conj(bufferRx); % Range compression FD domain
-
-% Set each column of range compression to Time Domain
-[rows,columns]=size(Range_compression);
-for col = 1 : columns
-    thisColumn = Range_compression(:, col);
-    if max(thisColumn)>0
-        deebug=1;
-    end
-    [time_compression,range_compressed]=freq2time(thisColumn, Rs_FreqD);
-    idx1=find(time_compression>=0,1);
-    idx2=find(time_compression<=7e-6,1,'last');
-    time_compression_cut=time_compression(idx1:idx2);
-    range_compressed_cut=range_compressed(idx1:idx2);
-    range_compressed_matrix(:,col)=range_compressed_cut;
-end

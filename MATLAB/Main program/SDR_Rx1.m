@@ -1,15 +1,27 @@
+
+% Author of the LimeSDR MATLAB compatibility program:
+%    Damir Rakhimov, CRL, TU Ilmenau, Dec 2019
+
+% Author of the current program:
+% Miguel Albuquerque, Escola Naval, 2022
+
+%This program allows the detection of signals with SDR in one channel.
+% After the detection, the samples and the timestamp are saved into two
+% matrices.
+
+
 clc
 clear all
 
 addpath('C:\Users\black\OneDrive\Ambiente de Trabalho\Tese\programação\SDR') % add path with LimeSuite library
 
 % Initialize parameters
-filename='Canal gabinete';
+filename='Aviao13_AgUnif';
 TotalTime   = 1;       % Time of observation, s
-Fc          = 2.4e9;   % Carrier Frequency, Hz
+Fc          = 2.45e9;   % Carrier Frequency, Hz
 Fs          = 10e6;      % Frequency of sampling frequency, Hz   2x> B
-Ts          = 30;      % Signal duration, s
-Fsig        = 2.4e9;    % Frequency of desired signal, Hz
+Ts          = 20;      % Signal duration, s
+Fsig        = 2.45e9;    % Frequency of desired signal, Hz
 Asig        = 1;        % Amplitude of signal, V
 BW          = 5e6;      % Bandwidth of the signal, Hz (5-40MHz and 50-130Mhz)
 Gain        = 20;       % Receiver Gain, dB
