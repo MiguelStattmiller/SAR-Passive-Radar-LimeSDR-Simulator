@@ -13,7 +13,7 @@ In order to achieve the main goal, firstly It was used Gnu Radio and Pothos Flow
 
 Next, It was produced a SAR passive radar simulator (MATLAB folder).
 
-Finally, It was developped the SAR passive radar processing code, for aeroplanes detection(MATLAB folder).
+Finally, It was developped the passive radar processing code, for aeroplanes detection(MATLAB folder).
 
 **ORGANIZATION/WORK DESCRIPTION:** 
 
