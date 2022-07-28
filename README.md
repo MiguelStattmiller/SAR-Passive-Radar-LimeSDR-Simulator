@@ -46,6 +46,8 @@ In order to start programming SDR at a high level end, it was used Gnu radio com
      *SDR_Rx0*- Program to receive samples with LimeSDR USB in channel Rx0.
   
      *SDR_Rx1*- Program to receive samples with LimeSDR USB in channel Rx1.
+     
+     *SDR_processing*- Program to correlate the acquired samples with LimeSDR USB in both channels. Allowing the detection of the target.
    
   Passive Radar Simulator- Simulator for SAR passive radar using a QPSK modulator.
   
