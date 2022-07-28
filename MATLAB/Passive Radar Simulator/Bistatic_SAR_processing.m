@@ -41,17 +41,17 @@ end
 range=time_compression_cut*c;
 
 
-%***************** Maximum of Range compressed data******************
+%***************** Curvatures Along Range ******************
 
 [max_correlation, row_idx] = max(range_compressed_matrix, [], 1);
 y_max = time_compression_cut(row_idx);
 y_max = y_max*c;
 
 
-%***************** Range migration correction ******************
+%***************** Range Cell Migration Correction ******************
 
 
-% Calculate necessary time delay between columns related to the column that has the minimum
+% Calculate necessary time delay between columns, related to the column that has the minimum
 % distance
 
 
@@ -62,7 +62,7 @@ thisrow=y_max(i,:);
 [R0,ixR0]=min(thisrow(thisrow ~= 0));
 first_idx = find(thisrow, 1, 'first');
 last_idx  = find(thisrow, 1, 'last');
-[rowOfMin, colOfMin] = find(thisrow == R0); % Find row and col of min.
+[rowOfMin, colOfMin] = find(thisrow == R0); 
 for col = 1 : columns
         thisColumn = y_max(i, col);
         if thisColumn == 0
@@ -90,7 +90,8 @@ for i = 1:size(RMC,1)
 end
 
 
-%***************** Range Migration in compressed data ******************
+% Range Cell Migration Correction application for each colummn of
+% range compressed data.
 
 distance_correction=round(distance_correction);
 [rows2,columns2]=size(range_compressed_matrix);
@@ -110,10 +111,10 @@ code=0;
     end
 
 
-%%
+
 %***************** Azimuth compression ******************
 
-% FFT of each Row of RCMC data
+% FFT of each Row of migration corrected data
 [rows,columns]=size(migration_compressed_matrix);
 for row = 1 :  rows
     thisrow = migration_compressed_matrix(row, :);
@@ -123,8 +124,8 @@ end
 
 % Select only positive frequencies
 k=find(freq_azimuth>0);
-freq_azimuth2=freq_azimuth(4000:7999);
-azimuth_compressed_matrix2=azimuth_compressed_matrix(:,4000:7999);
+freq_azimuth2=freq_azimuth(k);
+azimuth_compressed_matrix2=azimuth_compressed_matrix(:,k);
 
 % Interpolation
 [rows,columns]=size(azimuth_compressed_matrix);
@@ -146,8 +147,9 @@ for row=1:rows
 end
 
 %%
-% Expected azimuth compression
+% Expected Azimuth Compression
 
+% FFT of each Row of RCMC data
 [rows,columns]=size(RMC);
 for row = 1 :  rows
     thisrow = RMC(row, :);
@@ -155,9 +157,12 @@ for row = 1 :  rows
     azimuth_compressed_matrix(row,:)=azimuth.';
 end
 
+%Interpolation
 azimuth2=interp1(freq_azimuth,abs(azimuth),linspace(min(freq_azimuth), ...
 max(freq_azimuth),length(waypoints)));
 
+
+%Shift of sinc Function
 [min,posin] = find(RMC, 1, 'first');
 [min2,posout]  = find(RMC, 1, 'last');
 maxvalue3=max(y_max);

@@ -86,7 +86,7 @@ grid on;
  hold on
  set(fig,'color','white');
  plot(abs(freq_XQPSK),20*log10(abs(X_QPSK)),'b','linewidth',2);
- xlim ([20e6 40e6]);
+ %xlim ([20e6 40e6]);
  xlabel('Frequency [Hz]');
  ylabel('QPSK Spectrum [dB]');
  set(gca,'fontsize',fontsize);
@@ -156,7 +156,7 @@ teta_flutuations_reflec=theta_3dB_surv/2; % Define the flutuation angle value, u
 
 % White Noise addition 
 
-SNR=30; % Introduce white noise SNR value, applied to surveillance signal
+SNR=-26; % Introduce white noise SNR value, applied to surveillance signal
 
 
 % Define surveillance area and targets
@@ -253,8 +253,6 @@ for i=1:numel(waypoints) % For each waypoint
                         kd_ref=(2*pi*fB_ref)/c; % Reference Doppler information
                         doppler_freqSurv=freq_XQPSK_cut+fB; % Surveillance Doppler frequency
                         doppler_freqRef=freq_XQPSK_cut+fB_ref; % Reference Doppler frequency
-                        %Surveillance_SignalFD=Wi_transmit*Wi_Surv*X_QPSK_cut.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
-                        %Reference_SignalFD=Wi_transmit*Wi_ref*X_QPSK_cut.*exp(-1*j*(k0+kd_ref)*Rd); % Reference Signal frequency domain
                         Surveillance_SignalFD=Wi_transmit*Wi_Surv*(1/(R1+R2))*X_QPSK_cut.*exp(-1*j*(k0+Kd)*(R1+R2)); % Surveillance Signal frequency domain
                         %Surveillance_SignalFD=awgn(Surveillance_SignalFD,SNR,'measured'); % Introduce white gaussian Noise
                         surv_matrix(:,i)=Surveillance_SignalFD.';  % Surveillance Signal of entire detections in frequency domain

@@ -292,12 +292,12 @@ title('Cross-ambiguity Function');
 %***************** Range compressed data representation  ******************
  
 figure;
-maxcolorbar=max(max(20*log10(abs(range_compressed_matrix))));
-contourf(1:400,range,20*log10(abs(range_compressed_matrix)),'edgecolor','none');
+%maxcolorbar=max(max(20*log10(abs(range_compressed_matrix))));
+contourf(1:400,range,abs(range_compressed_matrix),'edgecolor','none');
 %contourf(20*log10(abs(range_compressed_matrix)),'edgecolor','none');
 colorbar;
 colormap(jet);
-caxis([maxcolorbar-30 maxcolorbar]);
+%caxis([maxcolorbar-30 maxcolorbar]);
 title('Range Compressed Data');
 xlabel('Waypoints (m)');
 ylabel('Range (m)');
@@ -362,49 +362,42 @@ xlabel('Waypoints (m)');
 ylabel('Range (m)');
 ylim([95 125]);
 
-%***************** Plot the maximum of range compression  ******************
+%***************** Expected curvatures Along Range ******************
 
- 
+
+plot(waypoints,y_max);
+title('Range Compressed Data');
+xlabel('Waypoints (m)');
+ylabel('Range (m)');
+legend('Calculated Distance');
 
 
 plot(waypoints,y_max);
 hold on
 plot(waypoints,distance_matrix);
-title('Range over aeroplane movement');
+title('Range Compressed Data');
 xlabel('Waypoints (m)');
-ylabel('Range to target (m)');
+ylabel('Range (m)');
 legend('Calculated Distance','Estimated Distance');
 
 
 
-%***************** Plot Range Migration with range compressed data   ******************
+%***************** Expected Range Cell Migration Correction******************
 
 
 
 plot(waypoints,RMC);
 hold on
-plot(waypoints,distance_matrix);
+plot(waypoints,y_max);
 hold off
-title('Range over aeroplane movement');
+title('Cell Migration Correction Data');
 xlabel('Waypoints (m)');
-ylabel('Range to target (m)');
-legend('Range Cell Migration correction');
+ylabel('Range (m)');
+legend('Cell Migration Correction Data','Calculated Distance');
 
 
 
-%***************** Plot migration correction    ******************
-
-
-
-plot(waypoints,RMC);
-hold on
-plot(RMC,azimuth);
-hold off
-title('Range over aeroplane movement');
-xlabel('Waypoints (m)');
-ylabel('Range to target (m)');
-legend('Range Cell Migration correction','Azimuth compression');
-ylim([0 98]);
+%***************** Range Cell Migration Correction in Range Compressed Data******************
 
 figure;
 %maxcolorbar=max(max(20*log10(abs(range_compressed_matrix))));
@@ -412,11 +405,11 @@ contourf(1:400,range,abs(migration_compressed_matrix),'edgecolor','none');
 colorbar;
 colormap(jet);
 %caxis([maxcolorbar-30 maxcolorbar-10]);
-title('Migration Compressed Data');
+title('Cell Migration Correction Data');
 xlabel('Waypoints (m)');
 ylabel('Range (m)');
 
-%***************** Plot azimuth correction    ******************
+%***************** Azimuth Compression ******************
 
 contourf(waypoints,range,abs(azimuth3),'edgecolor','none');
 colorbar;
@@ -425,13 +418,16 @@ title('Azimuth Compressed Data');
 xlabel('Waypoints (m)');
 ylabel('Range (m)');
 
+%***************** Expected Azimuth Compression ******************
+
+
 figure;
 plot(waypoints,azimuth2);
 hold on
 plot(waypoints,RMC);
 plot(x,y,'^r');
-title('Range over aeroplane movement');
+title('Target detection');
 xlabel('Waypoints (m)');
 ylabel('Range (m)');
-legend('Azimuth Compression','Range Migration Correction',sprintf('(%2.0f,%2.0f) Target',x,y));
+legend('Azimuth Compression','Cell Range Migration Correction',sprintf('(%2.0f,%2.0f) Target',x,y));
 
