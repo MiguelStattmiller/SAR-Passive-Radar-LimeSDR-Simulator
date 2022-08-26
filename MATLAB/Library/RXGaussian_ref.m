@@ -1,6 +1,5 @@
 function [Wi_ref] = RXGaussian_ref(X_receiverref,Y_receiverref,X_transmitter,Y_transmitter,alpha_zeroSVref,D_ref)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+%This function allows the calculation of a raised-cosine equation
 
 %**************** Function Calculus
 theta_3dB_ref=sqrt(4*pi/(10^(D_ref/10))); %desired HPBW
