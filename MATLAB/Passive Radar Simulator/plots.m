@@ -1,8 +1,3 @@
-
-% Author of the current program:
-% Miguel Albuquerque, Escola Naval, 2022
-
-
 %***************** Spectrum formation of both signals ******************
 figure;
 ic=find(~all(surv_matrix==0));
@@ -303,9 +298,9 @@ contourf(1:400,range,abs(range_compressed_matrix),'edgecolor','none');
 colorbar;
 colormap(jet);
 %caxis([maxcolorbar-30 maxcolorbar]);
-title('Range Compressed Data');
-xlabel('Waypoints (m)');
-ylabel('Range (m)');
+title('Range Compressed Data','FontSize',14);
+xlabel('Azimuth [m]','FontSize',14);
+ylabel('Range [m]','FontSize',14);
 
 subplot(3,2,1);
 %maxcolorbar=max(max(20*log10(abs(range_compressed_matrix))));
@@ -380,10 +375,10 @@ legend('Calculated Distance');
 plot(waypoints,y_max);
 hold on
 plot(waypoints,distance_matrix);
-title('Range Compressed Data');
-xlabel('Waypoints (m)');
-ylabel('Range (m)');
-legend('Calculated Distance','Estimated Distance');
+title('Range Compressed Data','FontSize',14);
+xlabel('Azimuth [m]','FontSize',14);
+ylabel('Range [m]','FontSize',14);
+legend('Calculated Distance','Estimated Distance'),set(legend,'fontsize',14);
 
 
 
@@ -395,10 +390,10 @@ plot(waypoints,RMC);
 hold on
 plot(waypoints,y_max);
 hold off
-title('Cell Migration Correction Data');
-xlabel('Waypoints (m)');
-ylabel('Range (m)');
-legend('Cell Migration Correction Data','Calculated Distance');
+title('Cell Migration Correction Data','FontSize',14);
+xlabel('Azimuth [m]','FontSize',14);
+ylabel('Range [m]','FontSize',14);
+legend('Cell Migration Correction Data','Calculated Distance','fontsize',14);
 
 
 
@@ -410,18 +405,18 @@ contourf(1:400,range,abs(migration_compressed_matrix),'edgecolor','none');
 colorbar;
 colormap(jet);
 %caxis([maxcolorbar-30 maxcolorbar-10]);
-title('Cell Migration Correction Data');
-xlabel('Waypoints (m)');
-ylabel('Range (m)');
+title('Cell Migration Correction Data','FontSize',14);
+xlabel('Azimuth [m]','FontSize',14);
+ylabel('Range [m]','FontSize',14);
 
 %***************** Azimuth Compression ******************
 
 contourf(waypoints,range,abs(azimuth3),'edgecolor','none');
 colorbar;
 colormap(jet);
-title('Azimuth Compressed Data');
-xlabel('Waypoints (m)');
-ylabel('Range (m)');
+title('Azimuth Compressed Data','FontSize',14);
+xlabel('Azimuth [m]','FontSize',14);
+ylabel('Range [m]','FontSize',14);
 
 %***************** Expected Azimuth Compression ******************
 
@@ -431,8 +426,8 @@ plot(waypoints,azimuth2);
 hold on
 plot(waypoints,RMC);
 plot(x,y,'^r');
-title('Target detection');
-xlabel('Waypoints (m)');
-ylabel('Range (m)');
-legend('Azimuth Compression','Cell Range Migration Correction',sprintf('(%2.0f,%2.0f) Target',x,y));
+title('Target detection','FontSize',14);
+xlabel('Azimuth [m]','FontSize',14);
+ylabel('Range [m]','FontSize',14);
+legend('Azimuth Compression','Cell Range Migration Correction',sprintf('(%2.0f,%2.0f) Target',x,y),'fontsize',14);
 

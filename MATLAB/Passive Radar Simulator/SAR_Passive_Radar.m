@@ -74,9 +74,10 @@ t=linspace(0,Ns*Tb,length(QPSK_Signal));
 fig=figure;
 set(fig,'color','white');
 plot(t,QPSK_Signal,'linewidth',2,'color','b');
-xlabel('Time [s]');
-ylabel('QPSK signal [dB]');
-set(gca,'fontsize',fontsize);
+xlabel('Time [s]','FontSize',14);
+ylabel('QPSK signal [dB]','FontSize',14);
+title('QPSK Signal Time Domain','FontSize',14)
+%set(gca,'fontsize','fontsize',14);
 grid on;
 
 %**************** Plot frequency spectrum of QPSK signal
@@ -117,9 +118,10 @@ X_QPSK_cut=X_QPSK(idxx:idx2);
  hold on
  set(fig,'color','white');
  plot(freq_XQPSK_cut,20*log10(X_QPSK_cut),'b','linewidth',2);
- xlabel('Frequency [Hz]');
- ylabel('QPSK Normalized Spectrum [dB]');
- set(gca,'fontsize',fontsize);
+ xlabel('Frequency [Hz]','FontSize',14);
+ ylabel('QPSK Normalized Spectrum [dB]','FontSize',14);
+ title('QPSK Spectrum','FontSize',14)
+ %set(gca,'fontsize',fontsize);
  grid on;
  hold off
  

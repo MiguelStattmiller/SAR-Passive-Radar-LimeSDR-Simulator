@@ -146,6 +146,87 @@ afmag3 = afmag3*1; % Select plot gain *1
 afmag3(afmag3>1 )= 1;
 
 
+%**************** Plot ambiguity and cross-ambiguity functions
+
+
+%Plot Ambiguity Function of Sref
+[pks1, index] = max(afmag);
+xMax = delay(index);
+yMax = pks1;
+subplot(3,2,1)
+plot(delay,afmag,'LineStyle','-.'); 
+hold on
+plot3(delay(pks1,index),afmag(pks1,index), pks1, '^r')
+textString = sprintf('(%f, %f)', xMax, yMax);
+text(xMax, yMax,textString,"Color",'b','FontSize',10);
+hold off
+shading interp;
+xlim ([-8e-5 8e-5]);
+grid on; 
+colorbar;
+xlabel('Delay \tau (s)');
+ylabel('Ambiguity Function Magnitude');
+title('Ambiguity Function Sref');
+
+
+%Plot Ambiguity Function of Sr
+[pks2,index2] = max(afmag2);
+xMax2 = delay2(index2);
+yMax2 = pks2;
+subplot(3,2,2)   
+plot(delay2,afmag2,'LineStyle','-'); 
+hold on
+plot3(delay2(pks2,index2), afmag2(pks2,index2), pks2, '^r')
+textString2 = sprintf('(%f, %f)', xMax2, yMax2);
+text(xMax2, yMax2,textString2,"Color",'b','FontSize',10);
+hold off
+shading interp;
+xlim([-8e-5 8e-5]);
+grid on; 
+colorbar;
+xlabel('Delay \tau (us)');
+ylabel('Ambiguity Function Magnitude');
+title('Ambiguity Function Sr');
+
+
+% Plot cross-ambiguity function of Sref and Sr
+
+[pks3,index3] = max(afmag3);
+xMax3 = delay3(index3);
+yMax3 = pks3;
+subplot(3,2,3)
+plot(delay3,afmag3,'LineStyle','-'); 
+hold on
+%plot3(delay3(pks3,index3), afmag3(pks3,index3), pks3, '^r')
+textString3 = sprintf('(%f, %f)', xMax3, yMax3);
+text(xMax3, yMax3,textString3,"Color",'b','FontSize',10);
+hold off
+shading interp;
+xlim([-8e-5 8e-5]);
+grid on; 
+colorbar;
+xlabel('Delay \tau (s)');
+ylabel('Ambiguity Function Magnitude');
+title('Cross-ambiguity');
+
+
+% Plot ambiguity function of Sref, Sr and cross-ambiguity
+
+subplot(3,2,4)
+plot(delay,afmag,'LineStyle','-.','Color','b'); % Green Sref
+hold on
+plot(delay2, afmag2,'LineStyle','-','Color','r'); % Red Sr
+plot(delay3, afmag3,'LineStyle','--','Color','g'); % blue cross-ambiguity 
+hold off
+xlim ([-4e-5 4e-5]);
+grid on; 
+colorbar;
+xlabel('Delay \tau (s)');
+ylabel('Ambiguity Function Magnitude');
+title('Sref, Sr and cross-ambiguity');
+legend('Sref','Sr','cross-ambiguity');
+
+
 
 
 
