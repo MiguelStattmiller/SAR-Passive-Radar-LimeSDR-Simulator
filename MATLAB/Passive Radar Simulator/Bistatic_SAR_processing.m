@@ -5,7 +5,7 @@
 %The current program includes the steps for bistatic SAR processing, in
 %particular:
 %. Range compression
-%. Range Migration Correction
+%. Range Cell Migration Correction
 %. Azimuth Compression
 
 
