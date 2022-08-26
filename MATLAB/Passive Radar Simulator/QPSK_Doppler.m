@@ -13,7 +13,7 @@
 % using QPSK transmitted signal.
 % QPSK signal is created based on a message written in .txt file
 % For the passive radar: Reference signal= QPSK signal
-%            tir            Surveillance signal=QPSK_signal delayed in Time 
+%                        Surveillance signal=QPSK_signal delayed in Time 
 
 
 
