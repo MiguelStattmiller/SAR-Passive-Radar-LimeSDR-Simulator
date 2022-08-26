@@ -1,6 +1,5 @@
 function [Wi_transmit] = RXGaussian_transmit(X_target,Y_target,X_transmitter,Y_transmitter,alpha_zero_transmit,D_transmit)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+%This function allows the calculation of a raised-cosine equation
 
 
 %**************** Function Calculus
