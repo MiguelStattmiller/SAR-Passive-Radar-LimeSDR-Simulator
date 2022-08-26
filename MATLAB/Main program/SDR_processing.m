@@ -36,17 +36,17 @@ nSurv = numel(Surveillance_signal)/pulse_size;
 
 % Doppler delay processing Sr only
 xMax3=[]; yMax3=[];
-r=Reference_signal(1:10000000);
+r=Reference_signal(1:2000000);
 counter=1;
-surveillance_reshaped = reshape(Surveillance_signal, 1000000, 1, []);
+surveillance_reshaped = reshape(Surveillance_signal, 2000000, 1, []);
 %reference_reshaped = reshape(Reference_signal, 1000000, 1, []);
 sz = size(surveillance_reshaped);
-for i = 101
+for i = 1:60
     %r = reference_reshaped(:,1,i);
     s = surveillance_reshaped(:,1,i);
-    [afmag3,doppler3] = ambgfun(real(r),real(s),Fs,[250000 250000],'Cut','Delay','CutValue',0.4255358*Fs/10000000);
+    [afmag3,doppler3] = ambgfun(r,s,Fs,[250000 250000],'Cut','Delay');
     afmag3(afmag3>1 )= 1;
-        if i==41
+        if i==52
         dg=1;
     end
     [pks3,index3] = max(afmag3);
@@ -60,7 +60,7 @@ for i = 101
 xMax3=[]; yMax3=[];
 r=Reference_signal(1:10000000);
 counter=1;
-surveillance_reshaped = reshape(Surveillance_signal, 1000000, 1, []);
+surveillance_reshaped = reshape(Surveillance_signal, 10000, 1, []);
 %reference_reshaped = reshape(Reference_signal, 1000000, 1, []);
 sz = size(surveillance_reshaped);
 for i = 101
@@ -83,11 +83,12 @@ afmag(afmag>1 )= 1;
 % Doppler delay processing
 xMax3=[]; yMax3=[];
 counter=1;
-surveillance_reshaped = reshape(Surveillance_signal, 200000000, 1, []);
-reference_reshaped = reshape(Reference_signal, 200000000, 1, []);
+r=Reference_signal(1:2000000);
+surveillance_reshaped = reshape(Surveillance_signal, 2000000, 1, []);
+%reference_reshaped = reshape(Reference_signal, 200000000, 1, []);
 sz = size(surveillance_reshaped);
 for i = 1:sz(3)
-    r = reference_reshaped(:,1,i);
+    %r = reference_reshaped(:,1,i);
     s = surveillance_reshaped(:,1,i);
     [afmag3,doppler3] = ambgfun(r,s,Fs,[250000 250000],'Cut','Delay');
     afmag3(afmag3>1 )= 1;
@@ -99,9 +100,9 @@ for i = 1:sz(3)
 
 figure;
 plot(yMax3);
-ylabel('Máximo correlação');
-xlabel('Número de iterações');
-title('Correlação doppler');
+ylabel('Maximum of correlation','FontSize',14);
+xlabel('Number of iterations','FontSize',14);
+title('Cross-ambiguity Function','FontSize',14);
 
 figure;
 plot(xMax3);
@@ -149,28 +150,28 @@ title('Cross-ambiguity');
 
 % Time and Doppler delay processing
 
-r=Surveillance_signal(1:1000);
-%reference_reshaped = reshape(Reference_signal, 1000, 4, []);
+r=Reference_signal(101999000:102000000);
+reference_reshaped = reshape(Reference_signal, 1000, 4, []);
 surveillance_reshaped = reshape(Surveillance_signal, 1000, 4, []);
 counter=1;
 sz = size(surveillance_reshaped);
-
-sz1=70000;
-sz2=75000;
+s=Surveillance_signal(101999000:102000000);
+sz1=104000000;
+sz2=104001000;
 FigH = figure;
 AxesH = axes(FigH);
 SurfH = surf(AxesH, [], [], [],'LineStyle','-.');  
 shading interp;
-axis([-13e-6 -11e-6 -2000 2000]); 
+axis([10e-6 14e-6 -1200 1200]); 
 grid on; 
 view([140,35]); 
 colorbar;
-ylabel('Doppler (Hz)');
-xlabel('Delay(s)');
-title('Ambiguity Function Sref');
-for i = sz1:sz2
+ylabel('Doppler [Hz]','FontSize',14);
+xlabel('Delay [s]','FontSize',14);
+title('Cross-ambiguity Function','FontSize',14);
+for i = 20
     %r = reference_reshaped(:,1,i); 
-    s = surveillance_reshaped(:,1,i);
+    %s = surveillance_reshaped(:,1,i);
     [afmag3,delay3,doppler3] = ambgfun(r,s,Fs,[250000 250000]);
     afmag3(afmag3>1 )= 1;
     counter=counter+1
