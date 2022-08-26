@@ -1,7 +1,7 @@
 function [Pt] = LoS_transmitter(X_transmitter,Y_transmitter,X_target,Y_target,AoI)
 %This function allows to determine if there is line of sight between
 %transmitter and a target
-% If there is not line of sight, P returns the coordinates of that target
+% If there is no line of sight, P returns the coordinates of that target
 % If there is  line of sight, P=1
 
 % Define vector between transmitter and pixel
