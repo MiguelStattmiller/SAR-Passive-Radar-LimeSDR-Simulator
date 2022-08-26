@@ -1,3 +1,6 @@
+% The current program represents the code for all the plots needed to comprehend the work developed.
+
+
 %***************** Spectrum formation of both signals ******************
 figure;
 ic=find(~all(surv_matrix==0));
