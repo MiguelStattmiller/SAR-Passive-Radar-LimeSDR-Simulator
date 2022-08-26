@@ -1,6 +1,5 @@
 function [Wi_Surv] = RXGaussian(X_receiver,Y_receiver,X_target,Y_target,alpha_zero_surv,D_surv)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+%This function allows the calculation of a raised-cosine equation
 
 
 %**************** Function Calculus
