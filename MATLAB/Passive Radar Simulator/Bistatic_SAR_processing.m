@@ -8,6 +8,10 @@
 %. Range Cell Migration Correction
 %. Azimuth Compression
 
+% Inputs: surv_matrix(surveillance signal in frequency domain)
+ %        ref_matrix(reference signal in frequency domain)
+          
+
 
 
 %***************** Range Compression ******************
