@@ -114,10 +114,6 @@ code=0;
    
     end
 
-[max_correlation, row_idx] = max(migration_compressed_matrix, [], 1);
-y_max = time_compression_cut(row_idx);
-y_max = y_max*c;
-
 
 %***************** Azimuth compression ******************
 
