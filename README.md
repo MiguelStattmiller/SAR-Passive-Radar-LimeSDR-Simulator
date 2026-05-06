@@ -5,7 +5,7 @@ This project was developed as part of my MSc thesis in Naval Engineering – Wea
 
 The objective was to develop a passive radar system using Software-Defined Radio (SDR), focusing on signal processing, SDR-based acquisition and target detection.
 
-## Video Demonstration
+## Video of Project Development / Testing
 
 https://www.youtube.com/watch?v=VWCTOe3eWyw
 
