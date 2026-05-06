@@ -9,6 +9,10 @@ The objective was to develop a passive radar system using Software-Defined Radio
 
 https://www.youtube.com/watch?v=VWCTOe3eWyw
 
+## Access MSc Thesis
+
+https://comum.rcaap.pt/entities/publication/41b95197-6db2-41c5-8779-68fad87be082
+
 ---
 
 ## System Description
