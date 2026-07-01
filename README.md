@@ -157,7 +157,7 @@ The implemented passive radar processing chain consists of the following stages.
 ### Execution Workflow
 
 1. Configure the LimeSDR device.
-2. Execute the GNU Radio acquisition flowgraph.
+2. Execute the LimeSDR acquisition flowgraph.
 3. Record reference and surveillance channels.
 4. Import the captured data into MATLAB.
 5. Execute the signal processing scripts.
