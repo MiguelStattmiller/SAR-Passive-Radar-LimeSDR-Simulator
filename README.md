@@ -49,7 +49,6 @@ flowchart TB
 
         Lime["LimeSDR"]
 
-        GNU["GNU Radio"]
 
         MATLAB["MATLAB Signal Processing"]
 
@@ -62,7 +61,6 @@ flowchart TB
         Target --> Lime
 
         Lime --> GNU
-        GNU --> MATLAB
         MATLAB --> CAF
         CAF --> Detection
 
