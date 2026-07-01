@@ -98,36 +98,25 @@ SAR-Passive-Radar-LimeSDR-Simulator/
 ├── README.md
 │
 ├── GNU RADIO/
-│   ├── Experiment passive radar.grc
-│   ├── SDR passive radar.grc
-│   ├── FM receiver Gnu Radio.grc
-│   ├── FM receiver.pothos
-│   └── ISM receiver.grc
+│   └── GNU Radio Companion flowgraphs for SDR signal acquisition,
+│       receiver experiments and passive radar implementations.
 │
 ├── MATLAB/
 │   ├── Library/
-│   │   ├── LimeSuite and LimeSDR support files
-│   │   ├── Receiver and transmitter models
-│   │   ├── Gaussian signal generation
-│   │   ├── Directivity fitting scripts
-│   │   └── Utility functions
+│   │   └── Shared functions, signal processing utilities,
+│   │       LimeSDR interfaces and helper scripts.
 │   │
 │   ├── Main program/
-│   │   ├── SDR.m
-│   │   ├── SDR_Rx0.m
-│   │   ├── SDR_Rx1.m
-│   │   └── SDR_processing.m
+│   │   └── Main SDR acquisition and processing scripts used for
+│   │       passive radar experiments.
 │   │
 │   └── Passive Radar Simulator/
-│       ├── Bistatic_SAR_processing.m
-│       ├── SAR_Passive_Radar.m
-│       ├── QPSK_Doppler.m
-│       ├── QPSK_Time_Delay.m
-│       └── plots.m
+│       └── MATLAB simulation models for passive SAR and
+│           passive radar signal processing.
 │
 └── LITERATURE/
-    └── Resumos Artigos.pptx
-
+    └── Research papers, technical references and supporting material.
+```
 ---
 
 ## Processing Pipeline
