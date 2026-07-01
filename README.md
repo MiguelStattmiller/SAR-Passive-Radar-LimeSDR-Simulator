@@ -103,8 +103,7 @@ SAR-Passive-Radar-LimeSDR-Simulator/
 │
 ├── MATLAB/
 │   ├── Library/
-│   │   └── Shared functions, signal processing utilities,
-│   │       LimeSDR interfaces and helper scripts.
+│   │   └── Documentation
 │   │
 │   ├── Main program/
 │   │   └── Main SDR acquisition and processing scripts used for
