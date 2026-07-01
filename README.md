@@ -29,7 +29,7 @@ The implementation combines **MATLAB**, **GNU Radio** and **LimeSDR** to perform
 The MSc thesis consists of two independent developments:
 
 - **Passive Radar System** using SDR hardware for real-time signal acquisition and target detection.
-- **Passive SAR Simulator** developed in MATLAB for Synthetic Aperture Radar signal processing and simulation.
+- **Passive SAR Simulator** developed in MATLAB for Synthetic Aperture Radar simulation.
 
 Although both projects were developed within the same research work, they are independent implementations.
 
