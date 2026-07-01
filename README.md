@@ -190,21 +190,6 @@ The developed system successfully demonstrates:
 
 ---
 
-## Skills Demonstrated
-
-- Passive Radar
-- Passive SAR
-- Software Defined Radio (SDR)
-- MATLAB
-- GNU Radio
-- LimeSDR
-- Digital Signal Processing
-- Radar Signal Processing
-- Cross Ambiguity Function
-- RF Signal Acquisition
-- Scientific Research
-
----
 
 ## References
 
