@@ -26,39 +26,53 @@ The implementation combines **MATLAB**, **GNU Radio** and **LimeSDR** to perform
 
 ## System Architecture
 
+The MSc thesis consists of two independent developments:
+
+- **Passive Radar System** using SDR hardware for real-time signal acquisition and target detection.
+- **Passive SAR Simulator** developed in MATLAB for Synthetic Aperture Radar signal processing and simulation.
+
+Although both projects were developed within the same research work, they are independent implementations.
+
 ```mermaid
-flowchart LR
+flowchart TB
 
-    TX["Illuminator of Opportunity"]
+    Thesis["MSc Thesis"]
 
-    Aircraft["Target"]
+    Thesis --> Radar
+    Thesis --> SAR
 
-    Lime["LimeSDR"]
+    subgraph Radar["Passive Radar System"]
 
-    GNU["GNU Radio"]
+        TX["Illuminator of Opportunity"]
 
-    MATLAB["MATLAB Signal Processing"]
+        Target["Target"]
 
-    CAF["Cross Ambiguity Function"]
+        Lime["LimeSDR"]
 
-    Detection["Target Detection"]
+        GNU["GNU Radio"]
 
-    SAR["Passive SAR Simulation"]
+        MATLAB["MATLAB Signal Processing"]
 
-    TX --> Aircraft
+        CAF["Cross Ambiguity Function"]
 
-    TX --> Lime
-    Aircraft --> Lime
+        Detection["Target Detection"]
 
-    Lime --> GNU
+        TX --> Target
+        TX --> Lime
+        Target --> Lime
 
-    GNU --> MATLAB
+        Lime --> GNU
+        GNU --> MATLAB
+        MATLAB --> CAF
+        CAF --> Detection
 
-    MATLAB --> CAF
+    end
 
-    CAF --> Detection
+    subgraph SAR["Passive SAR Simulator"]
 
-    MATLAB --> SAR
+        SARMAT["MATLAB Passive SAR Simulation"]
+
+    end
 ```
 
 ---
