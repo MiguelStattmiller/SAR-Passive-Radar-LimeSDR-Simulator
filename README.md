@@ -34,43 +34,41 @@ The MSc thesis consists of two independent developments:
 Although both projects were developed within the same research work, they are independent implementations.
 
 ```mermaid
-flowchart TB
+flowchart LR
 
     Thesis["MSc Thesis"]
 
-    Thesis --> Radar
-    Thesis --> SAR
+    subgraph PRS["Passive Radar System"]
 
-    subgraph Radar["Passive Radar System"]
+        IO["Illuminator of Opportunity"]
 
-        TX["Illuminator of Opportunity"]
+        T["Target"]
 
-        Target["Target"]
-
-        Lime["LimeSDR"]
-
+        SDR["LimeSDR"]
 
         MATLAB["MATLAB Signal Processing"]
 
         CAF["Cross Ambiguity Function"]
 
-        Detection["Target Detection"]
+        DET["Target Detection"]
 
-        TX --> Target
-        TX --> Lime
-        Target --> Lime
-
-        Lime --> GNU
+        IO --> SDR
+        IO --> T
+        T --> SDR
+        SDR --> MATLAB
         MATLAB --> CAF
-        CAF --> Detection
+        CAF --> DET
 
     end
 
     subgraph SAR["Passive SAR Simulator"]
 
-        SARMAT["MATLAB Passive SAR Simulation"]
+        PSAR["MATLAB Passive SAR Simulation"]
 
     end
+
+    Thesis --> PRS
+    Thesis --> SAR
 ```
 
 ---
