@@ -10,20 +10,6 @@ The implementation combines **MATLAB** and **LimeSDR** to perform passive signal
 
 ---
 
-## Objectives
-
-| Objective | Description |
-|-----------|-------------|
-| Passive Radar | Develop a passive radar processing chain |
-| Passive SAR | Implement a Passive Synthetic Aperture Radar simulator |
-| SDR Integration | Integrate LimeSDR with GNU Radio |
-| Signal Processing | Implement radar signal processing algorithms |
-| Target Detection | Detect airborne targets using illuminators of opportunity |
-| MATLAB Development | Develop signal processing algorithms in MATLAB |
-| Experimental Validation | Evaluate the proposed system using SDR hardware |
-
----
-
 ## System Architecture
 
 The MSc thesis consists of two independent developments:
@@ -73,6 +59,22 @@ flowchart LR
 ```
 
 ---
+
+## Objectives
+
+| Objective | Description |
+|-----------|-------------|
+| Passive Radar | Develop a passive radar processing chain |
+| Passive SAR | Implement a Passive Synthetic Aperture Radar simulator |
+| SDR Integration | Integrate LimeSDR with GNU Radio |
+| Signal Processing | Implement radar signal processing algorithms |
+| Target Detection | Detect airborne targets using illuminators of opportunity |
+| MATLAB Development | Develop signal processing algorithms in MATLAB |
+| Experimental Validation | Evaluate the proposed system using SDR hardware |
+
+---
+
+
 
 ## Technologies
 
