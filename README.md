@@ -1,99 +1,217 @@
 # Passive SAR & Passive Radar System using SDR
 
 ## Overview
-This project was developed as part of my MSc thesis in Naval Engineering – Weapons & Electronics.
 
-The objective was to develop a passive radar system using Software-Defined Radio (SDR), focusing on signal processing, SDR-based acquisition and target detection.
+This repository contains the work developed during my **MSc Thesis in Naval Engineering – Weapons & Electronics**.
 
-## Video of Project Development / Testing
+The project focuses on the development and evaluation of a **Passive Radar** and **Passive Synthetic Aperture Radar (Passive SAR)** system using **Software Defined Radio (SDR)** technology.
 
-https://www.youtube.com/watch?v=VWCTOe3eWyw
-
-## Access MSc Thesis
-
-https://comum.rcaap.pt/entities/publication/41b95197-6db2-41c5-8779-68fad87be082
+The implementation combines **MATLAB**, **GNU Radio** and **LimeSDR** to perform passive signal acquisition, signal processing, target detection and SAR simulation using illuminators of opportunity.
 
 ---
 
-## System Description
-The system is based on passive radar principles using illuminators of opportunity, enabling aircraft detection without active signal transmission.
+## Objectives
 
-It includes:
-- Passive SAR simulation in MATLAB
-- Passive radar signal processing
-- SDR-based acquisition using LimeSDR and GNU Radio
+| Objective | Description |
+|-----------|-------------|
+| Passive Radar | Develop a passive radar processing chain |
+| Passive SAR | Implement a Passive Synthetic Aperture Radar simulator |
+| SDR Integration | Integrate LimeSDR with GNU Radio |
+| Signal Processing | Implement radar signal processing algorithms |
+| Target Detection | Detect airborne targets using illuminators of opportunity |
+| MATLAB Development | Develop signal processing algorithms in MATLAB |
+| Experimental Validation | Evaluate the proposed system using SDR hardware |
 
 ---
 
-## Technologies Used
-- MATLAB
-- GNU Radio
-- LimeSDR
-- Signal Processing
-- SDR (Software-Defined Radio)
+## System Architecture
+
+```mermaid
+flowchart LR
+
+    TX["Illuminator of Opportunity"]
+
+    Aircraft["Target"]
+
+    Lime["LimeSDR"]
+
+    GNU["GNU Radio"]
+
+    MATLAB["MATLAB Signal Processing"]
+
+    CAF["Cross Ambiguity Function"]
+
+    Detection["Target Detection"]
+
+    SAR["Passive SAR Simulation"]
+
+    TX --> Aircraft
+
+    TX --> Lime
+    Aircraft --> Lime
+
+    Lime --> GNU
+
+    GNU --> MATLAB
+
+    MATLAB --> CAF
+
+    CAF --> Detection
+
+    MATLAB --> SAR
+```
+
+---
+
+## Technologies
+
+| Technology | Purpose |
+|-----------|---------|
+| MATLAB | Signal processing and SAR simulation |
+| GNU Radio | SDR signal acquisition |
+| LimeSDR | RF front-end |
+| Software Defined Radio | Passive radar receiver |
+| Digital Signal Processing | Detection algorithms |
+| Passive Radar | Aircraft detection |
+| Passive SAR | Synthetic aperture simulation |
 
 ---
 
 ## Repository Structure
 
-### GNU RADIO
-Contains SDR experiments and acquisition systems.
-
-### MATLAB
-Contains the core algorithms and simulation models:
-- Passive SAR simulator
-- Signal processing routines
-- Detection algorithms
-- Data visualization
-
-### LITERATURE
-Research and supporting material.
-
----
-
-## How It Works (Technical Details)
-
-1. Signal acquisition using LimeSDR and GNU Radio  
-2. Extraction of reference and surveillance channels  
-3. Cross-correlation processing  
-4. Generation of Cross-Ambiguity Function (CAF)  
-5. Detection of targets  
-6. SAR simulation and analysis  
+```text
+SAR-Passive-Radar-LimeSDR-Simulator/
+│
+├── GNU RADIO/
+│   ├── SDR acquisition flowgraphs
+│   └── LimeSDR configuration
+│
+├── MATLAB/
+│   ├── Passive SAR simulation
+│   ├── Cross Ambiguity Function
+│   ├── Signal processing algorithms
+│   ├── Detection routines
+│   └── Visualization scripts
+│
+├── LITERATURE/
+│   ├── Research papers
+│   ├── References
+│   └── Supporting documentation
+│
+└── README.md
+```
 
 ---
 
-## Setup & Usage
+## Processing Pipeline
 
-To run the project:
+The implemented passive radar processing chain consists of the following stages.
 
-1. Install MATLAB and required toolboxes  
-2. Install GNU Radio and LimeSDR drivers  
-3. Configure SDR hardware  
-4. Run acquisition scripts  
-5. Execute MATLAB processing scripts  
+| Stage | Description |
+|--------|-------------|
+| Signal Acquisition | RF acquisition using LimeSDR |
+| Channel Separation | Reference and surveillance channel extraction |
+| Synchronization | Time alignment |
+| Cross Correlation | Signal correlation |
+| Cross Ambiguity Function | Range-Doppler processing |
+| Target Detection | Detection of moving targets |
+| Passive SAR | SAR image simulation |
 
 ---
 
-## Results
+## Hardware
 
-The system demonstrates:
-- Passive detection capability  
-- Signal processing performance  
-- Feasibility of SDR-based radar systems  
+| Component | Description |
+|-----------|-------------|
+| SDR | LimeSDR |
+| SDR Software | GNU Radio |
+| Processing Platform | MATLAB |
+| Operating System | Windows |
+
+---
+
+## Setup
+
+### Requirements
+
+| Software | Version |
+|----------|---------|
+| MATLAB | Recommended latest release |
+| GNU Radio | Compatible version |
+| LimeSDR Drivers | Installed |
+| LimeSuite | Installed |
+
+---
+
+### Execution Workflow
+
+1. Configure the LimeSDR device.
+2. Execute the GNU Radio acquisition flowgraph.
+3. Record reference and surveillance channels.
+4. Import the captured data into MATLAB.
+5. Execute the signal processing scripts.
+6. Analyse the generated Cross Ambiguity Function.
+7. Perform Passive SAR simulation.
+
+---
+
+## Project Demonstration
+
+A demonstration of the developed system is available below.
+
+📺 **YouTube**
+
+https://www.youtube.com/watch?v=VWCTOe3eWyw
 
 ---
 
 ## MSc Thesis
 
-Title: Development of Software-Defined Radio for Passive Radar Systems
+The complete dissertation is publicly available.
 
-Key contributions:
-- Passive radar system design  
-- Aircraft detection using signals of opportunity  
-- Passive SAR simulation  
-- Experimental SDR implementation  
+📖 **Repository**
+
+https://comum.rcaap.pt/entities/publication/41b95197-6db2-41c5-8779-68fad87be082
+
+---
+
+## Results
+
+The developed system successfully demonstrates:
+
+| Result | Status |
+|---------|--------|
+| SDR Acquisition | ✅ Completed |
+| MATLAB Processing | ✅ Completed |
+| Cross Ambiguity Function | ✅ Implemented |
+| Passive Radar Detection | ✅ Validated |
+| Passive SAR Simulation | ✅ Implemented |
+| Experimental SDR Tests | ✅ Completed |
+
+---
+
+## Skills Demonstrated
+
+- Passive Radar
+- Passive SAR
+- Software Defined Radio (SDR)
+- MATLAB
+- GNU Radio
+- LimeSDR
+- Digital Signal Processing
+- Radar Signal Processing
+- Cross Ambiguity Function
+- RF Signal Acquisition
+- Scientific Research
 
 ---
 
 ## References
-Based on concepts from passive radar, SAR and SDR signal processing.
+
+The project is based on concepts from:
+
+- Passive Radar
+- Passive Synthetic Aperture Radar
+- Software Defined Radio
+- Digital Signal Processing
+- Radar Signal Processing
