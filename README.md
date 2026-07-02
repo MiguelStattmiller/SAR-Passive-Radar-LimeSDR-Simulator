@@ -7,7 +7,8 @@ The project combines two complementary research components developed during my M
 - A real Passive Radar implementation using LimeSDR and GNU Radio for signal acquisition and aircraft detection experiments.
 - A MATLAB-based Passive SAR simulator developed to study bistatic synthetic aperture radar signal processing and image formation.
 
-Together, these components demonstrate both practical SDR implementation and advanced radar signal processing techniques.
+Together, these components demonstrate the complete development cycle of an SDR-based passive radar system, from real signal acquisition to advanced MATLAB signal processing, alongside an independent Passive SAR simulation framework.
+
 ---
 
 ## System Architecture
@@ -69,7 +70,6 @@ flowchart LR
 | SDR Integration | Integrate LimeSDR with GNU Radio |
 | Signal Processing | Implement radar signal processing algorithms |
 | Target Detection | Detect airborne targets using illuminators of opportunity |
-| MATLAB Development | Develop signal processing algorithms in MATLAB |
 | Experimental Validation | Evaluate the proposed system using SDR hardware |
 
 ---
@@ -83,9 +83,9 @@ flowchart LR
 | MATLAB | Signal processing and SAR simulation |
 | GNU Radio | SDR signal acquisition |
 | LimeSDR | RF front-end |
-| Software Defined Radio | Passive radar receiver |
+| Software Defined Radio | RF Signal acquisition |
 | Digital Signal Processing | Detection algorithms |
-| Passive Radar | Aircraft detection |
+| Passive Radar | Target detection algorithms |
 | Passive SAR | Synthetic aperture simulation |
 
 ---
@@ -124,17 +124,28 @@ SAR-Passive-Radar-LimeSDR-Simulator/
 
 ## Processing Pipeline
 
-The implemented passive radar processing chain consists of the following stages.
+### Passive Radar Processing
 
 | Stage | Description |
 |--------|-------------|
-| Signal Acquisition | RF acquisition using LimeSDR |
-| Channel Separation | Reference and surveillance channel extraction |
-| Synchronization | Time alignment |
-| Cross Correlation | Signal correlation |
-| Cross Ambiguity Function | Range-Doppler processing |
-| Target Detection | Detection of moving targets |
-| Passive SAR | SAR image simulation |
+| Signal Acquisition | RF signal acquisition using LimeSDR |
+| Channel Separation | Extraction of reference and surveillance channels |
+| Synchronization | Time alignment between received signals |
+| Cross Correlation | Correlation between reference and surveillance channels |
+| Cross Ambiguity Function (CAF) | Range-Doppler processing |
+| Target Detection | Detection of moving targets using illuminators of opportunity |
+
+---
+
+### Passive SAR Processing
+
+| Stage | Description |
+|--------|-------------|
+| Scene Definition | Definition of the bistatic Passive SAR scenario |
+| Signal Simulation | Generation of Passive SAR signals |
+| Range Compression | Pulse compression processing |
+| Azimuth Compression | Synthetic aperture processing |
+| Image Formation | Generation of the final Passive SAR image |
 
 ---
 
@@ -196,6 +207,9 @@ https://comum.rcaap.pt/entities/publication/41b95197-6db2-41c5-8779-68fad87be082
 
 ## Results
 
+The project successfully demonstrated both experimental and simulation-based radar processing.
+
+The Passive Radar implementation was validated using real SDR hardware, while the Passive SAR component demonstrated bistatic SAR image formation through MATLAB simulations.
 
 | Result | Status |
 |---------|--------|
@@ -218,6 +232,13 @@ The following figures illustrate representative outputs obtained during the deve
 
 ---
 
+## Key Contributions
+
+- Development of an SDR-based Passive Radar system using LimeSDR and GNU Radio.
+- MATLAB implementation of radar signal processing algorithms.
+- Cross Ambiguity Function (CAF) implementation for target detection.
+- Passive SAR simulation framework for bistatic imaging.
+- Experimental validation using real SDR hardware.
 
 ## References
 
