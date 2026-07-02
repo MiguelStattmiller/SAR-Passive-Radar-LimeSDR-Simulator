@@ -191,7 +191,6 @@ https://comum.rcaap.pt/entities/publication/41b95197-6db2-41c5-8779-68fad87be082
 
 ## Results
 
-The developed system successfully demonstrates:
 
 | Result | Status |
 |---------|--------|
@@ -202,11 +201,13 @@ The developed system successfully demonstrates:
 | Passive SAR Simulation | ✅ Implemented |
 | Experimental SDR Tests | ✅ Completed |
 
-| Cross Ambiguity Function | Passive SAR Simulation |
+The following figures illustrate representative outputs obtained during the development and validation of the passive radar signal processing chain and Passive SAR simulation.
+
+| Cross Ambiguity Function - Passive Radar System | Passive SAR Simulation |
 |--------------------------|------------------------|
 | ![](images/caf.png) | ![](images/passive_sar.png) |
 
-| Passive Radar Geometry |
+| Passive SAR Simulation Geometry |
 |------------------------|
 | ![](images/geometry.png) |
 
