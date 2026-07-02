@@ -2,12 +2,12 @@
 
 ## Overview
 
-This repository contains the work developed during my **MSc Thesis in Naval Engineering – Weapons & Electronics**.
+The project combines two complementary research components developed during my MSc thesis:
 
-The project focuses on the development and evaluation of a **Passive Radar** and **Passive Synthetic Aperture Radar (Passive SAR)** system using **Software Defined Radio (SDR)** technology.
+- A real Passive Radar implementation using LimeSDR and GNU Radio for signal acquisition and aircraft detection experiments.
+- A MATLAB-based Passive SAR simulator developed to study bistatic synthetic aperture radar signal processing and image formation.
 
-The implementation combines **MATLAB** and **LimeSDR** to perform passive signal acquisition, signal processing, target detection and SAR simulation using illuminators of opportunity.
-
+Together, these components demonstrate both practical SDR implementation and advanced radar signal processing techniques.
 ---
 
 ## System Architecture
