@@ -136,7 +136,7 @@ SAR-Passive-Radar-LimeSDR-Simulator/
 
 ---
 
-### Passive SAR Processing
+### Passive SAR Simulation Processing
 
 | Stage | Description |
 |--------|-------------|
