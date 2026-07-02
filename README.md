@@ -4,7 +4,7 @@
 
 The project combines two complementary research components developed during my MSc thesis:
 
-- A real Passive Radar implementation using LimeSDR and GNU Radio for signal acquisition and aircraft detection experiments.
+- A real Passive Radar implementation using LimeSDR and GNU Radio for RF signal acquisition, with the complete signal processing chain, including Cross Ambiguity Function (CAF) generation and target detection, developed in MATLAB.
 - A MATLAB-based Passive SAR simulator developed to study bistatic synthetic aperture radar signal processing and image formation.
 
 Together, these components demonstrate the complete development cycle of an SDR-based passive radar system, from real signal acquisition to advanced MATLAB signal processing, alongside an independent Passive SAR simulation framework.
