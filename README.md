@@ -94,22 +94,27 @@ flowchart LR
 
 ```text
 SAR-Passive-Radar-LimeSDR-Simulator/
+│
 ├── README.md
+│
+├── images/
+│   └── Figures used in the project documentation.
 │
 ├── GNU RADIO/
 │   └── GNU Radio Companion flowgraphs for SDR signal acquisition,
 │       receiver experiments and passive radar implementations.
 │
 ├── MATLAB/
+│   │
 │   ├── Library/
 │   │   └── Documentation
 │   │
 │   ├── Main program/
-│   │   └── Main SDR acquisition and processing scripts used for
+│   │   └── Main SDR acquisition and signal processing scripts used for
 │   │       passive radar experiments.
 │   │
 │   └── Passive Radar Simulator/
-│       └── MATLAB simulation models for passive SAR and
+│       └── MATLAB simulation models for Passive SAR and
 │           passive radar signal processing.
 │
 └── LITERATURE/
