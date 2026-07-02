@@ -172,21 +172,9 @@ SAR-Passive-Radar-LimeSDR-Simulator/
 
 ---
 
-### Execution Workflow
+## Project Development & Testing
 
-1. Configure the LimeSDR device.
-2. Execute the LimeSDR acquisition flowgraph.
-3. Record reference and surveillance channels.
-4. Import the captured data into MATLAB.
-5. Execute the signal processing scripts.
-6. Analyse the generated Cross Ambiguity Function.
-7. Perform Passive SAR simulation.
-
----
-
-## Project Demonstration
-
-A demonstration of the developed system is available below.
+The following video provides an overview of the project's development, showcasing the experimental setups, SDR implementation, laboratory testing and progressive validation of the proposed system.
 
 📺 **YouTube**
 
