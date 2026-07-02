@@ -202,6 +202,14 @@ The developed system successfully demonstrates:
 | Passive SAR Simulation | ✅ Implemented |
 | Experimental SDR Tests | ✅ Completed |
 
+| Cross Ambiguity Function | Passive SAR Simulation |
+|--------------------------|------------------------|
+| ![](images/caf.png) | ![](images/passive_sar.png) |
+
+| Passive Radar Geometry |
+|------------------------|
+| ![](images/geometry.png) |
+
 ---
 
 
