@@ -114,8 +114,7 @@ SAR-Passive-Radar-LimeSDR-Simulator/
 │   │       passive radar experiments.
 │   │
 │   └── Passive Radar Simulator/
-│       └── MATLAB simulation models for Passive SAR and
-│           passive radar signal processing.
+│       └── MATLAB simulation models for Passive SAR
 │
 └── LITERATURE/
     └── Research papers, technical references and supporting material.
